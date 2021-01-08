@@ -132,7 +132,7 @@ def main():
 
     }
     #updater = Updater(TOKEN)
-    print("1");
+    print("1111");
     updater = Updater(token = TOKEN, use_context=True, request_kwargs = REQUEST_KWARGS)
     print("2")
     dp = updater.dispatcher
