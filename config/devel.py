@@ -1,7 +1,8 @@
 # при разработке
 
 import os
-
+import logging
+log = logging.getLogger(__name__)
 DEBUG = True
 
 TITLE = 'SpecialistOff.NET'
