@@ -2,6 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d83d59a8-8a03-460f-953b-d8ceae5adfef" name="Default Changelist" comment="добавляем зависимости">
+      <change afterPath="$PROJECT_DIR$/logs/read.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -22,6 +24,13 @@
     <option name="CREATE_PULL_REQUEST_DEFAULT_BRANCH" value="main" />
     <option name="CREATE_PULL_REQUEST_DEFAULT_REPO_USER" value="Bakx13" />
     <option name="CREATE_PULL_REQUEST_DEFAULT_REPO_NAME" value="tbot_report" />
+  </component>
+  <component name="GithubPullRequestsUISettings">
+    <option name="hiddenUrls">
+      <set>
+        <option value="https://github.com/Bakx13/tbot_report" />
+      </set>
+    </option>
   </component>
   <component name="ProjectId" id="1mnpdYz73uCXeLayXecX9aU0Q4E" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
@@ -84,13 +93,55 @@
       <option name="project" value="LOCAL" />
       <updated>1610141919218</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="добавляем зависимости">
+      <created>1610142249426</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1610142249426</updated>
+    </task>
+    <task id="LOCAL-00005" summary="добавляем зависимости">
+      <created>1610142554928</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1610142554928</updated>
+    </task>
+    <task id="LOCAL-00006" summary="добавляем зависимости">
+      <created>1610142842036</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1610142842036</updated>
+    </task>
+    <task id="LOCAL-00007" summary="добавляем зависимости">
+      <created>1610143151077</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1610143151077</updated>
+    </task>
+    <task id="LOCAL-00008" summary="добавляем зависимости">
+      <created>1610143331638</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1610143331638</updated>
+    </task>
+    <task id="LOCAL-00009" summary="добавляем зависимости">
+      <created>1610143395366</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1610143395366</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="csdfsdf" />
-    <MESSAGE value="добавляем зависимости" />
     <MESSAGE value="досоздаем структуру каталогов. часть 1" />
-    <option name="LAST_COMMIT_MESSAGE" value="досоздаем структуру каталогов. часть 1" />
+    <MESSAGE value="добавляем зависимости" />
+    <option name="LAST_COMMIT_MESSAGE" value="добавляем зависимости" />
   </component>
 </project>
