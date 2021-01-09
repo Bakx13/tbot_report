@@ -15,6 +15,7 @@ except ImportError:
 
 
 from tbot_report.lib.picture import Picture
+from tbot_report.lib.loadarguments import ArgParses
 
 
 def get_connection():
@@ -105,16 +106,26 @@ def textMessage(update, context):
             
         
 def main():
-
-    """The core code of the program. Should be run only in the main process!"""
-    # Rename the main thread for presentation purposes
-    threading.current_thread().name = "Core"
-
-    # Start logging setup
+    #init variables
     log = logging.getLogger("core")
     logging.root.setLevel("DEBUG")
 
-    logging.basicConfig(filename='logs/'+threading.current_thread().name+'.log', filemode='w', format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
+    logging.basicConfig(filename='logs/'+threading.current_thread().name+'.log', filemode='w',
+                        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+                        level=logging.DEBUG)
+    """The core code of the program. Should be run only in the main process!"""
+    # Rename the main thread for presentation purposes
+    threading.current_thread().name = "Core"
+    CONFIG_COMMON = "config/config_common.toml"
+    ENV_LEVEL = ArgParses.createParser().type
+    unit_to_multiplier = {
+        'dev': "config/config_devel.toml",
+        'test': "config/config_test.toml",
+        'prod': "config/config_prod.toml",
+    }
+    CONFIG_FILE = unit_to_multiplier[ENV_LEVEL]
+    log.debug("conf_file:"+CONFIG_FILE)
+    # Start logging setup
     log.debug("Set logging level to INFO while the config is being loaded")
 
     log.debug('This is a debug message')
@@ -133,6 +144,9 @@ def main():
 
     }
     #updater = Updater(TOKEN)
+
+
+    # end init variables
     print("1111");
     log.info("1111")
     updater = Updater(token = TOKEN, use_context=True, request_kwargs = REQUEST_KWARGS)
