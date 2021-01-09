@@ -16,7 +16,7 @@ except ImportError:
 
 from tbot_report.lib.picture import Picture
 from tbot_report.lib.loadarguments import ArgParses
-
+import tbot_report.lib.nuconfig
 
 def get_connection():
     connected = psycopg2.connect(dbname='ditrb', user='ditrb', password='#d1trb',
@@ -107,22 +107,31 @@ def textMessage(update, context):
         
 def main():
     #init variables
-    log = logging.getLogger("core")
-    logging.root.setLevel("DEBUG")
+    CONFIG_COMMON = "config/config_common.toml"
 
+    log = logging.getLogger("core")
+    #logging.root.setLevel("DEBUG")
     logging.basicConfig(filename='logs/'+threading.current_thread().name+'.log', filemode='w',
                         format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                         level=logging.DEBUG)
     """The core code of the program. Should be run only in the main process!"""
     # Rename the main thread for presentation purposes
     threading.current_thread().name = "Core"
-    CONFIG_COMMON = "config/config_common.toml"
-    ENV_LEVEL = ArgParses.createParser().type
+
+    #Загружаем общий конфиг
+    if not os.path.isfile(CONFIG_COMMON):
+        log.fatal(CONFIG_COMMON + " does not exist!")
+        exit(254)
+
+    user_cfg = nuconfig.NuConfig(user_cfg_file)
+    #выбираем среду запуска программы: dev, test, prod
+    ENV_LEVEL = ArgParses.createParser().env
     unit_to_multiplier = {
         'dev': "config/config_devel.toml",
         'test': "config/config_test.toml",
         'prod': "config/config_prod.toml",
     }
+    #Загружаем конфиг среды запуска
     CONFIG_FILE = unit_to_multiplier[ENV_LEVEL]
     log.debug("conf_file:"+CONFIG_FILE)
     # Start logging setup

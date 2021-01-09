@@ -9,7 +9,7 @@ class ArgParses():
     pass
     def createParser ():
         parser = argparse.ArgumentParser()
-        parser.add_argument ('-t', '--type', choices=['dev', 'test', 'prod'], default='prod')
+        parser.add_argument ('-e', '--env', choices=['dev', 'test', 'prod'], default='prod')
         namespace = parser.parse_args(sys.argv[1:])
         return namespace
 
