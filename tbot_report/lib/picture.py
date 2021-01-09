@@ -7,7 +7,7 @@ class Picture(object):
     def __init__(self):
         """Constructor"""
         pass
-    def get_pict(self, update, context):
+    def get_pict(update, context, self):
         """Ищем картинку в сервисе https://source.unsplash.com/"""
         #print ('random pict')
         log.info("random pict")

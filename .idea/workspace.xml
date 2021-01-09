@@ -2,9 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d83d59a8-8a03-460f-953b-d8ceae5adfef" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/tbot_report/lib/picture.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/tbot_report.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/tbot_report.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tbot_report/bot.py" beforeDir="false" afterPath="$PROJECT_DIR$/tbot_report/bot.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tbot_report/bot.py" beforeDir="false" afterPath="$PROJECT_DIR$/bot.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tbot_report/lib/picture.py" beforeDir="false" afterPath="$PROJECT_DIR$/tbot_report/lib/picture.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -51,6 +53,11 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="settings.editor.selected.configurable" value="org.jetbrains.plugins.github.ui.GithubSettingsConfigurable" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/" />
+    </key>
   </component>
   <component name="RunManager">
     <configuration name="build.sh" type="ShConfigurationType" temporary="true">
@@ -158,13 +165,21 @@
       <option name="project" value="LOCAL" />
       <updated>1610143638363</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="разносим main по библиотекам и меняем print на logging">
+      <created>1610200509816</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1610200509816</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="csdfsdf" />
     <MESSAGE value="досоздаем структуру каталогов. часть 1" />
     <MESSAGE value="добавляем зависимости" />
-    <option name="LAST_COMMIT_MESSAGE" value="добавляем зависимости" />
+    <MESSAGE value="разносим main по библиотекам и меняем print на logging" />
+    <option name="LAST_COMMIT_MESSAGE" value="разносим main по библиотекам и меняем print на logging" />
   </component>
 </project>
