@@ -4,7 +4,7 @@ from tbot_report.lib.nuconfig import NuConfig
 log = logging.getLogger(__name__)
 
 class MyConfig(object):
-    """Класс для работы с картинками"""
+    """Класс для загрузки конфигов"""
 
     def __init__(self):
         """Constructor"""

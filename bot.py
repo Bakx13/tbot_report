@@ -16,8 +16,7 @@ except ImportError:
 
 from tbot_report.lib.picture import Picture
 from tbot_report.lib.loadarguments import ArgParses
-from tbot_report.lib.nuconfig import NuConfig
-from tbot_report.lib.loadconfig import MyConfig
+import tbot_report.lib.loadconfig
 
 
 def main():
@@ -32,14 +31,13 @@ def main():
                         level=logging.DEBUG)
     """The core code of the program. Should be run only in the main process!"""
     # Rename the main thread for presentation purposes
-
-
     #Загружаем общий конфиг
     if not os.path.isfile(CONFIG_COMMON):
         log.fatal(CONFIG_COMMON + " does not exist!")
         exit(254)
+    #разбираем параметр запуска bot.py env -среда исполнения. От этого зависит какой второй конфиг мы подтянем.
     ENV_LEVEL = ArgParses.createParser().env
-    config_all = MyConfig()
+    config_all = tbot_report.lib.loadconfig.MyConfig()
     config_all.Load(CONFIG_COMMON, ENV_LEVEL)
 
     # Обновляем настройки логирования после загрузку конфигов
