@@ -1,0 +1,71 @@
+# greed configuration file
+
+# Language parameters
+[Language]
+# Available languages:
+# it - Italian, by https://github.com/Steffo99
+# en - English, by https://github.com/DarrenWestwood
+# uk - Ukrainian, by https://github.com/pzhuk
+# ru - Russian, by https://github.com/pzhuk
+# zh_cn - Simplified Chinese, by https://github.com/zhihuiyuze
+# he - Hebrew, by https://github.com/netanelkoli
+# es_mx - Spanish (Mexican), by https://github.com/mastersuv
+# The lanugages that messages can be displayed in
+enabled_languages = ["en","ru"]
+# The default language to be set for users whose language cannot be autodetected or whose language is not enabled
+default_language = "ru"
+# The language to fallback to if a string is missing in a specific language
+# You should set it to either "it" or "en", other languages may be missing some strings as greed is updated
+fallback_language = "ru"
+
+
+# Database parameters
+[Database]
+# The database engine you want to use.
+# Refer to http://docs.sqlalchemy.org/en/latest/core/engines.html for the possible settings.
+engine = "sqlite:///database.sqlite"
+
+
+# Telegram bot parameters
+[Telegram]
+# Your bot token goes here. Get one from https://t.me/BotFather!
+token = "966917460:AAEssBFBIRI7eQuTl2Vqc595bep7AOFJKLU"
+# proxy configuration
+proxy_string = "socks4://24.181.205.134:54321"
+# Time in seconds before a conversation (thread) with no new messages expires
+# A lower value reduces memory usage, but can be inconvenient for the users
+conversation_timeout = 7200
+# Time to wait before sending another update request if there are no messages
+long_polling_timeout = 30
+# Time in seconds before retrying a request if it times out
+timed_out_pause = 1
+# Time in seconds before retrying a request that returned an error
+error_pause = 5
+
+# Bot appearance settings
+[Appearance]
+# Display the full order information to the customers instead of the shortened version
+# The full order information includes the order number and the timestamp of the order placement
+full_order_info = false
+# Allow balance refill during the order checkout in case of unsufficient balance
+refill_on_checkout = true
+# Display welcome message (conversation_after_start) when the user sends /start
+display_welcome_message = true
+
+
+# Logging settings
+[Logging]
+# The output format for the messages printed to the console
+# See https://docs.python.org/3/library/logging.html#logrecord-attributes for information about the {}-attributes
+format = "{asctime} | {threadName} | {name} | {message}"
+# Logging level: ignore all log entries with a level lower than the specified one
+# Valid options are FATAL, ERROR, WARNING, INFO, and DEBUG
+level = "DEBUG"
+#Level Numeric value
+#CRITICAL 50
+#ERROR 40
+#WARNING 30
+#INFO 20
+#DEBUG 10
+#NOTSET 0
+
