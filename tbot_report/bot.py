@@ -8,6 +8,7 @@ import logging
 import os
 import sys
 import threading
+import lib/picture
 
 try:
     import coloredlogs
@@ -99,17 +100,7 @@ def textMessage(update, context):
     #bot.send_text(chat_id=chat_id, text = "text1")
     print("sending image end")
 
-def pict(update, context):
-    print ('random pict')
-    text = update.message.text.split(' ',1)[1]
-    print ('split')
-    url = 'https://source.unsplash.com/800x600/?{0}/{1}'.format(text, str(random.randint(1,100000)))
-    print(url)
-    chat_id = update.message.chat_id
-    print("sending image")
-    context.bot.send_photo(chat_id=chat_id, photo=url)
-    #bot.send_text(chat_id=chat_id, text = "text1")
-    print("sending image end")
+
             
         
 def main():
@@ -120,7 +111,7 @@ def main():
 
     # Start logging setup
     log = logging.getLogger("core")
-    logging.root.setLevel("INFO")
+    logging.root.setLevel("DEBUG")
     logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
     log.debug("Set logging level to INFO while the config is being loaded")
     
@@ -137,6 +128,7 @@ def main():
     }
     #updater = Updater(TOKEN)
     print("1111");
+    log.info("1111")
     updater = Updater(token = TOKEN, use_context=True, request_kwargs = REQUEST_KWARGS)
     print("2")
     dp = updater.dispatcher
