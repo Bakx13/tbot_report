@@ -13,11 +13,12 @@ try:
 except ImportError:
     coloredlogs = None
 
-
+# подгружаем свои библиотеки
 import tbot_report.lib.picture
-import tbot_report.lib.loadarguments
+import tbot_report.lib.loadarguments as loadarguments
 import tbot_report.lib.loadconfig as MConfig
 import tbot_report.lib.duckbot as duckbot
+import tbot_report.localization.localization as localization
 
 
 def main():
@@ -37,7 +38,7 @@ def main():
         log.fatal(CONFIG_COMMON + " does not exist!")
         exit(254)
     #разбираем параметр запуска bot.py env -среда исполнения. От этого зависит какой второй конфиг мы подтянем.
-    ENV_LEVEL = tbot_report.lib.loadarguments.ArgParses.createParser().env
+    ENV_LEVEL = loadarguments.ArgParses.createParser().env
     config_all = MConfig.MyConfig()
     config_all.Load(CONFIG_COMMON, ENV_LEVEL)
 
@@ -56,9 +57,12 @@ def main():
     # Ignore most python-telegram-bot logs, as they are useless most of the time
     logging.getLogger("telegram").setLevel("ERROR")
 
+    #подтягиваем локализацию
+    default_language = config_all.language["default_language"]
+    default_loc = localization.Localization(language= default_language, fallback= default_language)
+
     #инициализируем бота
     bot = duckbot.factory(config_all)
-
     log.debug("Testing bot token...")
     me = bot.get_me()
     if me is None:

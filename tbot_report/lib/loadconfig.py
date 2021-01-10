@@ -27,6 +27,10 @@ class MyConfig(object):
         self.log_dir = common_cfg["Path"]["logs_dir"]
         #домашний каталог бота (лучше не пользоваться до создания инсталлятора)
         self.tbot_home = common_cfg["Path"]["logs_dir"]
+        #параметры для локализации
+        self.language["enabled_languages"] = common_cfg["Language"]["enabled_languages"]
+        self.language["default_language"] = common_cfg["Language"]["default_language"]
+        self.language["fallback_language"] = common_cfg["Language"]["fallback_language"]
         #выбираем среду запуска программы: dev, test, prod
         tmp = {
             'dev' : common_cfg["Path"]["dev_conf"],
@@ -48,9 +52,6 @@ class MyConfig(object):
         self.telegram["long_polling_timeout"] = common_cfg["Telegram"]["long_polling_timeout"]
         self.telegram["timed_out_pause"] = common_cfg["Telegram"]["timed_out_pause"]
         self.telegram["error_pause"] = common_cfg["Telegram"]["error_pause"]
-        self.language["enabled_languages"] = common_cfg["Language"]["enabled_languages"]
-        self.language["default_language"] = common_cfg["Language"]["default_language"]
-        self.language["fallback_language"] = common_cfg["Language"]["fallback_language"]
         log.debug("Конфиг телеги:")
         log.debug(self.telegram)
 
