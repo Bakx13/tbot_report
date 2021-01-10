@@ -2,15 +2,14 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d83d59a8-8a03-460f-953b-d8ceae5adfef" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/tbot_report/localization/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tbot_report/localization/locale/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tbot_report/localization/locale/en.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tbot_report/localization/locale/ru.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tbot_report/localization/localization.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tbot_report/database/database.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tbot_report/database/tables/about.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tbot_report/lib/worker.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bot.py" beforeDir="false" afterPath="$PROJECT_DIR$/bot.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tbot_report/lib/loadarguments.py" beforeDir="false" afterPath="$PROJECT_DIR$/tbot_report/lib/loadarguments.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/config_devel.toml" beforeDir="false" afterPath="$PROJECT_DIR$/config/config_devel.toml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tbot_report/lib/loadconfig.py" beforeDir="false" afterPath="$PROJECT_DIR$/tbot_report/lib/loadconfig.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tbot_report/lib/tbotlogic.py" beforeDir="false" afterPath="$PROJECT_DIR$/tbot_report/lib/tbotlogic.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -21,6 +20,7 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Python Script" />
+        <option value="HTML File" />
       </list>
     </option>
   </component>
@@ -46,13 +46,6 @@
     <option name="CREATE_PULL_REQUEST_DEFAULT_REPO_USER" value="Bakx13" />
     <option name="CREATE_PULL_REQUEST_DEFAULT_REPO_NAME" value="tbot_report" />
   </component>
-  <component name="GithubPullRequestsUISettings">
-    <option name="hiddenUrls">
-      <set>
-        <option value="https://github.com/Bakx13/tbot_report" />
-      </set>
-    </option>
-  </component>
   <component name="ProjectId" id="1mnpdYz73uCXeLayXecX9aU0Q4E" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <ConfirmationsSetting value="2" id="Add" />
@@ -62,15 +55,17 @@
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
+    <property name="DefaultHtmlFileTemplate" value="HTML File" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/tbot_report/localization" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/tbot_report/database" />
     <property name="settings.editor.selected.configurable" value="org.jetbrains.plugins.github.ui.GithubSettingsConfigurable" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/tbot_report/localization" />
+      <recent name="$PROJECT_DIR$/tbot_report/database" />
       <recent name="$PROJECT_DIR$/tbot_report/lib" />
+      <recent name="$PROJECT_DIR$/tbot_report/localization" />
       <recent name="$PROJECT_DIR$/config" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
@@ -255,7 +250,14 @@
       <option name="project" value="LOCAL" />
       <updated>1610290577594</updated>
     </task>
-    <option name="localTasksCounter" value="19" />
+    <task id="LOCAL-00019" summary="добавляем локализацию и еще немного рефакторинга">
+      <created>1610292199185</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1610292199185</updated>
+    </task>
+    <option name="localTasksCounter" value="20" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -278,6 +280,7 @@
     <MESSAGE value="добавляем работу с аргументами вызова и конфиг файлами 2" />
     <MESSAGE value="перенесли всю загрузку конфигов в отдельную библиотеку.&#10;Убрал нафиг старый бизнес-код&#10;разделил конфиги на два уровня: общий для всех сред (дев, тест и пром) и разные." />
     <MESSAGE value="чуток рефакторинга" />
-    <option name="LAST_COMMIT_MESSAGE" value="чуток рефакторинга" />
+    <MESSAGE value="добавляем локализацию и еще немного рефакторинга" />
+    <option name="LAST_COMMIT_MESSAGE" value="добавляем локализацию и еще немного рефакторинга" />
   </component>
 </project>

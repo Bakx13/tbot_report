@@ -8,6 +8,7 @@ import logging
 import os
 import sys
 import threading
+import sqlalchemy
 try:
     import coloredlogs
 except ImportError:
@@ -19,6 +20,8 @@ import tbot_report.lib.loadarguments as loadarguments
 import tbot_report.lib.loadconfig as MConfig
 import tbot_report.lib.duckbot as duckbot
 import tbot_report.localization.localization as localization
+#import tbot_report.lib.tbotlogic as tbotlogic
+import tbot_report.database.database as database
 
 
 def main():
@@ -61,6 +64,16 @@ def main():
     default_language = config_all.language["default_language"]
     default_loc = localization.Localization(language= default_language, fallback= default_language)
 
+    # подключаем СУБД
+    log.debug("Creating the sqlalchemy engine...")
+    engine = sqlalchemy.create_engine(config_all.database["engine"])
+    log.debug("Binding metadata to the engine...")
+    database.TableDeclarativeBase.metadata.bind = engine
+    log.debug("Creating all missing tables...")
+    database.TableDeclarativeBase.metadata.create_all()
+    log.debug("Preparing the tables through deferred reflection...")
+    sed.DeferredReflection.prepare(engine)
+
     #инициализируем бота
     bot = duckbot.factory(config_all)
     log.debug("Testing bot token...")
@@ -71,36 +84,13 @@ def main():
     log.debug("Bot token is valid!")
 
     exit(254)
-    TOKEN=config_all.telegram_token
-    REQUEST_KWARGS={
-    'proxy_url':config_all.telegram_proxy_string,
-    # Optional, if you need authentication:
-    #'username': 'PROXY_USER',
-    #'password': 'PROXY_PASS',
-    #'secret' : '7hfpeVBbrqORfvAofrlDY/l3d3cuYW1hem9uLmNvbQ',
-
-    }
-    #updater = Updater(TOKEN)
 
 
-    # end init variables
-    log.info("1111")
-    updater = Updater(token = TOKEN, use_context=True, request_kwargs = REQUEST_KWARGS)
-    print("2")
-    dp = updater.dispatcher
-    print("3")
-    
-    #text_message_handler = MessageHandler(Filters.text, textMessage)
-    
-    
-    dp.add_handler(CommandHandler('pict',Picture.get_pict))
-    #dp.add_handler(CommandHandler('office',in_office))
-    #dp.add_handler(CommandHandler('who',who))
-    #dp.add_handler(text_message_handler)
-    print("4")
-    updater.start_polling()
-    print("5")
-    updater.idle()
-    print("6")
+
+    # Notify on the console that the bot is starting
+    log.info(f"@{me.username} is starting!")
+    tbotlogic.run(config_all, default_loc)
+    exit(254)
+
 if __name__ == '__main__':
     main()

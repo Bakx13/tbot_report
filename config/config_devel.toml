@@ -6,7 +6,7 @@
 [Database]
 # The database engine you want to use.
 # Refer to http://docs.sqlalchemy.org/en/latest/core/engines.html for the possible settings.
-engine = "sqlite:///database.sqlite"
+engine = "postgresql://ditrb:#d1trb@ovz1.harry-popoff.myllp.vps.myjino.ru:49191/ditrb"
 
 
 # Telegram bot parameters

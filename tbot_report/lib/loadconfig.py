@@ -17,6 +17,7 @@ class MyConfig(object):
         self.telegram = {}
         self.telegram_proxy_string = ""
         self.language = {}
+        self.database = {}
 
     def Load(self, file_conf, env_level):
         log.debug("load config")
@@ -54,6 +55,6 @@ class MyConfig(object):
         self.telegram["error_pause"] = common_cfg["Telegram"]["error_pause"]
         log.debug("Конфиг телеги:")
         log.debug(self.telegram)
-
+        self.database["engine"] = common_cfg["Database"]["engine"]
         return
 
