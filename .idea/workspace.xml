@@ -2,9 +2,14 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d83d59a8-8a03-460f-953b-d8ceae5adfef" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/tbot_report/lib/duckbot.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tbot_report/lib/tbotlogic.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bot.py" beforeDir="false" afterPath="$PROJECT_DIR$/bot.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/config_common.toml" beforeDir="false" afterPath="$PROJECT_DIR$/config/config_common.toml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/config_devel.toml" beforeDir="false" afterPath="$PROJECT_DIR$/config/config_devel.toml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tbot_report/lib/loadconfig.py" beforeDir="false" afterPath="$PROJECT_DIR$/tbot_report/lib/loadconfig.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tbot_report/lib/picture.py" beforeDir="false" afterPath="$PROJECT_DIR$/tbot_report/lib/picture.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -233,8 +238,26 @@
       <option name="project" value="LOCAL" />
       <updated>1610222802217</updated>
     </task>
-    <option name="localTasksCounter" value="17" />
+    <task id="LOCAL-00017" summary="чуток рефакторинга">
+      <created>1610231590018</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1610231590018</updated>
+    </task>
+    <option name="localTasksCounter" value="18" />
     <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="csdfsdf" />
@@ -244,6 +267,7 @@
     <MESSAGE value="добавляем работу с аргументами вызова и конфиг файлами" />
     <MESSAGE value="добавляем работу с аргументами вызова и конфиг файлами 2" />
     <MESSAGE value="перенесли всю загрузку конфигов в отдельную библиотеку.&#10;Убрал нафиг старый бизнес-код&#10;разделил конфиги на два уровня: общий для всех сред (дев, тест и пром) и разные." />
-    <option name="LAST_COMMIT_MESSAGE" value="перенесли всю загрузку конфигов в отдельную библиотеку.&#10;Убрал нафиг старый бизнес-код&#10;разделил конфиги на два уровня: общий для всех сред (дев, тест и пром) и разные." />
+    <MESSAGE value="чуток рефакторинга" />
+    <option name="LAST_COMMIT_MESSAGE" value="чуток рефакторинга" />
   </component>
 </project>

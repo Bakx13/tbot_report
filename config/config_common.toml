@@ -17,3 +17,21 @@ format = "{asctime} | {threadName} | {name} | {message}"
 # Logging level: ignore all log entries with a level lower than the specified one
 # Valid options are FATAL, ERROR, WARNING, INFO, and DEBUG
 level = "DEBUG"
+
+# Language parameters
+[Language]
+# Available languages:
+# it - Italian, by https://github.com/Steffo99
+# en - English, by https://github.com/DarrenWestwood
+# uk - Ukrainian, by https://github.com/pzhuk
+# ru - Russian, by https://github.com/pzhuk
+# zh_cn - Simplified Chinese, by https://github.com/zhihuiyuze
+# he - Hebrew, by https://github.com/netanelkoli
+# es_mx - Spanish (Mexican), by https://github.com/mastersuv
+# The lanugages that messages can be displayed in
+enabled_languages = ["en","ru"]
+# The default language to be set for users whose language cannot be autodetected or whose language is not enabled
+default_language = "ru"
+# The language to fallback to if a string is missing in a specific language
+# You should set it to either "it" or "en", other languages may be missing some strings as greed is updated
+fallback_language = "ru"

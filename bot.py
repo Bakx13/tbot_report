@@ -14,9 +14,10 @@ except ImportError:
     coloredlogs = None
 
 
-from tbot_report.lib.picture import Picture
-from tbot_report.lib.loadarguments import ArgParses
-import tbot_report.lib.loadconfig
+import tbot_report.lib.picture
+import tbot_report.lib.loadarguments
+import tbot_report.lib.loadconfig as MConfig
+import tbot_report.lib.duckbot as duckbot
 
 
 def main():
@@ -36,8 +37,8 @@ def main():
         log.fatal(CONFIG_COMMON + " does not exist!")
         exit(254)
     #разбираем параметр запуска bot.py env -среда исполнения. От этого зависит какой второй конфиг мы подтянем.
-    ENV_LEVEL = ArgParses.createParser().env
-    config_all = tbot_report.lib.loadconfig.MyConfig()
+    ENV_LEVEL = tbot_report.lib.loadarguments.ArgParses.createParser().env
+    config_all = MConfig.MyConfig()
     config_all.Load(CONFIG_COMMON, ENV_LEVEL)
 
     # Обновляем настройки логирования после загрузку конфигов
@@ -55,9 +56,20 @@ def main():
     # Ignore most python-telegram-bot logs, as they are useless most of the time
     logging.getLogger("telegram").setLevel("ERROR")
 
+    #инициализируем бота
+    bot = duckbot.factory(config_all)
+
+    log.debug("Testing bot token...")
+    me = bot.get_me()
+    if me is None:
+        logging.fatal("The token you have entered in the config file is invalid. Fix it, then restart greed.")
+        sys.exit(1)
+    log.debug("Bot token is valid!")
+
+    exit(254)
     TOKEN=config_all.telegram_token
     REQUEST_KWARGS={
-    config_all.telegram_proxy_string,
+    'proxy_url':config_all.telegram_proxy_string,
     # Optional, if you need authentication:
     #'username': 'PROXY_USER',
     #'password': 'PROXY_PASS',
@@ -68,8 +80,6 @@ def main():
 
 
     # end init variables
-    print("1111");
-    exit(254)
     log.info("1111")
     updater = Updater(token = TOKEN, use_context=True, request_kwargs = REQUEST_KWARGS)
     print("2")

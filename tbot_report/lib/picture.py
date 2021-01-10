@@ -1,4 +1,5 @@
 import logging
+import random
 log = logging.getLogger(__name__)
 
 class Picture(object):
@@ -7,7 +8,7 @@ class Picture(object):
     def __init__(self):
         """Constructor"""
         pass
-    def get_pict(update, context, self):
+    def get_pict(update, context):
         """Ищем картинку в сервисе https://source.unsplash.com/"""
         #print ('random pict')
         log.info("random pict")
@@ -17,7 +18,7 @@ class Picture(object):
         log.info(url)
         #print(url)
         chat_id = update.message.chat_id
-        print("sending image")
+        log.info("sending image")
         context.bot.send_photo(chat_id=chat_id, photo=url)
         #bot.send_text(chat_id=chat_id, text = "text1")
         print("sending image end")
