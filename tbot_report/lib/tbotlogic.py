@@ -3,13 +3,17 @@ import tbot_report.lib.loadconfig as MConfig
 import tbot_report.localization.localization as localization
 import tbot_report.lib.duckbot as duckbot
 import tbot_report.lib.worker as worker
+import tbot_report.database.database as database
+import sqlalchemy
+import telegram
 
 
 log = logging.getLogger(__name__)
 
 
-class TBot(object, ):
-    def run(user_cfg: MConfig, default_loc: localization.Localization, bot: duckbot.DuckBot):
+class TBot(object):
+
+    def run(user_cfg: MConfig, default_loc: localization.Localization, bot: duckbot, engine: sqlalchemy):
         """запускаем бесконечный цикл обработки бота"""
         # Current update offset; if None it will get the last 100 unparsed messages
         next_update = None
@@ -59,6 +63,7 @@ class TBot(object, ):
                     # Otherwise, forward the update to the corresponding worker
                     receiving_worker = chat_workers.get(update.message.chat.id)
                     # Ensure a worker exists for the chat and is alive
+                    log.debug("init receiving_worker")
                     if receiving_worker is None:
                         log.debug(f"Received a message in a chat without worker: {update.message.chat.id}")
                         # Suggest that the user restarts the chat with /start
@@ -75,7 +80,8 @@ class TBot(object, ):
                         # Skip the update
                         continue
                     # If the message contains the "Cancel" string defined in the strings file...
-                   if update.message.text == receiving_worker.loc.get("menu_cancel"):
+                    #exit(254)
+                    if update.message.text == receiving_worker.loc.get("menu_cancel"):
                         log.debug(f"Forwarding CancelSignal to {receiving_worker}")
                         # Send a CancelSignal to the worker instead of the update
                         receiving_worker.queue.put(worker.CancelSignal())

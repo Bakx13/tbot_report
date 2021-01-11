@@ -14,8 +14,9 @@ import requests
 import sqlalchemy.orm
 import telegram
 
-import database as db
+import tbot_report.database.database as db
 import tbot_report.localization.localization as localization
+import tbot_report.lib.loadconfig as MConfig
 from tbot_report.lib.nuconfig import NuConfig
 
 log = logging.getLogger(__name__)
@@ -40,7 +41,7 @@ class Worker(threading.Thread):
                  bot,
                  chat: telegram.Chat,
                  telegram_user: telegram.User,
-                 cfg: nuconfig.NuConfig,
+                 cfg: MConfig.MyConfig,
                  engine,
                  *args,
                  **kwargs):
@@ -80,10 +81,10 @@ class Worker(threading.Thread):
                     self.value = int(value)
                 elif isinstance(value, float):
                     # Convert the value to minimum units
-                    self.value = int(value * (10 ** worker.cfg["Payments"]["currency_exp"]))
+                    self.value = int(value * (10 ** worker.cfg.payments["currency_exp"]))
                 elif isinstance(value, str):
                     # Remove decimal points, then cast to int
-                    self.value = int(float(value.replace(",", ".")) * (10 ** worker.cfg["Payments"]["currency_exp"]))
+                    self.value = int(float(value.replace(",", ".")) * (10 ** worker.cfg.payments["currency_exp"]))
                 elif isinstance(value, Price):
                     # Copy self
                     self.value = value.value
@@ -94,15 +95,15 @@ class Worker(threading.Thread):
             def __str__(self):
                 return worker.loc.get(
                     "currency_format_string",
-                    symbol=worker.cfg["Payments"]["currency_symbol"],
-                    value="{0:.2f}".format(self.value / (10 ** worker.cfg["Payments"]["currency_exp"]))
+                    symbol=worker.cfg.payments["currency_symbol"],
+                    value="{0:.2f}".format(self.value / (10 ** worker.cfg.payments["currency_exp"]))
                 )
 
             def __int__(self):
                 return self.value
 
             def __float__(self):
-                return self.value / (10 ** worker.cfg["Payments"]["currency_exp"])
+                return self.value / (10 ** worker.cfg.payments["currency_exp"])
 
             def __ge__(self, other):
                 return self.value >= Price(other).value
@@ -198,7 +199,7 @@ class Worker(threading.Thread):
         # noinspection PyBroadException
         try:
             # Welcome the user to the bot
-            if self.cfg["Appearance"]["display_welcome_message"] == "yes":
+            if self.cfg.appearance["display_welcome_message"] == "yes":
                 self.bot.send_message(self.chat.id, self.loc.get("conversation_after_start"))
             # If the user is not an admin, send him to the user menu
             if self.admin is None:
@@ -245,7 +246,7 @@ class Worker(threading.Thread):
         If a stop signal is sent, try to gracefully stop the thread."""
         # Pop data from the queue
         try:
-            data = self.queue.get(timeout=self.cfg["Telegram"]["conversation_timeout"])
+            data = self.queue.get(timeout=self.cfg.telegram["conversation_timeout"])
         except queuem.Empty:
             # If the conversation times out, gracefully stop the thread
             self.__graceful_stop(StopSignal("timeout"))
@@ -663,11 +664,11 @@ class Worker(threading.Thread):
         if credit_required > 0:
             self.bot.send_message(self.chat.id, self.loc.get("error_not_enough_credit"))
             # Suggest payment for missing credit value if configuration allows refill
-            if self.cfg["Payments"]["CreditCard"]["credit_card_token"] != "" \
-                    and self.cfg["Appearance"]["refill_on_checkout"] \
-                    and self.Price(self.cfg["Payments"]["CreditCard"]["min_amount"]) <= \
+            if self.cfg.ccard["credit_card_token"] != "" \
+                    and self.cfg.appearance["refill_on_checkout"] \
+                    and self.Price(self.cfg.ccard["min_amount"]) <= \
                     credit_required <= \
-                    self.Price(self.cfg["Payments"]["CreditCard"]["max_amount"]):
+                    self.Price(self.cfg.ccard["max_amount"]):
                 self.__make_payment(self.Price(credit_required))
         # If afer requested payment credit is still insufficient (either payment failure or cancel)
         if self.user.credit < self.__get_cart_value(cart):
@@ -755,7 +756,7 @@ class Worker(threading.Thread):
         # Cash
         keyboard.append([telegram.KeyboardButton(self.loc.get("menu_cash"))])
         # Telegram Payments
-        if self.cfg["Payments"]["CreditCard"]["credit_card_token"] != "":
+        if self.cfg.ccard["credit_card_token"] != "":
             keyboard.append([telegram.KeyboardButton(self.loc.get("menu_credit_card"))])
         # Keyboard: go back to the previous menu
         keyboard.append([telegram.KeyboardButton(self.loc.get("menu_cancel"))])
@@ -784,7 +785,7 @@ class Worker(threading.Thread):
         """Add money to the wallet through a credit card payment."""
         log.debug("Displaying __add_credit_cc")
         # Create a keyboard to be sent later
-        presets = self.cfg["Payments"]["CreditCard"]["payment_presets"]
+        presets = self.cfg.ccard["payment_presets"]
         keyboard = [[telegram.KeyboardButton(str(self.Price(preset)))] for preset in presets]
         keyboard.append([telegram.KeyboardButton(self.loc.get("menu_cancel"))])
         # Boolean variable to check if the user has cancelled the action
@@ -805,12 +806,12 @@ class Worker(threading.Thread):
             # Convert the amount to an integer
             value = self.Price(selection)
             # Ensure the amount is within the range
-            if value > self.Price(self.cfg["Payments"]["CreditCard"]["max_amount"]):
+            if value > self.Price(self.cfg.ccard["max_amount"]):
                 self.bot.send_message(self.chat.id,
                                       self.loc.get("error_payment_amount_over_max",
                                                    max_amount=self.Price(self.cfg["Credit Card"]["max_amount"])))
                 continue
-            elif value < self.Price(self.cfg["Payments"]["CreditCard"]["min_amount"]):
+            elif value < self.Price(self.cfg.ccard["min_amount"]):
                 self.bot.send_message(self.chat.id,
                                       self.loc.get("error_payment_amount_under_min",
                                                    min_amount=self.Price(self.cfg["Credit Card"]["min_amount"])))
@@ -843,13 +844,13 @@ class Worker(threading.Thread):
                               title=self.loc.get("payment_invoice_title"),
                               description=self.loc.get("payment_invoice_description", amount=str(amount)),
                               payload=self.invoice_payload,
-                              provider_token=self.cfg["Payments"]["CreditCard"]["credit_card_token"],
+                              provider_token=self.cfg.ccard["credit_card_token"],
                               start_parameter="tempdeeplink",
                               currency=self.cfg["Payments"]["currency"],
                               prices=prices,
-                              need_name=self.cfg["Payments"]["CreditCard"]["name_required"],
-                              need_email=self.cfg["Payments"]["CreditCard"]["email_required"],
-                              need_phone_number=self.cfg["Payments"]["CreditCard"]["phone_required"],
+                              need_name=self.cfg.ccard["name_required"],
+                              need_email=self.cfg.ccard["email_required"],
+                              need_phone_number=self.cfg.ccard["phone_required"],
                               reply_markup=inline_keyboard)
         # Wait for the precheckout query
         precheckoutquery = self.__wait_for_precheckoutquery(cancellable=True)
@@ -879,8 +880,8 @@ class Worker(threading.Thread):
 
     def __get_total_fee(self, amount):
         # Calculate a fee for the required amount
-        fee_percentage = self.cfg["Payments"]["CreditCard"]["fee_percentage"] / 100
-        fee_fixed = self.cfg["Payments"]["CreditCard"]["fee_fixed"]
+        fee_percentage = self.cfg.ccard["fee_percentage"] / 100
+        fee_fixed = self.cfg.ccard["fee_fixed"]
         total_fee = amount * fee_percentage + fee_fixed
         if total_fee > 0:
             return total_fee
@@ -1375,7 +1376,7 @@ class Worker(threading.Thread):
         # Reopen the file for reading
         with open(f"transactions_{self.chat.id}.csv") as file:
             # Send the file via a manual request to Telegram
-            requests.post(f"https://api.telegram.org/bot{self.cfg['Telegram']['token']}/sendDocument",
+            requests.post(f"https://api.telegram.org/bot{self.cfg.telegram['token']}/sendDocument",
                           files={"document": file},
                           params={"chat_id": self.chat.id,
                                   "parse_mode": "HTML"})
@@ -1464,31 +1465,31 @@ class Worker(threading.Thread):
         keyboard = []
         options: Dict[str, str] = {}
         # https://en.wikipedia.org/wiki/List_of_language_names
-        if "it" in self.cfg["Language"]["enabled_languages"]:
+        if "it" in self.cfg.language["enabled_languages"]:
             lang = "🇮🇹 Italiano"
             keyboard.append([telegram.KeyboardButton(lang)])
             options[lang] = "it"
-        if "en" in self.cfg["Language"]["enabled_languages"]:
+        if "en" in self.cfg.language["enabled_languages"]:
             lang = "🇬🇧 English"
             keyboard.append([telegram.KeyboardButton(lang)])
             options[lang] = "en"
-        if "ru" in self.cfg["Language"]["enabled_languages"]:
+        if "ru" in self.cfg.language["enabled_languages"]:
             lang = "🇷🇺 Русский"
             keyboard.append([telegram.KeyboardButton(lang)])
             options[lang] = "ru"
-        if "uk" in self.cfg["Language"]["enabled_languages"]:
+        if "uk" in self.cfg.language["enabled_languages"]:
             lang = "🇺🇦 Українська"
             keyboard.append([telegram.KeyboardButton(lang)])
             options[lang] = "uk"
-        if "zh_cn" in self.cfg["Language"]["enabled_languages"]:
+        if "zh_cn" in self.cfg.language["enabled_languages"]:
             lang = "🇨🇳 简体中文"
             keyboard.append([telegram.KeyboardButton(lang)])
             options[lang] = "zh_cn"
-        if "he" in self.cfg["Language"]["enabled_languages"]:
+        if "he" in self.cfg.language["enabled_languages"]:
             lang = "🇮🇱 עברית"
             keyboard.append([telegram.KeyboardButton(lang)])
             options[lang] = "he"
-        if "es_mx" in self.cfg["Language"]["enabled_languages"]:
+        if "es_mx" in self.cfg.language["enabled_languages"]:
             lang = "🇲🇽 Español"
             keyboard.append([telegram.KeyboardButton(lang)])
             options[lang] = "es_mx"
@@ -1507,14 +1508,14 @@ class Worker(threading.Thread):
 
     def __create_localization(self):
         # Check if the user's language is enabled; if it isn't, change it to the default
-        if self.user.language not in self.cfg["Language"]["enabled_languages"]:
+        if self.user.language not in self.cfg.language["enabled_languages"]:
             log.debug(f"User's language '{self.user.language}' is not enabled, changing it to the default")
-            self.user.language = self.cfg["Language"]["default_language"]
+            self.user.language = self.cfg.language["default_language"]
             self.session.commit()
         # Create a new Localization object
         self.loc = localization.Localization(
             language=self.user.language,
-            fallback=self.cfg["Language"]["fallback_language"],
+            fallback=self.cfg.language["fallback_language"],
             replacements={
                 "user_string": str(self.user),
                 "user_mention": self.user.mention(),

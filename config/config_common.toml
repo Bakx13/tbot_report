@@ -13,7 +13,7 @@ prod_conf = "config/config_prod.toml"
 [Logging]
 # The output format for the messages printed to the console
 # See https://docs.python.org/3/library/logging.html#logrecord-attributes for information about the {}-attributes
-format = "{asctime} | {threadName} | {name} | {message}"
+format = "{asctime} | {threadName} | {levelname} | {name} | {message}"
 # Logging level: ignore all log entries with a level lower than the specified one
 # Valid options are FATAL, ERROR, WARNING, INFO, and DEBUG
 level = "DEBUG"
@@ -35,3 +35,52 @@ default_language = "ru"
 # The language to fallback to if a string is missing in a specific language
 # You should set it to either "it" or "en", other languages may be missing some strings as greed is updated
 fallback_language = "ru"
+
+# General payment settings
+[Payments]
+# ISO currency code
+currency = "RUB"
+# Currency exp parameter. You can find that on https://core.telegram.org/bots/payments/currencies.json.
+# It has a value of 2 in most currencies (EUR, USD, GBP...)
+currency_exp = 2
+# Currency symbol which is show to the client users when displaying prices and transaction values
+# If not defined here, default language specific currency symbol from strings would be used
+currency_symbol = "₽"
+
+
+# Credit card payment settings
+[CreditCard]
+# Telegram Payments provider token obtainable at https://t.me/BotFather in the bot's Payments menu
+# If empty, credit card payments are disabled.
+# credit_card_token =
+credit_card_token = "123456789:YOUR_TOKEN_HERE_"
+# Minimum wallet payment accepted (in miniumum currency units, $1.00 = 100 units)
+min_amount = 1000
+# Maximum wallet payment accepted (in miniumum currency units, $1.00 = 100 units)
+max_amount = 10000
+# The preset selections that can be made when adding credit to the wallet with a credit card
+# Presets are pipe-separated |, and should never be outside the bounds provided by the min_amount and max_amount options
+payment_presets = [10.00, 25.00, 50.00, 100.00]
+# Make the user pay a extra fee when adding credit to the wallet with a credit card
+# The formula for determining the total cost is:
+# cost = added_funds + added_funds * fee_percentage / 100 + fee_fixed
+# Set these values to 0 to disable the feature.
+fee_percentage = 2.9
+fee_fixed = 30
+# "Shipping" information
+# Telegram can ask for extra information when charging the user for a credit card transaction
+# Set to yes the data you want to be required
+# This data will be stored in the database
+name_required = true
+email_required = true
+phone_required = true
+
+# Bot appearance settings
+[Appearance]
+# Display the full order information to the customers instead of the shortened version
+# The full order information includes the order number and the timestamp of the order placement
+full_order_info = false
+# Allow balance refill during the order checkout in case of unsufficient balance
+refill_on_checkout = true
+# Display welcome message (conversation_after_start) when the user sends /start
+display_welcome_message = true

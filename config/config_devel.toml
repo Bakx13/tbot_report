@@ -25,22 +25,11 @@ timed_out_pause = 1
 # Time in seconds before retrying a request that returned an error
 error_pause = 5
 
-# Bot appearance settings
-[Appearance]
-# Display the full order information to the customers instead of the shortened version
-# The full order information includes the order number and the timestamp of the order placement
-full_order_info = false
-# Allow balance refill during the order checkout in case of unsufficient balance
-refill_on_checkout = true
-# Display welcome message (conversation_after_start) when the user sends /start
-display_welcome_message = true
-
-
 # Logging settings
 [Logging]
 # The output format for the messages printed to the console
 # See https://docs.python.org/3/library/logging.html#logrecord-attributes for information about the {}-attributes
-format = "{asctime} | {threadName} | {name} | {message}"
+format = "{asctime} | {threadName} | {levelname} | {name} | {message}"
 # Logging level: ignore all log entries with a level lower than the specified one
 # Valid options are FATAL, ERROR, WARNING, INFO, and DEBUG
 level = "DEBUG"

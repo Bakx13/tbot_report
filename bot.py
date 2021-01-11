@@ -9,6 +9,9 @@ import os
 import sys
 import threading
 import sqlalchemy
+import sqlalchemy.ext.declarative as sed
+import sqlalchemy.orm
+
 try:
     import coloredlogs
 except ImportError:
@@ -20,7 +23,7 @@ import tbot_report.lib.loadarguments as loadarguments
 import tbot_report.lib.loadconfig as MConfig
 import tbot_report.lib.duckbot as duckbot
 import tbot_report.localization.localization as localization
-#import tbot_report.lib.tbotlogic as tbotlogic
+import tbot_report.lib.tbotlogic as tbotlogic
 import tbot_report.database.database as database
 
 
@@ -83,13 +86,10 @@ def main():
         sys.exit(1)
     log.debug("Bot token is valid!")
 
-    exit(254)
-
-
 
     # Notify on the console that the bot is starting
     log.info(f"@{me.username} is starting!")
-    tbotlogic.run(config_all, default_loc)
+    tbotlogic.TBot.run(config_all, default_loc, bot, engine)
     exit(254)
 
 if __name__ == '__main__':

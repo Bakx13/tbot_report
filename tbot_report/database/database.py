@@ -8,7 +8,7 @@ from sqlalchemy import Integer, BigInteger, String, Text, LargeBinary, DateTime,
 from sqlalchemy.ext.declarative import declarative_base, DeferredReflection
 from sqlalchemy.orm import relationship, backref
 
-import utils
+import tbot_report.lib.utils as utils
 
 if typing.TYPE_CHECKING:
     import worker
@@ -47,7 +47,7 @@ class User(DeferredReflection, TableDeclarativeBase):
         if w.telegram_user.language_code:
             self.language = w.telegram_user.language_code
         else:
-            self.language = w.cfg["Language"]["default_language"]
+            self.language = w.cfg.language["default_language"]
         # The starting wallet value is 0
         self.credit = 0
 
@@ -130,12 +130,12 @@ class Product(DeferredReflection, TableDeclarativeBase):
     def send_as_message(self, w: "worker.Worker", chat_id: int) -> dict:
         """Send a message containing the product data."""
         if self.image is None:
-            r = requests.get(f"https://api.telegram.org/bot{w.cfg['Telegram']['token']}/sendMessage",
+            r = requests.get(f"https://api.telegram.org/bot{w.cfg.telegram['token']}/sendMessage",
                              params={"chat_id": chat_id,
                                      "text": self.text(w),
                                      "parse_mode": "HTML"})
         else:
-            r = requests.post(f"https://api.telegram.org/bot{w.cfg['Telegram']['token']}/sendPhoto",
+            r = requests.post(f"https://api.telegram.org/bot{w.cfg.telegram['token']}/sendPhoto",
                               files={"photo": self.image},
                               params={"chat_id": chat_id,
                                       "caption": self.text(w),
@@ -267,7 +267,7 @@ class Order(DeferredReflection, TableDeclarativeBase):
         else:
             status_emoji = w.loc.get("emoji_not_processed")
             status_text = w.loc.get("text_not_processed")
-        if user and w.cfg["Appearance"]["full_order_info"] == "no":
+        if user and w.cfg.appearance["full_order_info"] == "no":
             return w.loc.get("user_order_format_string",
                              status_emoji=status_emoji,
                              status_text=status_text,
