@@ -1,12 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="d83d59a8-8a03-460f-953b-d8ceae5adfef" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tbot_report/lib/duckbot.py" beforeDir="false" afterPath="$PROJECT_DIR$/tbot_report/lib/duckbot.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tbot_report/lib/picture.py" beforeDir="false" afterPath="$PROJECT_DIR$/tbot_report/lib/picture.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tbot_report/lib/worker.py" beforeDir="false" afterPath="$PROJECT_DIR$/tbot_report/lib/worker.py" afterDir="false" />
-    </list>
+    <list default="true" id="d83d59a8-8a03-460f-953b-d8ceae5adfef" name="Default Changelist" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -267,7 +262,14 @@
       <option name="project" value="LOCAL" />
       <updated>1610372367485</updated>
     </task>
-    <option name="localTasksCounter" value="22" />
+    <task id="LOCAL-00022" summary="исправлены баги, отладка.">
+      <created>1610456384097</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1610456384097</updated>
+    </task>
+    <option name="localTasksCounter" value="23" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
