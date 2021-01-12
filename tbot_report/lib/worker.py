@@ -809,12 +809,12 @@ class Worker(threading.Thread):
             if value > self.Price(self.cfg.ccard["max_amount"]):
                 self.bot.send_message(self.chat.id,
                                       self.loc.get("error_payment_amount_over_max",
-                                                   max_amount=self.Price(self.cfg["Credit Card"]["max_amount"])))
+                                                   max_amount=self.Price(self.cfg.ccard["max_amount"])))
                 continue
             elif value < self.Price(self.cfg.ccard["min_amount"]):
                 self.bot.send_message(self.chat.id,
                                       self.loc.get("error_payment_amount_under_min",
-                                                   min_amount=self.Price(self.cfg["Credit Card"]["min_amount"])))
+                                                   min_amount=self.Price(self.cfg.ccard["min_amount"])))
                 continue
             break
         # If the user cancelled the action...
@@ -846,7 +846,7 @@ class Worker(threading.Thread):
                               payload=self.invoice_payload,
                               provider_token=self.cfg.ccard["credit_card_token"],
                               start_parameter="tempdeeplink",
-                              currency=self.cfg["Payments"]["currency"],
+                              currency=self.cfg.payments["currency"],
                               prices=prices,
                               need_name=self.cfg.ccard["name_required"],
                               need_email=self.cfg.ccard["email_required"],

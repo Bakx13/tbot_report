@@ -15,6 +15,10 @@ class Picture(object):
         text = update.message.text.split(' ',1)[1]
         #print ('split')
         url = 'https://source.unsplash.com/800x600/?{0}/{1}'.format(text, str(random.randint(1,100000)))
+        #https://source.unsplash.com/800x600/?grasshopper
+        #https://source.unsplash.com/800x600/?locusts
+
+
         log.info(url)
         #print(url)
         chat_id = update.message.chat_id
