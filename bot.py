@@ -1,12 +1,5 @@
-from telegram.ext import Updater, InlineQueryHandler, CommandHandler, MessageHandler, Filters
-import requests
-import re
-import random
-import psycopg2
-import datetime
 import logging
 import os
-import sys
 import threading
 import sqlalchemy
 import sqlalchemy.ext.declarative as sed
@@ -22,7 +15,6 @@ except ImportError:
 import tbot_report.lib.picture
 import tbot_report.lib.loadarguments as loadarguments
 import tbot_report.lib.loadconfig as MConfig
-import tbot_report.lib.duckbot as duckbot
 import tbot_report.localization.localization as localization
 import tbot_report.lib.tbotlogic as tbotlogic
 import tbot_report.database.database as database
@@ -70,7 +62,7 @@ def main():
 
     # подключаем СУБД
     log.debug("Creating the sqlalchemy engine...")
-    engine = sqlalchemy.create_engine(config_all.database["engine"])
+    engine = sqlalchemy.create_engine(config_all.database["engine"], echo=True)
     log.debug("Binding metadata to the engine...")
     database.TableDeclarativeBase.metadata.bind = engine
     log.debug("Creating all missing tables...")
@@ -78,18 +70,9 @@ def main():
     log.debug("Preparing the tables through deferred reflection...")
     sed.DeferredReflection.prepare(engine)
 
-    #инициализируем бота
-    bot = duckbot.factory(config_all)
-    log.debug("Testing bot token...")
-    me = bot.get_me()
-    if me is None:
-        logging.fatal("The token you have entered in the config file is invalid. Fix it, then restart greed.")
-        sys.exit(1)
-    log.debug("Bot token is valid!")
 
+    bot = tbotlogic.TBot.initbot(config_all)
 
-    # Notify on the console that the bot is starting
-    log.info(f"@{me.username} is starting!")
     tbotlogic.TBot.run(config_all, default_loc, bot, engine)
     exit(254)
 

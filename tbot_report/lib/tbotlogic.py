@@ -1,19 +1,33 @@
 import logging
+import sqlalchemy
+import telegram
+import sys
+
+# подкючаем локальные библиотеки
 import tbot_report.lib.loadconfig as MConfig
 import tbot_report.localization.localization as localization
 import tbot_report.lib.duckbot as duckbot
 import tbot_report.lib.worker as worker
-import tbot_report.database.database as database
-import sqlalchemy
-import telegram
 
 
 log = logging.getLogger(__name__)
 
 
 class TBot(object):
+    def initbot(user_cfg: MConfig):
+       #инициализируем бота
+        bot = duckbot.factory(user_cfg)
+        log.debug("Testing bot token...")
+        me = bot.get_me()
+        if me is None:
+            logging.fatal("The token you have entered in the config file is invalid. Fix it, then restart greed.")
+            sys.exit(1)
+        log.debug("Bot token is valid!")
+        # Notify on the console that the bot is starting
+        log.info(f"@{me.username} is starting!")
+        return bot
 
-    def run(user_cfg: MConfig, default_loc: localization.Localization, bot: duckbot, engine: sqlalchemy):
+def run(user_cfg: MConfig, default_loc: localization.Localization, bot: duckbot, engine: sqlalchemy):
         """запускаем бесконечный цикл обработки бота"""
         # Current update offset; if None it will get the last 100 unparsed messages
         next_update = None

@@ -2,7 +2,13 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d83d59a8-8a03-460f-953b-d8ceae5adfef" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase_[Default_Changelist]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase__Default_Changelist_.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bot.py" beforeDir="false" afterPath="$PROJECT_DIR$/bot.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/deploy/build.sh" beforeDir="false" afterPath="$PROJECT_DIR$/deploy/build.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tbot_report/database/database.py" beforeDir="false" afterPath="$PROJECT_DIR$/tbot_report/database/database.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tbot_report/lib/tbotlogic.py" beforeDir="false" afterPath="$PROJECT_DIR$/tbot_report/lib/tbotlogic.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -12,8 +18,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Python Script" />
         <option value="HTML File" />
+        <option value="Python Script" />
       </list>
     </option>
   </component>
@@ -52,7 +58,7 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/tbot_report/lib" />
-    <property name="settings.editor.selected.configurable" value="org.jetbrains.plugins.github.ui.GithubSettingsConfigurable" />
+    <property name="settings.editor.selected.configurable" value="configurable.group.tools" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
@@ -278,7 +284,14 @@
       <option name="project" value="LOCAL" />
       <updated>1610465724252</updated>
     </task>
-    <option name="localTasksCounter" value="24" />
+    <task id="LOCAL-00024" summary="https://konstantinshin.atlassian.net/browse/SVDEV-3&#10;Проверяем интеграцию с JIRA">
+      <created>1610546017258</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1610546017258</updated>
+    </task>
+    <option name="localTasksCounter" value="25" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -305,6 +318,7 @@
     <MESSAGE value="добавляем локализацию и еще немного рефакторинга" />
     <MESSAGE value="добавляем работу с БД" />
     <MESSAGE value="исправлены баги, отладка." />
-    <option name="LAST_COMMIT_MESSAGE" value="исправлены баги, отладка." />
+    <MESSAGE value="https://konstantinshin.atlassian.net/browse/SVDEV-3&#10;Проверяем интеграцию с JIRA" />
+    <option name="LAST_COMMIT_MESSAGE" value="https://konstantinshin.atlassian.net/browse/SVDEV-3&#10;Проверяем интеграцию с JIRA" />
   </component>
 </project>

@@ -1,5 +1,6 @@
 import logging
 import typing
+import importlib
 
 import requests
 import telegram
@@ -14,6 +15,7 @@ if typing.TYPE_CHECKING:
     import worker
 
 log = logging.getLogger(__name__)
+
 
 # Create a base class to define all the database subclasses
 TableDeclarativeBase = declarative_base()
