@@ -62,6 +62,7 @@ def main():
 
     # подключаем СУБД
     log.debug("Creating the sqlalchemy engine...")
+    # TODO Не забыть выключить отладку для БД. Либо обернуть в логику уровня логирования. 
     engine = sqlalchemy.create_engine(config_all.database["engine"], echo=True)
     log.debug("Binding metadata to the engine...")
     database.TableDeclarativeBase.metadata.bind = engine
