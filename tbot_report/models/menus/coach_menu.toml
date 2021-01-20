@@ -1,0 +1,19 @@
+# tbot configuration menu&handler file
+# name - it's name of handler
+# value - it's name of menu point
+
+
+[Coach.MenuStart]
+# The database engine you want to use.
+# Refer to http://docs.sqlalchemy.org/en/latest/core/engines.html for the possible settings.
+# Формат
+menu_all_swimpool_list = "Swimpoollist"
+menu_all_timetable = "Timetable"
+menu_training_method = "Training_Method"
+
+# Telegram bot parameters
+[Coach.MenuSwimpool]
+menu_add_swimpool = "Add_Swimpool"
+menu_del_swimpool = "Del_Swimpool"
+[Coach.MenuSwimpoolAdd]
+1="menu_cancel"

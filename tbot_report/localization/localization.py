@@ -33,7 +33,7 @@ class Localization:
 
     def get(self, key: str, **kwargs) -> str:
         try:
-            log.debug(f"Getting localized string with key {key}")
+            #log.debug(f"Getting localized string with key {key}")
             string = self.module.__getattribute__(key)
         except AttributeError:
             if self.fallback_module:

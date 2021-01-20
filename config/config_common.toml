@@ -8,6 +8,12 @@ logs_dir = "logs/"
 dev_conf = "config/config_devel.toml"
 test_conf = "config/config_test.toml"
 prod_conf = "config/config_prod.toml"
+menu_dir = "tbot_report/models/menus/"
+
+[Menu]
+coach_menu = "coach_menu.toml"
+admin_menu = "admin_menu.toml"
+user_menu = "user_menu.toml"
 
 # Logging settings
 [Logging]

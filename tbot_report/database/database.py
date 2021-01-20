@@ -308,3 +308,70 @@ class OrderItem(DeferredReflection, TableDeclarativeBase):
 
     def __repr__(self):
         return f"<OrderItem {self.item_id}>"
+
+
+#---- swimbot tables
+
+class SwimPool(DeferredReflection, TableDeclarativeBase):
+    """A purchasable product."""
+
+    # Product id
+    id = Column(Integer, primary_key=True)
+    # Product name
+    name = Column(String)
+    # Product description
+    description = Column(Text)
+    # Product price, if null product is not for sale
+    price = Column(Integer)
+    # Image data
+    image = Column(LargeBinary)
+    # Product has been deleted
+    deleted = Column(Boolean, nullable=False)
+
+    # Extra table parameters
+    __tablename__ = "swimpool"
+
+    # No __init__ is needed, the default one is sufficient
+
+    def text(self, w: "worker.Worker", *, style: str = "full", cart_qty: int = None):
+        """Return the product details formatted with Telegram HTML. The image is omitted."""
+        if style == "short":
+            return f"{cart_qty}x {utils.telegram_html_escape(self.name)} - {str(w.Price(self.price) * cart_qty)}"
+        elif style == "full":
+            if cart_qty is not None:
+                cart = w.loc.get("in_cart_format_string", quantity=cart_qty)
+            else:
+                cart = ''
+            return w.loc.get("product_format_string", name=utils.telegram_html_escape(self.name),
+                             description=utils.telegram_html_escape(self.description),
+                             price=str(w.Price(self.price)),
+                             cart=cart)
+        else:
+            raise ValueError("style is not an accepted value")
+
+    def __repr__(self):
+        return f"<Product {self.name}>"
+
+    def send_as_message(self, w: "worker.Worker", chat_id: int) -> dict:
+        """Send a message containing the product data."""
+        if self.image is None:
+            r = requests.get(f"https://api.telegram.org/bot{w.cfg.telegram['token']}/sendMessage",
+                             params={"chat_id": chat_id,
+                                     "text": self.text(w),
+                                     "parse_mode": "HTML"})
+        else:
+            r = requests.post(f"https://api.telegram.org/bot{w.cfg.telegram['token']}/sendPhoto",
+                              files={"photo": self.image},
+                              params={"chat_id": chat_id,
+                                      "caption": self.text(w),
+                                      "parse_mode": "HTML"})
+        return r.json()
+
+    def set_image(self, file: telegram.File):
+        """Download an image from Telegram and store it in the image column.
+        This is a slow blocking function. Try to avoid calling it directly, use a thread if possible."""
+        # Download the photo through a get request
+        r = requests.get(file.file_path)
+        # Store the photo in the database record
+        self.image = r.content
+

@@ -2,7 +2,21 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d83d59a8-8a03-460f-953b-d8ceae5adfef" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/config/config_test.toml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tbot_report/lib/TelegramMenu.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tbot_report/models/menus/coach_menu.toml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bot.py" beforeDir="false" afterPath="$PROJECT_DIR$/bot.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/config_common.toml" beforeDir="false" afterPath="$PROJECT_DIR$/config/config_common.toml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/config_devel.toml" beforeDir="false" afterPath="$PROJECT_DIR$/config/config_devel.toml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tbot_report/database/database.py" beforeDir="false" afterPath="$PROJECT_DIR$/tbot_report/database/database.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tbot_report/lib/loadconfig.py" beforeDir="false" afterPath="$PROJECT_DIR$/tbot_report/lib/loadconfig.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tbot_report/lib/nuconfig.py" beforeDir="false" afterPath="$PROJECT_DIR$/tbot_report/lib/nuconfig.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tbot_report/lib/tbotlogic.py" beforeDir="false" afterPath="$PROJECT_DIR$/tbot_report/lib/tbotlogic.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tbot_report/lib/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/tbot_report/lib/utils.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tbot_report/lib/worker.py" beforeDir="false" afterPath="$PROJECT_DIR$/tbot_report/lib/worker.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tbot_report/localization/locale/ru.py" beforeDir="false" afterPath="$PROJECT_DIR$/tbot_report/localization/locale/ru.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tbot_report/localization/localization.py" beforeDir="false" afterPath="$PROJECT_DIR$/tbot_report/localization/localization.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -51,15 +65,16 @@
     <property name="DefaultHtmlFileTemplate" value="HTML File" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/tbot_report/lib" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/config" />
     <property name="settings.editor.selected.configurable" value="configurable.group.tools" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/config" />
+      <recent name="$PROJECT_DIR$/tbot_report/models/menus" />
       <recent name="$PROJECT_DIR$/tbot_report/lib" />
       <recent name="$PROJECT_DIR$/tbot_report/database" />
       <recent name="$PROJECT_DIR$/tbot_report/localization" />
-      <recent name="$PROJECT_DIR$/config" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/tbot_report/localization/locale" />
@@ -292,7 +307,14 @@
       <option name="project" value="LOCAL" />
       <updated>1610816162601</updated>
     </task>
-    <option name="localTasksCounter" value="26" />
+    <task id="LOCAL-00026" summary="плюс картинка схема">
+      <created>1610816312374</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1610816312374</updated>
+    </task>
+    <option name="localTasksCounter" value="27" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -321,6 +343,7 @@
     <MESSAGE value="исправлены баги, отладка." />
     <MESSAGE value="https://konstantinshin.atlassian.net/browse/SVDEV-3&#10;Проверяем интеграцию с JIRA" />
     <MESSAGE value="Убрал бизнес-логику из основной bot.py для более простой переделки в другом проекте.&#10;Добавил в документацию в визио-файл первую картинку с постановкой требований." />
-    <option name="LAST_COMMIT_MESSAGE" value="Убрал бизнес-логику из основной bot.py для более простой переделки в другом проекте.&#10;Добавил в документацию в визио-файл первую картинку с постановкой требований." />
+    <MESSAGE value="плюс картинка схема" />
+    <option name="LAST_COMMIT_MESSAGE" value="плюс картинка схема" />
   </component>
 </project>

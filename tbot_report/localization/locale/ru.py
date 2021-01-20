@@ -20,7 +20,11 @@ product_format_string = "<b>{name}</b>\n" \
                         "{description}\n" \
                         "{price}\n" \
                         "<b>{cart}</b>"
-
+# Product information
+swimpool_format_string = "<b>{name}</b>\n" \
+                        "{description}\n" \
+                        "{price}\n" \
+                        "<b>{cart}</b>"
 # Order number, displayed in the order info
 order_number = "Заказ #{id}"
 
@@ -125,6 +129,30 @@ conversation_expired = "🕐  За долгое время я не получи�
                        " чтобы сохранить ресурсы.\n" \
                        "Чтобы начать снова, пришлите команду /start ."
 
+#----описание общих пунктов меню
+menu_all_swimpool_list = "🏊 Список бассейнов"
+menu_all_timetable = "🚞 Расписание"
+menu_bot_info = "ℹ️ Информация о боте"
+menu_cancel = "🔙 Отмена"
+menu_user_mode = "👤 Режим покупателя"
+menu_training_method = "✌ Методики тренировок"
+menu_add_swimpool = "🏊 Добавить бассейн"
+menu_del_swimpool = "🚫 удалить бассейн"
+#----- пункты меню  администратора
+
+
+#----- пункты меню тренера
+menu_coach_about = "🐯 Обо мне"
+menu_coach_client_about = "👔 О клиенте"
+menu_coach_client_list = "👔 Список клиентов"
+
+
+#----- пункты меню клиента
+
+menu_buy_inventory = "👙 Рекомендуемый инвентарь"
+
+#----
+
 # User menu: order
 menu_order = "🛒 Заказать"
 
@@ -134,8 +162,7 @@ menu_order_status = "🛍 Мои заказы"
 # User menu: add credit
 menu_add_credit = "💵 Пополнить кошелек"
 
-# User menu: bot info
-menu_bot_info = "ℹ️ Информация о боте"
+
 
 # User menu: cash
 menu_cash = "💵 Наличными"
@@ -155,8 +182,7 @@ menu_transactions = "💳 Список транзакций"
 # Menu: edit credit
 menu_edit_credit = "💰 Создать транзакцию"
 
-# Admin menu: go to user mode
-menu_user_mode = "👤 Режим покупателя"
+
 
 # Admin menu: add product
 menu_add_product = "✨ Новый продукт"
@@ -164,8 +190,7 @@ menu_add_product = "✨ Новый продукт"
 # Admin menu: delete product
 menu_delete_product = "❌ Удалить продукт"
 
-# Menu: cancel
-menu_cancel = "🔙 Отмена"
+
 
 # Menu: skip
 menu_skip = "⏭ Пропустить"

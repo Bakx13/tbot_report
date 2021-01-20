@@ -21,6 +21,8 @@ class MyConfig(object):
         self.payments = {}
         self.ccard = {}
         self.appearance = {}
+        self.menu_dir = ""
+        self.menu = {}
     def Load(self, file_conf, env_level):
         log.debug("load config")
         #заполняем настройки из общего конфига
@@ -30,6 +32,9 @@ class MyConfig(object):
         self.log_dir = common_cfg["Path"]["logs_dir"]
         #домашний каталог бота (лучше не пользоваться до создания инсталлятора)
         self.tbot_home = common_cfg["Path"]["logs_dir"]
+        self.menu_dir = common_cfg["Path"]["menu_dir"]
+        #названия файлов с меню для каждой роли
+        self.menu = common_cfg["Menu"]
         #параметры для локализации
         self.language["enabled_languages"] = common_cfg["Language"]["enabled_languages"]
         self.language["default_language"] = common_cfg["Language"]["default_language"]

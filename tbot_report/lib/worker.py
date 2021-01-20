@@ -17,7 +17,9 @@ import telegram
 import tbot_report.database.database as db
 import tbot_report.localization.localization as localization
 import tbot_report.lib.loadconfig as MConfig
-from tbot_report.lib.nuconfig import NuConfig
+import tbot_report.lib.utils as utils
+#import tbot_report.lib.TelegramMenu
+from tbot_report.lib.TelegramMenu import TelegramMenu, TelegramQoachHandler
 
 log = logging.getLogger(__name__)
 
@@ -265,6 +267,7 @@ class Worker(threading.Thread):
         while True:
             # Get the next update
             update = self.__receive_next_update()
+            log.debug(f"get command {update.message.text}")
             # If a CancelSignal is received...
             if isinstance(update, CancelSignal):
                 # And the wait is cancellable...
@@ -439,34 +442,46 @@ class Worker(threading.Thread):
                 self.bot.send_message(self.chat.id, self.loc.get("error_user_does_not_exist"))
                 continue
             return user
+    def get_menu_by_step(self):
 
+        return
     def __user_menu(self):
+        menu_file = TelegramMenu.get_menu_file(self.cfg, "coach_menu")
+        tMenu = TelegramMenu(menu_file)
+        tMenu.set_menu_by_type("Coach")
+        tMenu.set_menu_by_name("MenuSwimpool", self.loc)
+        log.debug(tMenu.data)
         """Function called from the run method when the user is not an administrator.
         Normal bot actions should be placed here."""
         log.debug("Displaying __user_menu")
         # Loop used to returning to the menu after executing a command
         while True:
             # Create a keyboard with the user main menu
+            keyboard = tMenu.get_keyboard()
+            '''
             keyboard = [[telegram.KeyboardButton(self.loc.get("menu_order"))],
                         [telegram.KeyboardButton(self.loc.get("menu_order_status"))],
                         [telegram.KeyboardButton(self.loc.get("menu_add_credit"))],
                         [telegram.KeyboardButton(self.loc.get("menu_language"))],
                         [telegram.KeyboardButton(self.loc.get("menu_help")),
                          telegram.KeyboardButton(self.loc.get("menu_bot_info"))]]
+            log.debug(f"get keyboard worker: {keyboard}")
+            '''
             # Send the previously created keyboard to the user (ensuring it can be clicked only 1 time)
             self.bot.send_message(self.chat.id,
                                   self.loc.get("conversation_open_user_menu",
                                                credit=self.Price(self.user.credit)),
                                   reply_markup=telegram.ReplyKeyboardMarkup(keyboard, one_time_keyboard=True))
             # Wait for a reply from the user
-            selection = self.__wait_for_specific_message([
-                self.loc.get("menu_order"),
-                self.loc.get("menu_order_status"),
-                self.loc.get("menu_add_credit"),
-                self.loc.get("menu_language"),
-                self.loc.get("menu_help"),
-                self.loc.get("menu_bot_info"),
-            ])
+            log.debug(f"get loc menu worker: {tMenu.keyboard_handler}")
+            selection = self.__wait_for_specific_message(tMenu.loc_menu)
+            handlername = utils.get_key(tMenu.keyboard_handler, selection)
+            log.debug(f"worker menu selected name: {selection}")
+            log.debug(f"worker menu selected {handlername}")
+            QoachHandler = TelegramQoachHandler()
+            #Вызываем обработчик в зависимости от выбранной команды.
+            m = getattr(TelegramQoachHandler, handlername)
+            m(QoachHandler)
             # After the user reply, update the user data
             self.update_user()
             # If the user has selected the Order option...

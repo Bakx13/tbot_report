@@ -21,17 +21,15 @@ import tbot_report.database.database as database
 
 
 def main():
+    """The core code of the program. Should be run only in the main process!"""
     #init variables
     CONFIG_COMMON = "config/config_common.toml"
     threading.current_thread().name = "Core"
-
     log = logging.getLogger(threading.current_thread().name)
-    #logging.root.setLevel("DEBUG")
     logging.basicConfig(filename='logs/'+threading.current_thread().name+'.log', filemode='w',
                         format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                         level=logging.DEBUG)
-    """The core code of the program. Should be run only in the main process!"""
-    # Rename the main thread for presentation purposes
+
     #Загружаем общий конфиг
     if not os.path.isfile(CONFIG_COMMON):
         log.fatal(CONFIG_COMMON + " does not exist!")
@@ -62,8 +60,8 @@ def main():
 
     # подключаем СУБД
     log.debug("Creating the sqlalchemy engine...")
-    # TODO Не забыть выключить отладку для БД. Либо обернуть в логику уровня логирования. 
-    engine = sqlalchemy.create_engine(config_all.database["engine"], echo=True)
+    # TODO Не забыть выключить отладку для БД. Либо обернуть в логику уровня логирования.
+    engine = sqlalchemy.create_engine(config_all.database["engine"], echo=False)
     log.debug("Binding metadata to the engine...")
     database.TableDeclarativeBase.metadata.bind = engine
     log.debug("Creating all missing tables...")
@@ -75,7 +73,6 @@ def main():
     bot = tbotlogic.TBot.initbot(config_all)
 
     tbotlogic.TBot.run(config_all, default_loc, bot, engine)
-    exit(254)
 
 if __name__ == '__main__':
     main()

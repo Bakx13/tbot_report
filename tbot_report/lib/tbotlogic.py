@@ -27,7 +27,7 @@ class TBot(object):
         log.info(f"@{me.username} is starting!")
         return bot
 
-def run(user_cfg: MConfig, default_loc: localization.Localization, bot: duckbot, engine: sqlalchemy):
+    def run(user_cfg: MConfig, default_loc: localization.Localization, bot: duckbot, engine: sqlalchemy):
         """запускаем бесконечный цикл обработки бота"""
         # Current update offset; if None it will get the last 100 unparsed messages
         next_update = None
@@ -48,7 +48,7 @@ def run(user_cfg: MConfig, default_loc: localization.Localization, bot: duckbot,
                     if update.message.chat.type != "private":
                         log.debug(f"Received a message from a non-private chat: {update.message.chat.id}")
                         # Notify the chat
-                        bot.send_message(update.message.chat.id, default_loc.get("error_nonprivate_chat"))
+                        #bot.send_message(update.message.chat.id, default_loc.get("error_nonprivate_chat"))
                         # Skip the update
                         continue
                     # If the message is a start command...
