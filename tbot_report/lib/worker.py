@@ -255,6 +255,7 @@ class Worker(threading.Thread):
         # Check if the data is a stop signal instance
         if isinstance(data, StopSignal):
             # Gracefully stop the process
+            log.debug("Waiting for a specific message...")
             self.__graceful_stop(data)
         # Return the received update
         return data
@@ -420,7 +421,7 @@ class Worker(threading.Thread):
         # Find all the users in the database
         users = self.session.query(db.User).order_by(db.User.user_id).all()
         # Create a list containing all the keyboard button strings
-        keyboard_buttons = [[self.loc.get("menu_cancel")]]
+        keyboard_buttons = [[self.loc.get("menu_all_cancel")]]
         # Add to the list all the users
         for user in users:
             keyboard_buttons.append([user.identifiable_str()])
@@ -449,28 +450,18 @@ class Worker(threading.Thread):
         menu_file = TelegramMenu.get_menu_file(self.cfg, "coach_menu")
         tMenu = TelegramMenu(menu_file)
         tMenu.set_menu_by_type("Coach")
-        tMenu.set_menu_by_name("MenuSwimpool", self.loc)
-        log.debug(tMenu.data)
+        tMenu.set_menu_by_name("MenuStart", self.loc)
         """Function called from the run method when the user is not an administrator.
         Normal bot actions should be placed here."""
         log.debug("Displaying __user_menu")
         # Loop used to returning to the menu after executing a command
+        header_txt = "menu_coach_main_txt"
+        keyboard = tMenu.get_keyboard()
         while True:
             # Create a keyboard with the user main menu
-            keyboard = tMenu.get_keyboard()
-            '''
-            keyboard = [[telegram.KeyboardButton(self.loc.get("menu_order"))],
-                        [telegram.KeyboardButton(self.loc.get("menu_order_status"))],
-                        [telegram.KeyboardButton(self.loc.get("menu_add_credit"))],
-                        [telegram.KeyboardButton(self.loc.get("menu_language"))],
-                        [telegram.KeyboardButton(self.loc.get("menu_help")),
-                         telegram.KeyboardButton(self.loc.get("menu_bot_info"))]]
-            log.debug(f"get keyboard worker: {keyboard}")
-            '''
+
             # Send the previously created keyboard to the user (ensuring it can be clicked only 1 time)
-            self.bot.send_message(self.chat.id,
-                                  self.loc.get("conversation_open_user_menu",
-                                               credit=self.Price(self.user.credit)),
+            self.bot.send_message(self.chat.id, self.loc.get(header_txt),
                                   reply_markup=telegram.ReplyKeyboardMarkup(keyboard, one_time_keyboard=True))
             # Wait for a reply from the user
             log.debug(f"get loc menu worker: {tMenu.keyboard_handler}")
@@ -479,36 +470,21 @@ class Worker(threading.Thread):
             log.debug(f"worker menu selected name: {selection}")
             log.debug(f"worker menu selected {handlername}")
             QoachHandler = TelegramQoachHandler()
-            #Вызываем обработчик в зависимости от выбранной команды.
-            m = getattr(TelegramQoachHandler, handlername)
-            m(QoachHandler)
+
             # After the user reply, update the user data
             self.update_user()
-            # If the user has selected the Order option...
-            if selection == self.loc.get("menu_order"):
-                # Open the order menu
-                self.__order_menu()
-            # If the user has selected the Order Status option...
-            elif selection == self.loc.get("menu_order_status"):
-                # Display the order(s) status
-                self.__order_status()
-            # If the user has selected the Add Credit option...
-            elif selection == self.loc.get("menu_add_credit"):
-                # Display the add credit menu
-                self.__add_credit_menu()
-            # If the user has selected the Language option...
-            elif selection == self.loc.get("menu_language"):
-                # Display the language menu
-                self.__language_menu()
-            # If the user has selected the Bot Info option...
-            elif selection == self.loc.get("menu_bot_info"):
-                # Display information about the bot
-                self.__bot_info()
-            # If the user has selected the Help option...
-            elif selection == self.loc.get("menu_help"):
-                # Go to the Help menu
-                self.__help_menu()
 
+            #Вызываем обработчик в зависимости от выбранной команды.
+            try:
+                m = getattr(TelegramQoachHandler, handlername)
+                keyboard, header_txt = m(QoachHandler, tMenu, self)
+            except:
+                header_txt = "menu_all_inbuilding_txt"
+                log.error(f"handler {handlername} not found in class TelegramQoachHandler")
+                tMenu.set_menu_by_type("Coach")
+                tMenu.set_menu_by_name("MenuStart", self.loc)
+                keyboard = tMenu.get_keyboard()
+        return
     def __order_menu(self):
         """User menu to order products from the shop."""
         log.debug("Displaying __order_menu")
@@ -542,7 +518,7 @@ class Worker(threading.Thread):
                                               caption=product.text(w=self),
                                               reply_markup=inline_keyboard)
         # Create the keyboard with the cancel button
-        inline_keyboard = telegram.InlineKeyboardMarkup([[telegram.InlineKeyboardButton(self.loc.get("menu_cancel"),
+        inline_keyboard = telegram.InlineKeyboardMarkup([[telegram.InlineKeyboardButton(self.loc.get("menu_all_cancel"),
                                                                                         callback_data="cart_cancel")]])
         # Send a message containing the button to cancel or pay
         final_msg = self.bot.send_message(self.chat.id,
@@ -576,7 +552,7 @@ class Worker(threading.Thread):
                 # Create the final inline keyboard
                 final_inline_keyboard = telegram.InlineKeyboardMarkup(
                     [
-                        [telegram.InlineKeyboardButton(self.loc.get("menu_cancel"), callback_data="cart_cancel")],
+                        [telegram.InlineKeyboardButton(self.loc.get("menu_all_cancel"), callback_data="cart_cancel")],
                         [telegram.InlineKeyboardButton(self.loc.get("menu_done"), callback_data="cart_done")]
                     ])
                 # Edit both the product and the final message
@@ -620,7 +596,7 @@ class Worker(threading.Thread):
                                                                                 callback_data="cart_remove"))
                 product_inline_keyboard = telegram.InlineKeyboardMarkup(product_inline_list)
                 # Create the final inline keyboard
-                final_inline_list = [[telegram.InlineKeyboardButton(self.loc.get("menu_cancel"),
+                final_inline_list = [[telegram.InlineKeyboardButton(self.loc.get("menu_all_cancel"),
                                                                     callback_data="cart_cancel")]]
                 for product_id in cart:
                     if cart[product_id][1] > 0:
@@ -774,13 +750,13 @@ class Worker(threading.Thread):
         if self.cfg.ccard["credit_card_token"] != "":
             keyboard.append([telegram.KeyboardButton(self.loc.get("menu_credit_card"))])
         # Keyboard: go back to the previous menu
-        keyboard.append([telegram.KeyboardButton(self.loc.get("menu_cancel"))])
+        keyboard.append([telegram.KeyboardButton(self.loc.get("menu_all_cancel"))])
         # Send the keyboard to the user
         self.bot.send_message(self.chat.id, self.loc.get("conversation_payment_method"),
                               reply_markup=telegram.ReplyKeyboardMarkup(keyboard, one_time_keyboard=True))
         # Wait for a reply from the user
         selection = self.__wait_for_specific_message(
-            [self.loc.get("menu_cash"), self.loc.get("menu_credit_card"), self.loc.get("menu_cancel")],
+            [self.loc.get("menu_cash"), self.loc.get("menu_credit_card"), self.loc.get("menu_all_cancel")],
             cancellable=True)
         # If the user has selected the Cash option...
         if selection == self.loc.get("menu_cash"):
@@ -802,7 +778,7 @@ class Worker(threading.Thread):
         # Create a keyboard to be sent later
         presets = self.cfg.ccard["payment_presets"]
         keyboard = [[telegram.KeyboardButton(str(self.Price(preset)))] for preset in presets]
-        keyboard.append([telegram.KeyboardButton(self.loc.get("menu_cancel"))])
+        keyboard.append([telegram.KeyboardButton(self.loc.get("menu_all_cancel"))])
         # Boolean variable to check if the user has cancelled the action
         cancelled = False
         # Loop used to continue asking if there's an error during the input
@@ -811,7 +787,7 @@ class Worker(threading.Thread):
             self.bot.send_message(self.chat.id, self.loc.get("payment_cc_amount"),
                                   reply_markup=telegram.ReplyKeyboardMarkup(keyboard, one_time_keyboard=True))
             # Wait until a valid amount is sent
-            selection = self.__wait_for_regex(r"([0-9]+(?:[.,][0-9]+)?|" + self.loc.get("menu_cancel") + r")",
+            selection = self.__wait_for_regex(r"([0-9]+(?:[.,][0-9]+)?|" + self.loc.get("menu_all_cancel") + r")",
                                               cancellable=True)
             # If the user cancelled the action
             if isinstance(selection, CancelSignal):
@@ -852,7 +828,7 @@ class Worker(threading.Thread):
         # Create the invoice keyboard
         inline_keyboard = telegram.InlineKeyboardMarkup([[telegram.InlineKeyboardButton(self.loc.get("menu_pay"),
                                                                                         pay=True)],
-                                                         [telegram.InlineKeyboardButton(self.loc.get("menu_cancel"),
+                                                         [telegram.InlineKeyboardButton(self.loc.get("menu_all_cancel"),
                                                                                         callback_data="cmd_cancel")]])
         # The amount is valid, send the invoice
         self.bot.send_invoice(self.chat.id,
@@ -925,14 +901,14 @@ class Worker(threading.Thread):
                 keyboard.append([self.loc.get("menu_transactions"), self.loc.get("menu_csv")])
             if self.admin.is_owner:
                 keyboard.append([self.loc.get("menu_edit_admins")])
-            keyboard.append([self.loc.get("menu_user_mode")])
+            keyboard.append([self.loc.get("menu_admin_user_mode")])
             # Send the previously created keyboard to the user (ensuring it can be clicked only 1 time)
             self.bot.send_message(self.chat.id, self.loc.get("conversation_open_admin_menu"),
                                   reply_markup=telegram.ReplyKeyboardMarkup(keyboard, one_time_keyboard=True))
             # Wait for a reply from the user
             selection = self.__wait_for_specific_message([self.loc.get("menu_products"),
                                                           self.loc.get("menu_orders"),
-                                                          self.loc.get("menu_user_mode"),
+                                                          self.loc.get("menu_admin_user_mode"),
                                                           self.loc.get("menu_edit_credit"),
                                                           self.loc.get("menu_transactions"),
                                                           self.loc.get("menu_csv"),
@@ -950,7 +926,7 @@ class Worker(threading.Thread):
                 # Open the edit credit menu
                 self.__create_transaction()
             # If the user has selected the User mode option...
-            elif selection == self.loc.get("menu_user_mode"):
+            elif selection == self.loc.get("menu_admin_user_mode"):
                 # Tell the user how to go back to admin menu
                 self.bot.send_message(self.chat.id, self.loc.get("conversation_switch_to_user_mode"))
                 # Start the bot in user mode
@@ -976,7 +952,7 @@ class Worker(threading.Thread):
         # Create a list of product names
         product_names = [product.name for product in products]
         # Insert at the start of the list the add product option, the remove product option and the Cancel option
-        product_names.insert(0, self.loc.get("menu_cancel"))
+        product_names.insert(0, self.loc.get("menu_all_cancel"))
         product_names.insert(1, self.loc.get("menu_add_product"))
         product_names.insert(2, self.loc.get("menu_delete_product"))
         # Create a keyboard using the product names
@@ -1102,7 +1078,7 @@ class Worker(threading.Thread):
         # Create a list of product names
         product_names = [product.name for product in products]
         # Insert at the start of the list the Cancel button
-        product_names.insert(0, self.loc.get("menu_cancel"))
+        product_names.insert(0, self.loc.get("menu_all_cancel"))
         # Create a keyboard using the product names
         keyboard = [[telegram.KeyboardButton(product_name)] for product_name in product_names]
         # Send the previously created keyboard to the user (ensuring it can be clicked only 1 time)
@@ -1128,7 +1104,7 @@ class Worker(threading.Thread):
         # Create a cancel and a stop keyboard
         stop_keyboard = telegram.InlineKeyboardMarkup([[telegram.InlineKeyboardButton(self.loc.get("menu_stop"),
                                                                                       callback_data="cmd_cancel")]])
-        cancel_keyboard = telegram.InlineKeyboardMarkup([[telegram.InlineKeyboardButton(self.loc.get("menu_cancel"),
+        cancel_keyboard = telegram.InlineKeyboardMarkup([[telegram.InlineKeyboardButton(self.loc.get("menu_all_cancel"),
                                                                                         callback_data="cmd_cancel")]])
         # Send a small intro message on the Live Orders mode
         # Remove the keyboard with the first message... (#39)
@@ -1231,7 +1207,7 @@ class Worker(threading.Thread):
         if isinstance(user, CancelSignal):
             return
         # Create an inline keyboard with a single cancel button
-        cancel = telegram.InlineKeyboardMarkup([[telegram.InlineKeyboardButton(self.loc.get("menu_cancel"),
+        cancel = telegram.InlineKeyboardMarkup([[telegram.InlineKeyboardButton(self.loc.get("menu_all_cancel"),
                                                                                callback_data="cmd_cancel")]])
         # Request from the user the amount of money to be credited manually
         self.bot.send_message(self.chat.id, self.loc.get("ask_credit"), reply_markup=cancel)
@@ -1273,7 +1249,7 @@ class Worker(threading.Thread):
         # Create a keyboard with the user help menu
         keyboard = [[telegram.KeyboardButton(self.loc.get("menu_guide"))],
                     [telegram.KeyboardButton(self.loc.get("menu_contact_shopkeeper"))],
-                    [telegram.KeyboardButton(self.loc.get("menu_cancel"))]]
+                    [telegram.KeyboardButton(self.loc.get("menu_all_cancel"))]]
         # Send the previously created keyboard to the user (ensuring it can be clicked only 1 time)
         self.bot.send_message(self.chat.id,
                               self.loc.get("conversation_open_help_menu"),

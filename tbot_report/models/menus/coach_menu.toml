@@ -1,19 +1,44 @@
 # tbot configuration menu&handler file
-# name - it's name of handler
-# value - it's name of menu point
+# name - it's name of menu point
+# value - it's name of handler
+# https://konstantinshin.atlassian.net/wiki/spaces/SWIMDEV/pages/262309 - ссылка на требования по функционалу тренера
+
+#У тренера будут следующие функциональные возможности:
+#Добавление бассейнаSVDEV-8: Добавление бассейнаВ РАБОТЕ @Александр Падалец
+#Составление расписания занятий
+#Редактирование личной карточкиSVDEV-13 НАДО ВЗЯТЬ В РАБОТУ
+#Описание методик тренировок
+#Инвентарь
+#Общение клиентов с тренером (контроль чатов и персональные чаты)
+#Запись на пробную тренировку
+#Выставление счета на оплату тренировок
+#Отслеживание клиента/группы в части оплаты занятий
+#Внесение и отслеживание результатов клиента
+#Ведение карточки клиента (фото, видео, комментарии)
+#Составление календаря спортивных мероприятий
+#Ведение фото и видеоотчета тренировки.
+
 
 
 [Coach.MenuStart]
 # The database engine you want to use.
 # Refer to http://docs.sqlalchemy.org/en/latest/core/engines.html for the possible settings.
 # Формат
-menu_all_swimpool_list = "Swimpoollist"
-menu_all_timetable = "Timetable"
-menu_training_method = "Training_Method"
+menu_coach_client_list = "ClientList"
+menu_coach_client_request = "ClientRequest"
+menu_all_timetable = "TimeTable"
+
+menu_all_swimpool_list = "SwimpoolList"
+menu_all_training_method = "TrainingMethod"
+menu_coach_personal_card = "PersonalCard"
+menu_all_inventor = "Inventory"
+menu_coach_finance = "FinanceStatus"
+menu_coach_training_status = "TrainingStatus"
 
 # Telegram bot parameters
 [Coach.MenuSwimpool]
-menu_add_swimpool = "Add_Swimpool"
-menu_del_swimpool = "Del_Swimpool"
+menu_all_add_swimpool = "AddSwimpool"
+menu_all_del_swimpool = "DelSwimpool"
+menu_all_cancel = "Cancel"
 [Coach.MenuSwimpoolAdd]
-1="menu_cancel"
+1="menu_all_cancel"

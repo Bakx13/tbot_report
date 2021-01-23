@@ -4,7 +4,7 @@ import importlib
 
 import requests
 import telegram
-from sqlalchemy import Column, ForeignKey, UniqueConstraint
+from sqlalchemy import Column, ForeignKey, UniqueConstraint, ARRAY
 from sqlalchemy import Integer, BigInteger, String, Text, LargeBinary, DateTime, Boolean
 from sqlalchemy.ext.declarative import declarative_base, DeferredReflection
 from sqlalchemy.orm import relationship, backref
@@ -209,6 +209,37 @@ class Admin(DeferredReflection, TableDeclarativeBase):
     # The telegram id
     user_id = Column(BigInteger, ForeignKey("users.user_id"), primary_key=True)
     user = relationship("User")
+    timetable_id = Column(BigInteger, ForeignKey("timetable.timetable_id"), primary_key=True)
+    timetable = relationship("TimeTable")    # Permissions
+
+    admin_id = Column(BigInteger, primary_key=False)
+    about = Column(String, nullable=False)
+    picture = Column(String)
+    # Extra table parameters
+    __tablename__ = "qoachs"
+
+class SwimPool(DeferredReflection, TableDeclarativeBase):
+    """A greed administrator with his permissions."""
+
+    # The telegram id
+    swimpool_id = Column(BigInteger, primary_key=True)
+
+    distict_id = Column(BigInteger, ForeignKey("district.district_id"), primary_key=False)
+    district = relationship("District")
+    timetable_id = Column(BigInteger, ForeignKey("timetable.timetable_id"), primary_key=False)
+    timetable = relationship("TimeTable")    # Permissions
+    about = Column(String, nullable=False)
+    picture = Column(String)
+    address = Column(String, nullable=False)
+    # Extra table parameters
+    __tablename__ = ""
+
+class Qoach(DeferredReflection, TableDeclarativeBase):
+    """A greed administrator with his permissions."""
+
+    # The telegram id
+    user_id = Column(BigInteger, ForeignKey("users.user_id"), primary_key=True)
+    user = relationship("User")
     # Permissions
     edit_products = Column(Boolean, default=False)
     receive_orders = Column(Boolean, default=False)
@@ -220,20 +251,21 @@ class Admin(DeferredReflection, TableDeclarativeBase):
 
     # Extra table parameters
     __tablename__ = "admins"
-
     def __repr__(self):
         return f"<Admin {self.user_id}>"
 
 
-class Order(DeferredReflection, TableDeclarativeBase):
+class TimeTable(DeferredReflection, TableDeclarativeBase):
     """An order which has been placed by an user.
     It may include multiple products, available in the OrderItem table."""
 
     # The unique order id
-    order_id = Column(Integer, primary_key=True)
+    timetable_id = Column(Integer, primary_key=True)
     # The user who placed the order
     user_id = Column(BigInteger, ForeignKey("users.user_id"))
     user = relationship("User")
+
+    train_period = Column("data", ARRAY(String))
     # Date of creation
     creation_date = Column(DateTime, nullable=False)
     # Date of delivery
@@ -250,7 +282,7 @@ class Order(DeferredReflection, TableDeclarativeBase):
     transaction = relationship("Transaction", uselist=False)
 
     # Extra table parameters
-    __tablename__ = "orders"
+    __tablename__ = "timetable"
 
     def __repr__(self):
         return f"<Order {self.order_id} placed by User {self.user_id}>"

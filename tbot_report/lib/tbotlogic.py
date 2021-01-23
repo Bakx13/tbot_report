@@ -95,7 +95,8 @@ class TBot(object):
                         continue
                     # If the message contains the "Cancel" string defined in the strings file...
                     #exit(254)
-                    if update.message.text == receiving_worker.loc.get("menu_cancel"):
+                    '''
+                    if update.message.text == receiving_worker.loc.get("menu_all_cancel"):
                         log.debug(f"Forwarding CancelSignal to {receiving_worker}")
                         # Send a CancelSignal to the worker instead of the update
                         receiving_worker.queue.put(worker.CancelSignal())
@@ -103,7 +104,10 @@ class TBot(object):
                         log.debug(f"Forwarding message to {receiving_worker}")
                         # Forward the update to the worker
                         receiving_worker.queue.put(update)
-                # If the update is a inline keyboard press...
+                    '''
+                    log.debug(f"Forwarding message to {receiving_worker}")
+                    # Forward the update to the worker
+                    receiving_worker.queue.put(update)                # If the update is a inline keyboard press...
                 if isinstance(update.callback_query, telegram.CallbackQuery):
                     # Forward the update to the corresponding worker
                     receiving_worker = chat_workers.get(update.callback_query.from_user.id)

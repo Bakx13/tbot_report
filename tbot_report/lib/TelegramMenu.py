@@ -7,7 +7,7 @@ import telegram
 from tbot_report.lib.nuconfig import NuConfig
 import tbot_report.lib.loadconfig as MConfig
 import tbot_report.localization.localization as localization
-
+import tbot_report.lib.worker as Worker
 
 log = logging.getLogger(__name__)
 
@@ -18,15 +18,38 @@ class TelegramHandler():
 class TelegramQoachHandler(TelegramHandler):
     def __init__(self):
         super().__init__()
-    def Swimpoollist(self):
+    def SwimpoolList(self, tMenu, worker: Worker):
+        msg_txt = "menu_all_swimpool_list_text"
         log.debug(f"begin Swimpoollist handler")
-        return
-    def Add_Swimpool(self):
-        log.debug(f"begin Add_Swimpool handler")
-        return
-    def Del_Swimpool(self):
+        # переопределяем клавиатуру для выбранного пункта меню
+        tMenu.set_menu_by_type("Coach")
+        tMenu.set_menu_by_name("MenuSwimpool", worker.loc)
+        keyboard = tMenu.get_keyboard()
+        return keyboard, msg_txt
+    def AddSwimpool(self, tMenu, worker: Worker):
+        msg_txt = "menu_all_swimpool_list_text"
+        log.debug(f"begin Swimpoollist handler")
+        # переопределяем клавиатуру для выбранного пункта меню
+        tMenu.set_menu_by_type("Coach")
+        tMenu.set_menu_by_name("MenuSwimpool", worker.loc)
+        keyboard = tMenu.get_keyboard()
+        return keyboard, msg_txt
+    def DelSwimpool(self, tMenu, worker: Worker):
         log.debug(f"begin Del_Swimpool handler")
-        return
+        msg_txt = "menu_all_swimpool_list_text"
+        # переопределяем клавиатуру для выбранного пункта меню
+        tMenu.set_menu_by_type("Coach")
+        tMenu.set_menu_by_name("MenuSwimpool", worker.loc)
+        keyboard = tMenu.get_keyboard()
+        return keyboard, msg_txt
+    def Cancel(self, tMenu, worker: Worker):
+        log.debug(f"begin Cancel handler")
+        msg_txt = "menu_coach_main_txt"
+        # переопределяем клавиатуру для выбранного пункта меню
+        tMenu.set_menu_by_type("Coach")
+        tMenu.set_menu_by_name("MenuStart", worker.loc)
+        keyboard = tMenu.get_keyboard()
+        return keyboard, msg_txt
 class TelegramMenu(NuConfig):
     def __init__(self, file: "TextIO"):
         super().__init__(file)
@@ -76,15 +99,12 @@ class TelegramMenu(NuConfig):
         #self.keyboard = self.menu.keys()
         for menuitem in self.menu.keys():
             #menuitem = self.menu[menuitem]
-            log.debug(f"add menu point {menuitem} to keyboard")
+            #log.debug(f"add menu point {menuitem} to keyboard")
             self.keyboard.append([telegram.KeyboardButton(loc.get(menuitem))])
             self.loc_menu.append(loc.get(menuitem))
             self.handler_list.append(self.menu[menuitem])
             tmp=[self.menu[menuitem],loc.get(menuitem)]
             self.keyboard_handler.append(tmp)
-        log.debug(f"keyboard: {self.keyboard}")
-        log.debug(f"menu: {self.menu}")
-        log.debug(f"handler list: {self.handler_list}")
-        log.debug(f"localization menu: {self.loc_menu}")
+
     def get_keyboard(self):
         return self.keyboard
