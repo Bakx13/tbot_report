@@ -75,8 +75,10 @@ class User(DeferredReflection, TableDeclarativeBase):
 
     def recalculate_credit(self):
         """Recalculate the credit for this user by calculating the sum of the values of all their transactions."""
+        '''
         valid_transactions: typing.List[Transaction] = [t for t in self.transactions if not t.refunded]
         self.credit = sum(map(lambda t: t.value, valid_transactions))
+        '''
 
     @property
     def full_name(self):
@@ -88,7 +90,7 @@ class User(DeferredReflection, TableDeclarativeBase):
     def __repr__(self):
         return f"<User {self.mention()} having {self.credit} credit>"
 
-
+'''
 class Product(DeferredReflection, TableDeclarativeBase):
     """A purchasable product."""
 
@@ -201,38 +203,7 @@ class Transaction(DeferredReflection, TableDeclarativeBase):
 
     def __repr__(self):
         return f"<Transaction {self.transaction_id} for User {self.user_id}>"
-
-
-class Admin(DeferredReflection, TableDeclarativeBase):
-    """A greed administrator with his permissions."""
-
-    # The telegram id
-    user_id = Column(BigInteger, ForeignKey("users.user_id"), primary_key=True)
-    user = relationship("User")
-    timetable_id = Column(BigInteger, ForeignKey("timetable.timetable_id"), primary_key=True)
-    timetable = relationship("TimeTable")    # Permissions
-
-    admin_id = Column(BigInteger, primary_key=False)
-    about = Column(String, nullable=False)
-    picture = Column(String)
-    # Extra table parameters
-    __tablename__ = "qoachs"
-
-class SwimPool(DeferredReflection, TableDeclarativeBase):
-    """A greed administrator with his permissions."""
-
-    # The telegram id
-    swimpool_id = Column(BigInteger, primary_key=True)
-
-    distict_id = Column(BigInteger, ForeignKey("district.district_id"), primary_key=False)
-    district = relationship("District")
-    timetable_id = Column(BigInteger, ForeignKey("timetable.timetable_id"), primary_key=False)
-    timetable = relationship("TimeTable")    # Permissions
-    about = Column(String, nullable=False)
-    picture = Column(String)
-    address = Column(String, nullable=False)
-    # Extra table parameters
-    __tablename__ = ""
+'''
 
 class Qoach(DeferredReflection, TableDeclarativeBase):
     """A greed administrator with his permissions."""
@@ -240,7 +211,27 @@ class Qoach(DeferredReflection, TableDeclarativeBase):
     # The telegram id
     user_id = Column(BigInteger, ForeignKey("users.user_id"), primary_key=True)
     user = relationship("User")
+    timetable_id = Column(BigInteger, ForeignKey("timetable.id"), primary_key=True)
+    timetable = relationship("TimeTable")    # Permissions
+
+    id = Column(BigInteger, primary_key=False)
+    about = Column(String, nullable=False)
+    picture = Column(String)
+    # Extra table parameters
+    __tablename__ = "qoachs"
+    def __repr__(self):
+        return f"<Qoach {self.user_id}>"
+
+class Admin(DeferredReflection, TableDeclarativeBase):
+    """Описание класса для работы с таблицей бассейнов"""
+
+    # The telegram id
+    user_id = Column(BigInteger, ForeignKey("users.user_id"), primary_key=True)
+    user = relationship("User")
+
+    id = Column(BigInteger, primary_key=False)
     # Permissions
+
     edit_products = Column(Boolean, default=False)
     receive_orders = Column(Boolean, default=False)
     create_transactions = Column(Boolean, default=False)
@@ -260,12 +251,7 @@ class TimeTable(DeferredReflection, TableDeclarativeBase):
     It may include multiple products, available in the OrderItem table."""
 
     # The unique order id
-    timetable_id = Column(Integer, primary_key=True)
-    # The user who placed the order
-    user_id = Column(BigInteger, ForeignKey("users.user_id"))
-    user = relationship("User")
-
-    train_period = Column("data", ARRAY(String))
+    id = Column(Integer, primary_key=True)
     # Date of creation
     creation_date = Column(DateTime, nullable=False)
     # Date of delivery
@@ -275,19 +261,19 @@ class TimeTable(DeferredReflection, TableDeclarativeBase):
     # Refund reason: if null, product hasn't been refunded
     refund_reason = Column(Text)
     # List of items in the order
-    items: typing.List["OrderItem"] = relationship("OrderItem")
+    train_period: typing.List["TimeTableItem"] = relationship("TimeTableItem")
     # Extra details specified by the purchasing user
     notes = Column(Text)
-    # Linked transaction
-    transaction = relationship("Transaction", uselist=False)
+
 
     # Extra table parameters
     __tablename__ = "timetable"
 
     def __repr__(self):
-        return f"<Order {self.order_id} placed by User {self.user_id}>"
+        return f"<>"
 
     def text(self, w: "worker.Worker", session, user=False):
+        '''
         joined_self = session.query(Order).filter_by(order_id=self.order_id).join(Transaction).one()
         items = ""
         for item in self.items:
@@ -319,28 +305,62 @@ class TimeTable(DeferredReflection, TableDeclarativeBase):
                              notes=self.notes if self.notes is not None else "",
                              value=str(w.Price(-joined_self.transaction.value))) + \
                    (w.loc.get("refund_reason", reason=self.refund_reason) if self.refund_date is not None else "")
+        '''
 
-
-class OrderItem(DeferredReflection, TableDeclarativeBase):
-    """A product that has been purchased as part of an order."""
+class TimeTableItem(DeferredReflection, TableDeclarativeBase):
+    """Одна строчка из расписания занятий"""
 
     # The unique item id
-    item_id = Column(Integer, primary_key=True)
+    id = Column(Integer, primary_key=True)
     # The product that is being ordered
-    product_id = Column(Integer, ForeignKey("products.id"), nullable=False)
-    product = relationship("Product")
-    # The order in which this item is being purchased
-    order_id = Column(Integer, ForeignKey("orders.order_id"), nullable=False)
+    item = Column(String, nullable=False)
+
+    timetable_id = Column(Integer, ForeignKey("timetable.id"), nullable=False)
 
     # Extra table parameters
-    __tablename__ = "orderitems"
+    __tablename__ = "timetableitems"
 
-    def text(self, w: "worker.Worker"):
-        return f"{self.product.name} - {str(w.Price(self.product.price))}"
+    def text(self):
+        return f""
 
     def __repr__(self):
-        return f"<OrderItem {self.item_id}>"
+        return f"<TimeTableItem {self.id}>"
 
+
+class District(DeferredReflection, TableDeclarativeBase):
+    """Одна строчка из расписания занятий"""
+
+    # The unique item id
+    id = Column(Integer, primary_key=True)
+    # The product that is being ordered
+    name = Column(String, nullable=False)
+    description = Column(String)
+
+    # Extra table parameters
+    __tablename__ = "district"
+
+    def text(self):
+        return f""
+
+    def __repr__(self):
+        return f"<TimeTableItem {self.id}>"
+class City(DeferredReflection, TableDeclarativeBase):
+    """Одна строчка из расписания занятий"""
+
+    # The unique item id
+    id = Column(Integer, primary_key=True)
+    # The product that is being ordered
+    name = Column(String, nullable=False)
+    description = Column(String)
+
+    # Extra table parameters
+    __tablename__ = "city"
+
+    def text(self):
+        return f""
+
+    def __repr__(self):
+        return f"<city {self.id}>"
 
 #---- swimbot tables
 
@@ -349,16 +369,33 @@ class SwimPool(DeferredReflection, TableDeclarativeBase):
 
     # Product id
     id = Column(Integer, primary_key=True)
-    # Product name
-    name = Column(String)
-    # Product description
-    description = Column(Text)
-    # Product price, if null product is not for sale
-    price = Column(Integer)
-    # Image data
+
+    # ссылка на таблицу с города
+    city_id = Column(BigInteger, ForeignKey("city.id"), primary_key=False)
+    district = relationship("City")
+
+    # ссылка на таблицы с районами города
+    distict_id = Column(BigInteger, ForeignKey("district.id"), primary_key=False)
+    district = relationship("District")
+
+    # ссылка на таблицу с расписанием занятий
+    timetable_id = Column(BigInteger, ForeignKey("timetable.id"), primary_key=False)
+    timetable = relationship("TimeTable")    # Permissions
+
+    # картинка бассейна
     image = Column(LargeBinary)
-    # Product has been deleted
-    deleted = Column(Boolean, nullable=False)
+
+    # адрес бассейна
+    address = Column(String, nullable=False)
+
+    # Название бассейна
+    name = Column(String)
+
+    # Описание бассейна
+    description = Column(Text)
+
+    # Стоимость разового посещения
+    price = Column(Integer)
 
     # Extra table parameters
     __tablename__ = "swimpool"
@@ -368,16 +405,11 @@ class SwimPool(DeferredReflection, TableDeclarativeBase):
     def text(self, w: "worker.Worker", *, style: str = "full", cart_qty: int = None):
         """Return the product details formatted with Telegram HTML. The image is omitted."""
         if style == "short":
-            return f"{cart_qty}x {utils.telegram_html_escape(self.name)} - {str(w.Price(self.price) * cart_qty)}"
+            return f"x {utils.telegram_html_escape(self.name)} - {str(w.Price(self.price))}"
         elif style == "full":
-            if cart_qty is not None:
-                cart = w.loc.get("in_cart_format_string", quantity=cart_qty)
-            else:
-                cart = ''
-            return w.loc.get("product_format_string", name=utils.telegram_html_escape(self.name),
+            return w.loc.get("swimpool_format_string", name=utils.telegram_html_escape(self.name),
                              description=utils.telegram_html_escape(self.description),
-                             price=str(w.Price(self.price)),
-                             cart=cart)
+                             price=str(w.Price(self.price)))
         else:
             raise ValueError("style is not an accepted value")
 

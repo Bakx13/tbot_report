@@ -19,7 +19,7 @@ import tbot_report.localization.localization as localization
 import tbot_report.lib.loadconfig as MConfig
 import tbot_report.lib.utils as utils
 #import tbot_report.lib.TelegramMenu
-from tbot_report.lib.TelegramMenu import TelegramMenu, TelegramQoachHandler
+from tbot_report.lib.TelegramMenu import TelegramMenu, TelegramQoachHandler, TelegramAdminHandler
 
 log = logging.getLogger(__name__)
 
@@ -166,6 +166,7 @@ class Worker(threading.Thread):
         """The conversation code."""
         log.debug("Starting conversation")
         # Get the user db data from the users and admin tables
+        log.debug(f"user id = {self.chat.id}")
         self.user = self.session.query(db.User).filter(db.User.user_id == self.chat.id).one_or_none()
         self.admin = self.session.query(db.Admin).filter(db.Admin.user_id == self.chat.id).one_or_none()
         # If the user isn't registered, create a new record and add it to the db
@@ -261,6 +262,35 @@ class Worker(threading.Thread):
         return data
 
     def __wait_for_specific_message(self,
+                                    items: List[str],
+                                    cancellable: bool = False) -> Union[str, CancelSignal]:
+        """Continue getting updates until until one of the strings contained in the list is received as a message."""
+        log.debug("Waiting for a specific message...")
+        while True:
+            # Get the next update
+            update = self.__receive_next_update()
+            log.debug(f"get command {update.message.text}")
+            # If a CancelSignal is received...
+            if isinstance(update, CancelSignal):
+                # And the wait is cancellable...
+                if cancellable:
+                    # Return the CancelSignal
+                    return update
+                else:
+                    # Ignore the signal
+                    continue
+            # Ensure the update contains a message
+            if update.message is None:
+                continue
+            # Ensure the message contains text
+            if update.message.text is None:
+                continue
+            # Check if the message is contained in the list
+            if update.message.text not in items:
+                continue
+            # Return the message text
+            return update.message.text
+    def wait_for_specific_message(self,
                                     items: List[str],
                                     cancellable: bool = False) -> Union[str, CancelSignal]:
         """Continue getting updates until until one of the strings contained in the list is received as a message."""
@@ -447,43 +477,12 @@ class Worker(threading.Thread):
 
         return
     def __user_menu(self):
+        """Эта функция запускается, если с ботом начинается общение с ролью - тренер"""
+
         menu_file = TelegramMenu.get_menu_file(self.cfg, "coach_menu")
         tMenu = TelegramMenu(menu_file)
-        tMenu.set_menu_by_type("Coach")
-        tMenu.set_menu_by_name("MenuStart", self.loc)
-        """Function called from the run method when the user is not an administrator.
-        Normal bot actions should be placed here."""
-        log.debug("Displaying __user_menu")
-        # Loop used to returning to the menu after executing a command
-        header_txt = "menu_coach_main_txt"
-        keyboard = tMenu.get_keyboard()
-        while True:
-            # Create a keyboard with the user main menu
+        tMenu.coach_menu("Coach", "MenuStart", "menu_coach_main_txt",self)
 
-            # Send the previously created keyboard to the user (ensuring it can be clicked only 1 time)
-            self.bot.send_message(self.chat.id, self.loc.get(header_txt),
-                                  reply_markup=telegram.ReplyKeyboardMarkup(keyboard, one_time_keyboard=True))
-            # Wait for a reply from the user
-            log.debug(f"get loc menu worker: {tMenu.keyboard_handler}")
-            selection = self.__wait_for_specific_message(tMenu.loc_menu)
-            handlername = utils.get_key(tMenu.keyboard_handler, selection)
-            log.debug(f"worker menu selected name: {selection}")
-            log.debug(f"worker menu selected {handlername}")
-            QoachHandler = TelegramQoachHandler()
-
-            # After the user reply, update the user data
-            self.update_user()
-
-            #Вызываем обработчик в зависимости от выбранной команды.
-            try:
-                m = getattr(TelegramQoachHandler, handlername)
-                keyboard, header_txt = m(QoachHandler, tMenu, self)
-            except:
-                header_txt = "menu_all_inbuilding_txt"
-                log.error(f"handler {handlername} not found in class TelegramQoachHandler")
-                tMenu.set_menu_by_type("Coach")
-                tMenu.set_menu_by_name("MenuStart", self.loc)
-                keyboard = tMenu.get_keyboard()
         return
     def __order_menu(self):
         """User menu to order products from the shop."""
@@ -888,24 +887,19 @@ class Worker(threading.Thread):
         """Function called from the run method when the user is an administrator.
         Administrative bot actions should be placed here."""
         log.debug("Displaying __admin_menu")
+        menu_file = TelegramMenu.get_menu_file(self.cfg, "coach_menu")
+        tMenu = TelegramMenu(menu_file)
+        tMenu.set_menu_by_type("Admin")
+        tMenu.set_menu_by_name("MenuStart", self.loc)
+        header_txt = "menu_admin_main_txt"
+        keyboard = tMenu.get_keyboard()
         # Loop used to return to the menu after executing a command
         while True:
-            # Create a keyboard with the admin main menu based on the admin permissions specified in the db
-            keyboard = []
-            if self.admin.edit_products:
-                keyboard.append([self.loc.get("menu_products")])
-            if self.admin.receive_orders:
-                keyboard.append([self.loc.get("menu_orders")])
-            if self.admin.create_transactions:
-                keyboard.append([self.loc.get("menu_edit_credit")])
-                keyboard.append([self.loc.get("menu_transactions"), self.loc.get("menu_csv")])
-            if self.admin.is_owner:
-                keyboard.append([self.loc.get("menu_edit_admins")])
-            keyboard.append([self.loc.get("menu_admin_user_mode")])
             # Send the previously created keyboard to the user (ensuring it can be clicked only 1 time)
-            self.bot.send_message(self.chat.id, self.loc.get("conversation_open_admin_menu"),
+            self.bot.send_message(self.chat.id, self.loc.get(header_txt),
                                   reply_markup=telegram.ReplyKeyboardMarkup(keyboard, one_time_keyboard=True))
             # Wait for a reply from the user
+            '''
             selection = self.__wait_for_specific_message([self.loc.get("menu_products"),
                                                           self.loc.get("menu_orders"),
                                                           self.loc.get("menu_admin_user_mode"),
@@ -913,6 +907,24 @@ class Worker(threading.Thread):
                                                           self.loc.get("menu_transactions"),
                                                           self.loc.get("menu_csv"),
                                                           self.loc.get("menu_edit_admins")])
+            '''
+            selection = self.__wait_for_specific_message(tMenu.loc_menu)
+            handlername = utils.get_key(tMenu.keyboard_handler, selection)
+            log.debug(f"worker menu selected name: {selection}")
+            log.debug(f"worker menu selected {handlername}")
+            AdminHandler = TelegramAdminHandler()
+
+        #Вызываем обработчик в зависимости от выбранной команды.
+            #try:
+            m = getattr(TelegramAdminHandler, handlername)
+            m(AdminHandler, tMenu, self)
+            #except:
+            #    header_txt = "menu_all_inbuilding_txt"
+            #    log.error(f"handler {handlername} not found in class TelegramAdminHandler")
+            #    tMenu.set_menu_by_type("Admin")
+            #    tMenu.set_menu_by_name("MenuStart", self.loc)
+            #    keyboard = tMenu.get_keyboard()
+            '''
             # If the user has selected the Products option...
             if selection == self.loc.get("menu_products"):
                 # Open the products menu
@@ -943,7 +955,7 @@ class Worker(threading.Thread):
             elif selection == self.loc.get("menu_csv"):
                 # Generate the .csv file
                 self.__transactions_file()
-
+            '''
     def __products_menu(self):
         """Display the admin menu to select a product to edit."""
         log.debug("Displaying __products_menu")
@@ -981,7 +993,7 @@ class Worker(threading.Thread):
             # Open the edit menu for that specific product
             self.__edit_product_menu(product=product)
 
-    def __edit_product_menu(self, product: Optional[db.Product] = None):
+    def __edit_product_menu(self, product: Optional[db.SwimPool] = None):
         """Add a product to the database or edit an existing one."""
         log.debug("Displaying __edit_product_menu")
         # Create an inline keyboard with a single skip button

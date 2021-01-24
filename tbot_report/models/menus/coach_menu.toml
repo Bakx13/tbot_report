@@ -19,11 +19,9 @@
 #Ведение фото и видеоотчета тренировки.
 
 
-
+# Telegram bot parameters
 [Coach.MenuStart]
-# The database engine you want to use.
-# Refer to http://docs.sqlalchemy.org/en/latest/core/engines.html for the possible settings.
-# Формат
+
 menu_coach_client_list = "ClientList"
 menu_coach_client_request = "ClientRequest"
 menu_all_timetable = "TimeTable"
@@ -35,10 +33,27 @@ menu_all_inventor = "Inventory"
 menu_coach_finance = "FinanceStatus"
 menu_coach_training_status = "TrainingStatus"
 
-# Telegram bot parameters
+
 [Coach.MenuSwimpool]
 menu_all_add_swimpool = "AddSwimpool"
 menu_all_del_swimpool = "DelSwimpool"
 menu_all_cancel = "Cancel"
 [Coach.MenuSwimpoolAdd]
 1="menu_all_cancel"
+
+
+[Admin.MenuStart]
+
+menu_admin_client_list = "ClientList"
+menu_admin_client_request = "ClientRequest"
+menu_all_swimpool_list = "SwimpoolList"
+
+menu_all_inventor = "Inventory"
+
+menu_admin_user_mode = "SwitchAdminToCoach"
+
+[Admin.MenuSwimpool]
+menu_all_add_swimpool = "AddSwimpool"
+menu_all_del_swimpool = "DelSwimpool"
+menu_admin_del_swimpool = "EditSwimpool"
+menu_all_cancel = "Cancel"
