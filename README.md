@@ -7,7 +7,7 @@
 Софт для разработки:<br>
 PyCharm (Commynity последней версии) - фрэймворк для питона<br>
 DBevear - для работы с СУБД<br>
-Docker desktop - но можно и без него, для этого нужно поменять deply/build.sh или вообще отлаживаться в Pycharm. <br>
+Docker desktop - но можно и без него, для этого нужно поменять deploy/build.sh или вообще отлаживаться в Pycharm. <br>
 Camunda Modeler - https://camunda.com/download/modeler/ <br>
 В докере развернул:<br>
 debian - взял с официального сайта<br>
