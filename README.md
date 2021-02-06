@@ -1,10 +1,10 @@
 # tbot_report
 
-Софт для разработки:
-PyCharm (Commynity последней версии) - фрэймворк для питона
-DBevear - для работы с СУБД
-Docker desktop - но можно и без него, для этого нужно поменять deply/build.sh или вообще отлаживаться в Pycharm. 
-Camunda Modeler - https://camunda.com/download/modeler/ 
+Софт для разработки:<br>
+PyCharm (Commynity последней версии) - фрэймворк для питона<br>
+DBevear - для работы с СУБД<br>
+Docker desktop - но можно и без него, для этого нужно поменять deply/build.sh или вообще отлаживаться в Pycharm. <br>
+Camunda Modeler - https://camunda.com/download/modeler/ <br>
 В докере развернул:
 debian - взял с официального сайта
   внутри дополнительно:
