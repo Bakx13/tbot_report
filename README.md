@@ -25,11 +25,12 @@ python3 ./bot.py -e dev<br>
 
 Полезные проекты с гита.<br>
 Про BPMN:<br>
-https://github.com/labsolutionlu/bpmn_dmn/blob/7c2a632dab542ab81da56961193fc2235310934c/bpmn_dmn/bpmn/camunda.py 
-https://spiffworkflow.readthedocs.io/en/latest/SpiffWorkflow.task.html
+https://github.com/labsolutionlu/bpmn_dmn/blob/7c2a632dab542ab81da56961193fc2235310934c/bpmn_dmn/bpmn/camunda.py <br>
+https://spiffworkflow.readthedocs.io/en/latest/SpiffWorkflow.task.html <br>
 Про API telegram:<br>
-https://python-telegram-bot.readthedocs.io/en/stable/telegram.botcommand.html
-https://tlgrm.ru/docs/bots/api
-https://core.telegram.org/api
-https://github.com/tdlib/telegram-bot-api
-https://core.telegram.org/bots
+https://python-telegram-bot.readthedocs.io/en/stable/telegram.botcommand.html <br>
+https://tlgrm.ru/docs/bots/api <br>
+https://core.telegram.org/api <br>
+https://github.com/tdlib/telegram-bot-api <br>
+https://core.telegram.org/bots <br>
+ 
