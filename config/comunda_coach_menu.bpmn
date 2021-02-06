@@ -1,0 +1,364 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.5.0">
+  <bpmn:process id="Coach" name="Coach" isExecutable="false">
+    <bpmn:endEvent id="EndEvent_0ofyivj" name="three">
+      <bpmn:incoming>Flow_0n7xfm6</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:exclusiveGateway id="menu_all_swimpool_list">
+      <bpmn:extensionElements>
+        <camunda:properties>
+          <camunda:property name="handler" value="SwimpoolList" />
+          <camunda:property name="class" value="TelegramQoachHandler" />
+        </camunda:properties>
+        <camunda:executionListener expression="SwimpoolList" event="start" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>menu_all_swimpool_list_st</bpmn:incoming>
+      <bpmn:outgoing>Flow_add_swimpool</bpmn:outgoing>
+      <bpmn:outgoing>Flow_del_swimpool</bpmn:outgoing>
+      <bpmn:outgoing>Flow_Cancel</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="Flow_add_swimpool" name="Добавить бассейн" sourceRef="menu_all_swimpool_list" targetRef="menu_all_add_swimpool">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">lorder.menuname=="menu_all_add_swimpool"</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_del_swimpool" name="удалить бассейн" sourceRef="menu_all_swimpool_list" targetRef="menu_all_del_swimpool">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">lorder.menuname=="menu_all_del_swimpool"</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_Cancel" name="отменить операцию" sourceRef="menu_all_swimpool_list" targetRef="menu_all_cancel">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">lorder.menuname=="menu_all_cancel"</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:exclusiveGateway id="menu_coach_client_list">
+      <bpmn:extensionElements>
+        <camunda:properties>
+          <camunda:property name="handler" />
+        </camunda:properties>
+      </bpmn:extensionElements>
+      <bpmn:incoming>menu_coach_client_list_st</bpmn:incoming>
+      <bpmn:outgoing>Flow_0n7xfm6</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="Flow_0n7xfm6" sourceRef="menu_coach_client_list" targetRef="EndEvent_0ofyivj" />
+    <bpmn:exclusiveGateway id="menu_coach_client_request">
+      <bpmn:incoming>menu_coach_client_request_st</bpmn:incoming>
+      <bpmn:outgoing>Flow_1v4cj3d</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:endEvent id="Event_0mkzivi">
+      <bpmn:incoming>Flow_1v4cj3d</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_1v4cj3d" sourceRef="menu_coach_client_request" targetRef="Event_0mkzivi" />
+    <bpmn:exclusiveGateway id="menu_all_timetable">
+      <bpmn:incoming>menu_all_timetable_st</bpmn:incoming>
+      <bpmn:outgoing>Flow_0wheafk</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:endEvent id="menu_all_add_swimpool">
+      <bpmn:extensionElements>
+        <camunda:properties>
+          <camunda:property name="handler" value="AddSwimpool" />
+          <camunda:property />
+        </camunda:properties>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_add_swimpool</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:endEvent id="menu_all_del_swimpool">
+      <bpmn:incoming>Flow_del_swimpool</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:endEvent id="menu_all_cancel">
+      <bpmn:incoming>Flow_Cancel</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:endEvent id="menu_coach_personal_card_end">
+      <bpmn:incoming>Flow_0ctp7zu</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:exclusiveGateway id="menu_all_training_method">
+      <bpmn:incoming>menu_all_training_method_st</bpmn:incoming>
+      <bpmn:outgoing>Flow_1nqyuy7</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:endEvent id="Event_08dfncv">
+      <bpmn:incoming>Flow_1nqyuy7</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_1nqyuy7" sourceRef="menu_all_training_method" targetRef="Event_08dfncv" />
+    <bpmn:endEvent id="Event_1fmj4an">
+      <bpmn:incoming>Flow_0wheafk</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_0wheafk" sourceRef="menu_all_timetable" targetRef="Event_1fmj4an" />
+    <bpmn:exclusiveGateway id="menu_coach_personal_card">
+      <bpmn:incoming>menu_coach_personal_card_st</bpmn:incoming>
+      <bpmn:outgoing>Flow_0ctp7zu</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="Flow_0ctp7zu" sourceRef="menu_coach_personal_card" targetRef="menu_coach_personal_card_end" />
+    <bpmn:exclusiveGateway id="menu_all_inventor">
+      <bpmn:incoming>menu_all_inventor_st</bpmn:incoming>
+      <bpmn:outgoing>Flow_0vgn0t4</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:endEvent id="menu_all_inventor_end">
+      <bpmn:incoming>Flow_0vgn0t4</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_0vgn0t4" sourceRef="menu_all_inventor" targetRef="menu_all_inventor_end" />
+    <bpmn:exclusiveGateway id="menu_coach_finance">
+      <bpmn:incoming>menu_coach_finance_st</bpmn:incoming>
+      <bpmn:outgoing>Flow_0wp7f92</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:endEvent id="menu_coach_finance_end">
+      <bpmn:incoming>Flow_0wp7f92</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_0wp7f92" sourceRef="menu_coach_finance" targetRef="menu_coach_finance_end" />
+    <bpmn:exclusiveGateway id="menu_coach_training_status">
+      <bpmn:incoming>menu_coach_training_status_st</bpmn:incoming>
+      <bpmn:outgoing>Flow_01xqf7g</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:endEvent id="menu_coach_training_status_end">
+      <bpmn:incoming>Flow_01xqf7g</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_01xqf7g" sourceRef="menu_coach_training_status" targetRef="menu_coach_training_status_end" />
+    <bpmn:startEvent id="Event_0yaqot0">
+      <bpmn:outgoing>Flow_0ucdpa1</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="menu_coach_training_status_st" name="lorder menuname is menu_coach_training_status" sourceRef="MenuStart" targetRef="menu_coach_training_status">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">lorder.menuname=="menu_coach_training_status"</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="menu_coach_finance_st" name="lorder menuname is menu_coach_finance" sourceRef="MenuStart" targetRef="menu_coach_finance">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">lorder.menuname=="menu_coach_finance"</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="menu_all_inventor_st" name="lorder menuname is menu_all_inventor" sourceRef="MenuStart" targetRef="menu_all_inventor">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">lorder.menuname=="menu_all_inventor"</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="menu_coach_personal_card_st" name="lorder menuname is menu_coach_personal_card" sourceRef="MenuStart" targetRef="menu_coach_personal_card">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">lorder.menuname=="menu_coach_personal_card"</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="menu_all_training_method_st" name="lorder menuname is menu_all_training_method" sourceRef="MenuStart" targetRef="menu_all_training_method">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">lorder.menuname=="menu_all_training_method"</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="menu_all_swimpool_list_st" name="lorder menuname is menu_all_swimpool_list" sourceRef="MenuStart" targetRef="menu_all_swimpool_list">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">lorder.menuname=="menu_all_swimpool_list"</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="menu_coach_client_request_st" name="lorder menuname is menu_coach_client_request" sourceRef="MenuStart" targetRef="menu_coach_client_request">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">lorder.menuname=="menu_coach_client_request"</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="menu_all_timetable_st" name="lorder menuname is menu_all_timetable" sourceRef="MenuStart" targetRef="menu_all_timetable">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">lorder.menuname=="menu_all_timetable"</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="menu_coach_client_list_st" name="lorder menuname is menu_coach_client_list" sourceRef="MenuStart" targetRef="menu_coach_client_list">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">lorder.menuname=="menu_coach_client_list"</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_0ucdpa1" sourceRef="Event_0yaqot0" targetRef="MenuStart" />
+    <bpmn:exclusiveGateway id="MenuStart" name="MenuStart">
+      <bpmn:extensionElements>
+        <camunda:executionListener expression="MenuStart" event="start" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_0ucdpa1</bpmn:incoming>
+      <bpmn:outgoing>menu_coach_client_list_st</bpmn:outgoing>
+      <bpmn:outgoing>menu_all_timetable_st</bpmn:outgoing>
+      <bpmn:outgoing>menu_coach_client_request_st</bpmn:outgoing>
+      <bpmn:outgoing>menu_all_training_method_st</bpmn:outgoing>
+      <bpmn:outgoing>menu_coach_personal_card_st</bpmn:outgoing>
+      <bpmn:outgoing>menu_all_inventor_st</bpmn:outgoing>
+      <bpmn:outgoing>menu_coach_finance_st</bpmn:outgoing>
+      <bpmn:outgoing>menu_coach_training_status_st</bpmn:outgoing>
+      <bpmn:outgoing>menu_all_swimpool_list_st</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Coach">
+      <bpmndi:BPMNEdge id="Flow_01xqf7g_di" bpmnElement="Flow_01xqf7g">
+        <di:waypoint x="675" y="1470" />
+        <di:waypoint x="792" y="1470" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0wp7f92_di" bpmnElement="Flow_0wp7f92">
+        <di:waypoint x="675" y="1330" />
+        <di:waypoint x="792" y="1330" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0vgn0t4_di" bpmnElement="Flow_0vgn0t4">
+        <di:waypoint x="675" y="1150" />
+        <di:waypoint x="792" y="1150" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0ctp7zu_di" bpmnElement="Flow_0ctp7zu">
+        <di:waypoint x="675" y="950" />
+        <di:waypoint x="792" y="950" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0wheafk_di" bpmnElement="Flow_0wheafk">
+        <di:waypoint x="675" y="410" />
+        <di:waypoint x="822" y="410" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1nqyuy7_di" bpmnElement="Flow_1nqyuy7">
+        <di:waypoint x="675" y="760" />
+        <di:waypoint x="792" y="760" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1v4cj3d_di" bpmnElement="Flow_1v4cj3d">
+        <di:waypoint x="675" y="250" />
+        <di:waypoint x="822" y="250" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0q8j1lc_di" bpmnElement="menu_coach_client_request_st">
+        <di:waypoint x="454" y="534" />
+        <di:waypoint x="454" y="250" />
+        <di:waypoint x="625" y="250" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="519" y="233" width="87" height="53" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0n7xfm6_di" bpmnElement="Flow_0n7xfm6">
+        <di:waypoint x="675" y="101" />
+        <di:waypoint x="822" y="101" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0oreel3_di" bpmnElement="Flow_Cancel">
+        <di:waypoint x="650" y="589" />
+        <di:waypoint x="650" y="620" />
+        <di:waypoint x="790" y="620" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="694" y="606" width="52" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_03nm9ww_di" bpmnElement="Flow_del_swimpool">
+        <di:waypoint x="675" y="564" />
+        <di:waypoint x="792" y="564" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="677" y="546" width="86" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_05nguh2_di" bpmnElement="Flow_add_swimpool">
+        <di:waypoint x="650" y="539" />
+        <di:waypoint x="650" y="510" />
+        <di:waypoint x="790" y="510" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="695" y="496" width="49" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0h2b4no_di" bpmnElement="menu_coach_training_status_st">
+        <di:waypoint x="454" y="589" />
+        <di:waypoint x="454" y="1470" />
+        <di:waypoint x="625" y="1470" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="527" y="1453" width="87" height="53" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1wwm2is_di" bpmnElement="menu_coach_finance_st">
+        <di:waypoint x="454" y="589" />
+        <di:waypoint x="454" y="1330" />
+        <di:waypoint x="625" y="1330" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="527" y="1303" width="87" height="53" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1hh7wcj_di" bpmnElement="menu_all_inventor_st">
+        <di:waypoint x="454" y="589" />
+        <di:waypoint x="454" y="1150" />
+        <di:waypoint x="625" y="1150" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="519" y="1133" width="87" height="53" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1aoj6t0_di" bpmnElement="menu_coach_personal_card_st">
+        <di:waypoint x="454" y="589" />
+        <di:waypoint x="454" y="950" />
+        <di:waypoint x="625" y="950" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="528" y="933" width="87" height="53" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_15j7fu3_di" bpmnElement="menu_all_training_method_st">
+        <di:waypoint x="479" y="564" />
+        <di:waypoint x="508" y="564" />
+        <di:waypoint x="508" y="760" />
+        <di:waypoint x="625" y="760" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="512" y="733" width="87" height="53" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0j0rfxw_di" bpmnElement="menu_all_swimpool_list_st">
+        <di:waypoint x="479" y="564" />
+        <di:waypoint x="625" y="564" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="509" y="537" width="87" height="53" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1po4it0_di" bpmnElement="menu_all_timetable_st">
+        <di:waypoint x="454" y="539" />
+        <di:waypoint x="454" y="410" />
+        <di:waypoint x="625" y="410" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="518" y="389" width="87" height="53" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1qx79js_di" bpmnElement="menu_coach_client_list_st">
+        <di:waypoint x="454" y="539" />
+        <di:waypoint x="454" y="101" />
+        <di:waypoint x="625" y="101" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="530" y="83" width="87" height="53" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0ucdpa1_di" bpmnElement="Flow_0ucdpa1">
+        <di:waypoint x="188" y="564" />
+        <di:waypoint x="429" y="564" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="EndEvent_0ofyivj_di" bpmnElement="EndEvent_0ofyivj">
+        <dc:Bounds x="822" y="83" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="827" y="126" width="26" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_0v1bhfx_di" bpmnElement="menu_all_swimpool_list" isMarkerVisible="true">
+        <dc:Bounds x="625" y="539" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_0w9ztd8_di" bpmnElement="menu_coach_client_list" isMarkerVisible="true">
+        <dc:Bounds x="625" y="76" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_003k2fe_di" bpmnElement="menu_coach_client_request" isMarkerVisible="true">
+        <dc:Bounds x="625" y="225" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0mkzivi_di" bpmnElement="Event_0mkzivi">
+        <dc:Bounds x="822" y="232" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_0dg8wfq_di" bpmnElement="menu_all_timetable" isMarkerVisible="true">
+        <dc:Bounds x="625" y="385" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_082f88f_di" bpmnElement="menu_all_add_swimpool">
+        <dc:Bounds x="792" y="492" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1f3zdum_di" bpmnElement="menu_all_del_swimpool">
+        <dc:Bounds x="792" y="546" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_18p0snj_di" bpmnElement="menu_all_cancel">
+        <dc:Bounds x="792" y="602" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0olz3jv_di" bpmnElement="menu_coach_personal_card_end">
+        <dc:Bounds x="792" y="932" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_08qjarb_di" bpmnElement="menu_all_training_method" isMarkerVisible="true">
+        <dc:Bounds x="625" y="735" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_08dfncv_di" bpmnElement="Event_08dfncv">
+        <dc:Bounds x="792" y="742" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1fmj4an_di" bpmnElement="Event_1fmj4an">
+        <dc:Bounds x="822" y="392" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_1nqx3mb_di" bpmnElement="menu_coach_personal_card" isMarkerVisible="true">
+        <dc:Bounds x="625" y="925" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_04vmpfw_di" bpmnElement="menu_all_inventor" isMarkerVisible="true">
+        <dc:Bounds x="625" y="1125" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_02zz8n9_di" bpmnElement="menu_all_inventor_end">
+        <dc:Bounds x="792" y="1132" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_14em324_di" bpmnElement="menu_coach_finance" isMarkerVisible="true">
+        <dc:Bounds x="625" y="1305" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0xswyt2_di" bpmnElement="menu_coach_finance_end">
+        <dc:Bounds x="792" y="1312" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_1c5csic_di" bpmnElement="menu_coach_training_status" isMarkerVisible="true">
+        <dc:Bounds x="625" y="1445" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0j99ofw_di" bpmnElement="menu_coach_training_status_end">
+        <dc:Bounds x="792" y="1452" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0yaqot0_di" bpmnElement="Event_0yaqot0">
+        <dc:Bounds x="152" y="546" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_0c3bubv_di" bpmnElement="MenuStart" isMarkerVisible="true">
+        <dc:Bounds x="429" y="539" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="429" y="596" width="51" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

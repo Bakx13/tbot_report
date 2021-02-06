@@ -2,16 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d83d59a8-8a03-460f-953b-d8ceae5adfef" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tbot_report/lib/TelegramMenu.py" beforeDir="false" afterPath="$PROJECT_DIR$/tbot_report/lib/TelegramMenu.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tbot_report/lib/loadconfig.py" beforeDir="false" afterPath="$PROJECT_DIR$/tbot_report/lib/loadconfig.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tbot_report/lib/nuconfig.py" beforeDir="false" afterPath="$PROJECT_DIR$/tbot_report/lib/nuconfig.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tbot_report/lib/worker.py" beforeDir="false" afterPath="$PROJECT_DIR$/tbot_report/lib/worker.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tbot_report/localization/locale/ru.py" beforeDir="false" afterPath="$PROJECT_DIR$/tbot_report/localization/locale/ru.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tbot_report/models/menus/coach_menu.toml" beforeDir="false" afterPath="$PROJECT_DIR$/tbot_report/models/menus/coach_menu.toml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/config/comunda_admin_menu.bpmn" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/config/comunda_coach_menu.bpmn" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -330,7 +322,14 @@
       <option name="project" value="LOCAL" />
       <updated>1611492583001</updated>
     </task>
-    <option name="localTasksCounter" value="30" />
+    <task id="LOCAL-00030" summary="Перенес формирование меню в SpiffWorkflow. Движок для bpmn. НЕ разобрался как правильно запускать обработчики на каждом шаге. В итоге хэндлеры остались как и были в конфигах.&#10;Продолжаю убирать логику из worker'a в целевые классы - TelegramHandler&quot;ы и TelegramMenu.&#10;&#10;Разобрался как делать меню второго уровня. Пока в качестве примера в TelegramMenu реализован статик метод send_msg_nicekeyboard">
+      <created>1612644901029</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1612644901029</updated>
+    </task>
+    <option name="localTasksCounter" value="31" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -363,6 +362,7 @@
     <MESSAGE value="сделано универсальное меню через файл настроек плюс сделан универсальный вызов обработчика запроса к боту. Название метода также в файле настроек" />
     <MESSAGE value="Убран хардкод по оброботке запросов пользователя и заменен на динамический вызов обработчика. Пока только для тренера. &#10;Проведен рефакторинг названий пунктов меню.&#10;чуток убрал дебаг&#10;Начал формировать новую структуру БД.&#10;Добавлена возможность выводить в каждом пункте меню свою привественную диктовку.&#10;&#10;Убрал обработку menu_all_cancel как остановку общения с ботом. Но сама возможность остановить осталась." />
     <MESSAGE value="Перенес часть работы с меню тренера в класс для меню, убрал из worker&#10;убрал баги по новым таблицам плюс небольшой рефакторинг таблицы Админ&#10;Убрал из меню админа хардкод и перенес настройки по образу меню тренера в файл конфигурации&#10;Начал подключение SpiffWorkflow для задания правил перехода по меню." />
-    <option name="LAST_COMMIT_MESSAGE" value="Перенес часть работы с меню тренера в класс для меню, убрал из worker&#10;убрал баги по новым таблицам плюс небольшой рефакторинг таблицы Админ&#10;Убрал из меню админа хардкод и перенес настройки по образу меню тренера в файл конфигурации&#10;Начал подключение SpiffWorkflow для задания правил перехода по меню." />
+    <MESSAGE value="Перенес формирование меню в SpiffWorkflow. Движок для bpmn. НЕ разобрался как правильно запускать обработчики на каждом шаге. В итоге хэндлеры остались как и были в конфигах.&#10;Продолжаю убирать логику из worker'a в целевые классы - TelegramHandler&quot;ы и TelegramMenu.&#10;&#10;Разобрался как делать меню второго уровня. Пока в качестве примера в TelegramMenu реализован статик метод send_msg_nicekeyboard" />
+    <option name="LAST_COMMIT_MESSAGE" value="Перенес формирование меню в SpiffWorkflow. Движок для bpmn. НЕ разобрался как правильно запускать обработчики на каждом шаге. В итоге хэндлеры остались как и были в конфигах.&#10;Продолжаю убирать логику из worker'a в целевые классы - TelegramHandler&quot;ы и TelegramMenu.&#10;&#10;Разобрался как делать меню второго уровня. Пока в качестве примера в TelegramMenu реализован статик метод send_msg_nicekeyboard" />
   </component>
 </project>
