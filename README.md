@@ -27,7 +27,7 @@ python3 ./bot.py -e dev<br>
 Про BPMN:<br>
 https://github.com/labsolutionlu/bpmn_dmn/blob/7c2a632dab542ab81da56961193fc2235310934c/bpmn_dmn/bpmn/camunda.py 
 https://spiffworkflow.readthedocs.io/en/latest/SpiffWorkflow.task.html
-Про API telegram:
+Про API telegram:<br>
 https://python-telegram-bot.readthedocs.io/en/stable/telegram.botcommand.html
 https://tlgrm.ru/docs/bots/api
 https://core.telegram.org/api
