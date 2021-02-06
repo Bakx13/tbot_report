@@ -9,6 +9,7 @@ CompareReport = Dict[str, Union[str, List[str], "Missing"]]
 
 class NuConfig:
     def __init__(self, file: "TextIO"):
+        self.file = file
         self.data = toml.load(file)
 
     def __getitem__(self, item):

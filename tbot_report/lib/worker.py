@@ -270,6 +270,7 @@ class Worker(threading.Thread):
             # Get the next update
             update = self.__receive_next_update()
             log.debug(f"get command {update.message.text}")
+            log.debug(f"get command list {items}")
             # If a CancelSignal is received...
             if isinstance(update, CancelSignal):
                 # And the wait is cancellable...
@@ -299,6 +300,7 @@ class Worker(threading.Thread):
             # Get the next update
             update = self.__receive_next_update()
             log.debug(f"get command {update.message.text}")
+            log.debug(f"get command list {items}")
             # If a CancelSignal is received...
             if isinstance(update, CancelSignal):
                 # And the wait is cancellable...
@@ -480,8 +482,8 @@ class Worker(threading.Thread):
         """Эта функция запускается, если с ботом начинается общение с ролью - тренер"""
 
         menu_file = TelegramMenu.get_menu_file(self.cfg, "coach_menu")
-        tMenu = TelegramMenu(menu_file)
-        tMenu.coach_menu("Coach", "MenuStart", "menu_coach_main_txt",self)
+        tMenu = TelegramMenu(menu_file, self.loc, "Coach")
+        tMenu.coach_menu("MenuStart", "menu_coach_main_txt",self)
 
         return
     def __order_menu(self):
@@ -888,36 +890,27 @@ class Worker(threading.Thread):
         Administrative bot actions should be placed here."""
         log.debug("Displaying __admin_menu")
         menu_file = TelegramMenu.get_menu_file(self.cfg, "coach_menu")
-        tMenu = TelegramMenu(menu_file)
-        tMenu.set_menu_by_type("Admin")
-        tMenu.set_menu_by_name("MenuStart", self.loc)
+        tMenu = TelegramMenu(menu_file, self.loc, "Admin")
+        adminHandler = TelegramAdminHandler(self, "config/comunda_admin_menu.bpmn")
+        adminHandler.set_menu_by_bpmn("MenuStart", tMenu)
         header_txt = "menu_admin_main_txt"
-        keyboard = tMenu.get_keyboard()
+        keyboard = adminHandler.get_keyboard()
         # Loop used to return to the menu after executing a command
         while True:
             # Send the previously created keyboard to the user (ensuring it can be clicked only 1 time)
             self.bot.send_message(self.chat.id, self.loc.get(header_txt),
                                   reply_markup=telegram.ReplyKeyboardMarkup(keyboard, one_time_keyboard=True))
             # Wait for a reply from the user
-            '''
-            selection = self.__wait_for_specific_message([self.loc.get("menu_products"),
-                                                          self.loc.get("menu_orders"),
-                                                          self.loc.get("menu_admin_user_mode"),
-                                                          self.loc.get("menu_edit_credit"),
-                                                          self.loc.get("menu_transactions"),
-                                                          self.loc.get("menu_csv"),
-                                                          self.loc.get("menu_edit_admins")])
-            '''
-            selection = self.__wait_for_specific_message(tMenu.loc_menu)
-            handlername = utils.get_key(tMenu.keyboard_handler, selection)
+            selection = self.__wait_for_specific_message(tMenu.localnames)
+            handlername = tMenu.get_handler_by_displayname(selection)
             log.debug(f"worker menu selected name: {selection}")
             log.debug(f"worker menu selected {handlername}")
-            AdminHandler = TelegramAdminHandler()
 
         #Вызываем обработчик в зависимости от выбранной команды.
+            #todo вернуть try/catch
             #try:
             m = getattr(TelegramAdminHandler, handlername)
-            m(AdminHandler, tMenu, self)
+            m(adminHandler, tMenu, self)
             #except:
             #    header_txt = "menu_all_inbuilding_txt"
             #    log.error(f"handler {handlername} not found in class TelegramAdminHandler")

@@ -38,10 +38,12 @@ menu_coach_training_status = "TrainingStatus"
 menu_all_add_swimpool = "AddSwimpool"
 menu_all_del_swimpool = "DelSwimpool"
 menu_all_cancel = "Cancel"
-[Coach.MenuSwimpoolAdd]
-1="menu_all_cancel"
-
-
+[Coach.MenuAddSwimpool]
+menu_coach_save_swimpool = "SaveAddSwimpool"
+menu_all_cancel="Cancel"
+[Coach.MenuDelSwimpool]
+menu_coach_del_swimpool = "DelDelSwimpool"
+menu_all_cancel="Cancel"
 [Admin.MenuStart]
 
 menu_admin_client_list = "ClientList"

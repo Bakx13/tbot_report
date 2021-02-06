@@ -31,7 +31,7 @@ class MyConfig(object):
         #каталог для хранения логов
         self.log_dir = common_cfg["Path"]["logs_dir"]
         #домашний каталог бота (лучше не пользоваться до создания инсталлятора)
-        self.tbot_home = common_cfg["Path"]["logs_dir"]
+        self.tbot_home = common_cfg["Path"]["tbot_home"]
         self.menu_dir = common_cfg["Path"]["menu_dir"]
         #названия файлов с меню для каждой роли
         self.menu = common_cfg["Menu"]
