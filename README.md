@@ -4,6 +4,8 @@
 На выходе получаем ключик.<br>
 Далее этот ключи надо внести в config/config_devel.toml. 
 Конфиг используется в режиме разработки.<br>
+Задачи по проекту: https://konstantinshin.atlassian.net/jira/software/projects/SVDEV/boards/1 <br>
+Дока по проекту: https://konstantinshin.atlassian.net/wiki/spaces/SWIMDEV/pages/262309 <br>
 Софт для разработки:<br>
 PyCharm (Commynity последней версии) - фрэймворк для питона<br>
 DBevear - для работы с СУБД<br>
