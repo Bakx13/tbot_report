@@ -11,6 +11,10 @@ PyCharm (Commynity последней версии) - фрэймворк для 
 DBevear - для работы с СУБД<br>
 Docker desktop - но можно и без него, для этого нужно поменять deploy/build.sh или вообще отлаживаться в Pycharm. <br>
 Camunda Modeler - https://camunda.com/download/modeler/ <br>
+
+Необходимые библиотеки: 
+import sqlalchemy, необходимо отдельно поставить.
+
 В докере развернул:<br>
 debian - взял с официального сайта<br>
   внутри дополнительно:<br>
