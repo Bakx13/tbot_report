@@ -62,7 +62,6 @@
     </bpmn:endEvent>
     <bpmn:endEvent id="menu_all_cancel">
       <bpmn:incoming>Flow_Cancel</bpmn:incoming>
-      <bpmn:incoming>Flow_1ngse7f</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:exclusiveGateway id="menu_admin_user_mode" name="Перейти в режим тренера">
       <bpmn:incoming>menu_all_training_method_st</bpmn:incoming>
@@ -105,9 +104,7 @@
       <bpmn:outgoing>menu_coach_client_request_st</bpmn:outgoing>
       <bpmn:outgoing>menu_all_training_method_st</bpmn:outgoing>
       <bpmn:outgoing>menu_all_swimpool_list_st</bpmn:outgoing>
-      <bpmn:outgoing>Flow_1ngse7f</bpmn:outgoing>
     </bpmn:exclusiveGateway>
-    <bpmn:sequenceFlow id="Flow_1ngse7f" sourceRef="MenuStart" targetRef="menu_all_cancel" />
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Coach">
@@ -193,11 +190,6 @@
         <bpmndi:BPMNLabel>
           <dc:Bounds x="695" y="496" width="49" height="27" />
         </bpmndi:BPMNLabel>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_1ngse7f_di" bpmnElement="Flow_1ngse7f">
-        <di:waypoint x="454" y="589" />
-        <di:waypoint x="454" y="620" />
-        <di:waypoint x="792" y="620" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="EndEvent_0ofyivj_di" bpmnElement="EndEvent_0ofyivj">
         <dc:Bounds x="822" y="83" width="36" height="36" />

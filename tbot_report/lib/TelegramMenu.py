@@ -143,6 +143,13 @@ class TelegramAdminHandler(TelegramHandler):
         keyboard = tMenu.get_keyboard()
         return keyboard, msg_txt
 
+class TelegramSecondMenu():
+    def __init__(self):
+        return
+    @staticmethod
+    def startHandler(worker, updates: telegram.Update):
+        worker.bot.send_message(worker.chat.id, f"Ой, вы нажали кнопочку из дополнительного меню с обработчиком: {updates.callback_query.data}")
+        return
 
 class TelegramMenu(NuConfig):
     def __init__(self, file: "TextIO", loc: localization, type):
@@ -235,16 +242,24 @@ class TelegramMenu(NuConfig):
         keyboard = qoachHandler.get_keyboard()
         self.send_msg_nicekeyboard(worker)
         log.debug("Displaying coach_menu")
+        needupdatekeyboard=True
 
         # Loop used to returning to the menu after executing a command
         while True:
 
             # Send the previously created keyboard to the user (ensuring it can be clicked only 1 time)
-            worker.bot.send_message(worker.chat.id, worker.loc.get(header_txt),
-                                  reply_markup=telegram.ReplyKeyboardMarkup(keyboard, one_time_keyboard=True))
+            if (needupdatekeyboard):
+                worker.bot.send_message(worker.chat.id, worker.loc.get(header_txt),
+                                      reply_markup=telegram.ReplyKeyboardMarkup(keyboard, one_time_keyboard=True, resize_keyboard=True))
             # Wait for a reply from the user
             #log.debug(f"get loc menu worker: {self.keyboard_handler}")
             selection = worker.wait_for_specific_message(self.localnames)
+            #Если сделали выбор из второго меню.
+            needupdatekeyboard = True
+            if isinstance(selection, telegram.Update):
+                TelegramSecondMenu.startHandler(worker, selection)
+                needupdatekeyboard = False
+                continue
             handlername = self.get_handler_by_displayname(selection)
             menuname = self.get_name_by_displayname(selection)
             log.debug(f"worker menu selected name: {selection}")

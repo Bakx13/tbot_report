@@ -299,8 +299,10 @@ class Worker(threading.Thread):
         while True:
             # Get the next update
             update = self.__receive_next_update()
-            log.debug(f"get command {update.message.text}")
-            log.debug(f"get command list {items}")
+            try:
+                log.debug(f"get command {update.message.text}")
+            except:
+                log.debug(f"update.message.text is None")
             # If a CancelSignal is received...
             if isinstance(update, CancelSignal):
                 # And the wait is cancellable...
@@ -312,6 +314,10 @@ class Worker(threading.Thread):
                     continue
             # Ensure the update contains a message
             if update.message is None:
+                # @todo подумать как отделить команды из основного меню и команды из второго меню
+                if not update.callback_query is None:
+                    log.debug(f"get second command {update.callback_query.data}")
+                    return update
                 continue
             # Ensure the message contains text
             if update.message.text is None:

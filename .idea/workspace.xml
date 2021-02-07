@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="d83d59a8-8a03-460f-953b-d8ceae5adfef" name="Default Changelist" comment="fixup! Update README.md">
+    <list default="true" id="d83d59a8-8a03-460f-953b-d8ceae5adfef" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/comunda_admin_menu.bpmn" beforeDir="false" afterPath="$PROJECT_DIR$/config/comunda_admin_menu.bpmn" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tbot_report/lib/TelegramMenu.py" beforeDir="false" afterPath="$PROJECT_DIR$/tbot_report/lib/TelegramMenu.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tbot_report/lib/worker.py" beforeDir="false" afterPath="$PROJECT_DIR$/tbot_report/lib/worker.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -64,6 +67,7 @@
       <recent name="$PROJECT_DIR$/tbot_report/localization" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
       <recent name="$PROJECT_DIR$/tbot_report/localization/locale" />
       <recent name="$PROJECT_DIR$/" />
     </key>
@@ -336,7 +340,35 @@
       <option name="project" value="LOCAL" />
       <updated>1612645105456</updated>
     </task>
-    <option name="localTasksCounter" value="32" />
+    <task id="LOCAL-00032" summary="fixup! Update README.md">
+      <created>1612646782502</created>
+      <option name="number" value="00032" />
+      <option name="presentableId" value="LOCAL-00032" />
+      <option name="project" value="LOCAL" />
+      <updated>1612646782502</updated>
+    </task>
+    <task id="LOCAL-00033" summary="fixup! Update README.md">
+      <created>1612646848338</created>
+      <option name="number" value="00033" />
+      <option name="presentableId" value="LOCAL-00033" />
+      <option name="project" value="LOCAL" />
+      <updated>1612646848338</updated>
+    </task>
+    <task id="LOCAL-00034" summary="fixup! Update README.md">
+      <created>1612646905131</created>
+      <option name="number" value="00034" />
+      <option name="presentableId" value="LOCAL-00034" />
+      <option name="project" value="LOCAL" />
+      <updated>1612646905131</updated>
+    </task>
+    <task id="LOCAL-00035" summary="fixup! Update README.md">
+      <created>1612647072161</created>
+      <option name="number" value="00035" />
+      <option name="presentableId" value="LOCAL-00035" />
+      <option name="project" value="LOCAL" />
+      <updated>1612647072161</updated>
+    </task>
+    <option name="localTasksCounter" value="36" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -371,6 +403,7 @@
     <MESSAGE value="Перенес часть работы с меню тренера в класс для меню, убрал из worker&#10;убрал баги по новым таблицам плюс небольшой рефакторинг таблицы Админ&#10;Убрал из меню админа хардкод и перенес настройки по образу меню тренера в файл конфигурации&#10;Начал подключение SpiffWorkflow для задания правил перехода по меню." />
     <MESSAGE value="Перенес формирование меню в SpiffWorkflow. Движок для bpmn. НЕ разобрался как правильно запускать обработчики на каждом шаге. В итоге хэндлеры остались как и были в конфигах.&#10;Продолжаю убирать логику из worker'a в целевые классы - TelegramHandler&quot;ы и TelegramMenu.&#10;&#10;Разобрался как делать меню второго уровня. Пока в качестве примера в TelegramMenu реализован статик метод send_msg_nicekeyboard" />
     <MESSAGE value="Добавляю первую версию меню в исполнении bpmn.&#10;Для редактирования лучше использовать камунда моделер.&#10;пример и ссылка на страничке с требованиями - https://konstantinshin.atlassian.net/wiki/spaces/SWIMDEV/pages/262309" />
-    <option name="LAST_COMMIT_MESSAGE" value="Добавляю первую версию меню в исполнении bpmn.&#10;Для редактирования лучше использовать камунда моделер.&#10;пример и ссылка на страничке с требованиями - https://konstantinshin.atlassian.net/wiki/spaces/SWIMDEV/pages/262309" />
+    <MESSAGE value="fixup! Update README.md" />
+    <option name="LAST_COMMIT_MESSAGE" value="fixup! Update README.md" />
   </component>
 </project>

@@ -19,3 +19,4 @@
 #игнорировать каталог с SpiffWorkflow
 **/SpiffWorkflow-master/
 **/bpmn.dmn/
+**/python-telegram-bot/
