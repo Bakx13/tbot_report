@@ -19,7 +19,7 @@ import tbot_report.localization.localization as localization
 import tbot_report.lib.loadconfig as MConfig
 import tbot_report.lib.utils as utils
 #import tbot_report.lib.TelegramMenu
-from tbot_report.lib.TelegramMenu import TelegramMenu, TelegramQoachHandler, TelegramAdminHandler
+from tbot_report.lib.TelegramMenu import TelegramMenu, TelegramCoachHandler, TelegramAdminHandler
 
 log = logging.getLogger(__name__)
 
@@ -897,64 +897,8 @@ class Worker(threading.Thread):
         log.debug("Displaying __admin_menu")
         menu_file = TelegramMenu.get_menu_file(self.cfg, "coach_menu")
         tMenu = TelegramMenu(menu_file, self.loc, "Admin")
-        adminHandler = TelegramAdminHandler(self, "config/comunda_admin_menu.bpmn")
-        adminHandler.set_menu_by_bpmn("MenuStart", tMenu)
-        header_txt = "menu_admin_main_txt"
-        keyboard = adminHandler.get_keyboard()
-        # Loop used to return to the menu after executing a command
-        while True:
-            # Send the previously created keyboard to the user (ensuring it can be clicked only 1 time)
-            self.bot.send_message(self.chat.id, self.loc.get(header_txt),
-                                  reply_markup=telegram.ReplyKeyboardMarkup(keyboard, one_time_keyboard=True))
-            # Wait for a reply from the user
-            selection = self.__wait_for_specific_message(tMenu.localnames)
-            handlername = tMenu.get_handler_by_displayname(selection)
-            log.debug(f"worker menu selected name: {selection}")
-            log.debug(f"worker menu selected {handlername}")
-
-        #Вызываем обработчик в зависимости от выбранной команды.
-            #todo вернуть try/catch
-            #try:
-            m = getattr(TelegramAdminHandler, handlername)
-            m(adminHandler, tMenu, self)
-            #except:
-            #    header_txt = "menu_all_inbuilding_txt"
-            #    log.error(f"handler {handlername} not found in class TelegramAdminHandler")
-            #    tMenu.set_menu_by_type("Admin")
-            #    tMenu.set_menu_by_name("MenuStart", self.loc)
-            #    keyboard = tMenu.get_keyboard()
-            '''
-            # If the user has selected the Products option...
-            if selection == self.loc.get("menu_products"):
-                # Open the products menu
-                self.__products_menu()
-            # If the user has selected the Orders option...
-            elif selection == self.loc.get("menu_orders"):
-                # Open the orders menu
-                self.__orders_menu()
-            # If the user has selected the Transactions option...
-            elif selection == self.loc.get("menu_edit_credit"):
-                # Open the edit credit menu
-                self.__create_transaction()
-            # If the user has selected the User mode option...
-            elif selection == self.loc.get("menu_admin_user_mode"):
-                # Tell the user how to go back to admin menu
-                self.bot.send_message(self.chat.id, self.loc.get("conversation_switch_to_user_mode"))
-                # Start the bot in user mode
-                self.__user_menu()
-            # If the user has selected the Add Admin option...
-            elif selection == self.loc.get("menu_edit_admins"):
-                # Open the edit admin menu
-                self.__add_admin()
-            # If the user has selected the Transactions option...
-            elif selection == self.loc.get("menu_transactions"):
-                # Open the transaction pages
-                self.__transaction_pages()
-            # If the user has selected the .csv option...
-            elif selection == self.loc.get("menu_csv"):
-                # Generate the .csv file
-                self.__transactions_file()
-            '''
+        tMenu.admin_menu("MenuStart", "menu_admin_main_txt",self)
+        return
     def __products_menu(self):
         """Display the admin menu to select a product to edit."""
         log.debug("Displaying __products_menu")

@@ -144,9 +144,8 @@
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_15j7fu3_di" bpmnElement="menu_all_training_method_st">
-        <di:waypoint x="479" y="564" />
-        <di:waypoint x="508" y="564" />
-        <di:waypoint x="508" y="760" />
+        <di:waypoint x="454" y="589" />
+        <di:waypoint x="454" y="760" />
         <di:waypoint x="625" y="760" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="512" y="733" width="87" height="53" />
