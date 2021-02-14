@@ -4,7 +4,9 @@
     <list default="true" id="d83d59a8-8a03-460f-953b-d8ceae5adfef" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tbot_report/lib/TelegramMenu.py" beforeDir="false" afterPath="$PROJECT_DIR$/tbot_report/lib/TelegramMenu.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tbot_report/lib/worker.py" beforeDir="false" afterPath="$PROJECT_DIR$/tbot_report/lib/worker.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tbot_report/lib/duckbot.py" beforeDir="false" afterPath="$PROJECT_DIR$/tbot_report/lib/duckbot.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tbot_report/localization/locale/ru.py" beforeDir="false" afterPath="$PROJECT_DIR$/tbot_report/localization/locale/ru.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tbot_report/models/menus/coach_menu.toml" beforeDir="false" afterPath="$PROJECT_DIR$/tbot_report/models/menus/coach_menu.toml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -401,7 +403,14 @@
       <option name="project" value="LOCAL" />
       <updated>1613295718799</updated>
     </task>
-    <option name="localTasksCounter" value="41" />
+    <task id="LOCAL-00041" summary="Первая версия добавления бассейна админом. Простенькая, без дочерних таблиц">
+      <created>1613315167428</created>
+      <option name="number" value="00041" />
+      <option name="presentableId" value="LOCAL-00041" />
+      <option name="project" value="LOCAL" />
+      <updated>1613315167428</updated>
+    </task>
+    <option name="localTasksCounter" value="42" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -440,6 +449,7 @@
     <MESSAGE value="Переделал меню админа и тренера, вынес общие вещи в draw_menu()&#10;Меню админы убрал из worker и перенес в TelegramMenu" />
     <MESSAGE value="Теперь при каждом запуске в режиме дев очищаются все таблицы и добавляются тестовые данные&#10;Отображение бассейнов в виде меню в админке" />
     <MESSAGE value="Выводим первые данные из базы данных пользователю!!!" />
-    <option name="LAST_COMMIT_MESSAGE" value="Выводим первые данные из базы данных пользователю!!!" />
+    <MESSAGE value="Первая версия добавления бассейна админом. Простенькая, без дочерних таблиц" />
+    <option name="LAST_COMMIT_MESSAGE" value="Первая версия добавления бассейна админом. Простенькая, без дочерних таблиц" />
   </component>
 </project>

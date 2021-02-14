@@ -4,6 +4,7 @@ import time
 import traceback
 
 import telegram.error
+import telegram
 
 import tbot_report.lib.loadconfig as MConfig
 
@@ -58,11 +59,25 @@ def factory(cfg: MConfig):
         def __init__(self, *args, **kwargs):
             log.debug("init duckbot")
             self.bot = telegram.Bot(token=cfg.telegram["token"] , *args, **kwargs)
+            self.last_message_inline_keyboard = telegram.Message
+            self.last_message = telegram.Message
+            self.last_message_keyboard = telegram.Message
 
         @catch_telegram_errors
         def send_message(self, *args, **kwargs):
             # All messages are sent in HTML parse mode
-            return self.bot.send_message(parse_mode="HTML", *args, **kwargs)
+            # Добавляем в бота данные по последнему сообщению
+            if 'reply_markup' in kwargs:
+                if isinstance(kwargs['reply_markup'], telegram.InlineKeyboardMarkup):
+                    self.last_message_inline_keyboard = self.bot.send_message(parse_mode="HTML", *args, **kwargs)
+                    rtn = self.last_message_inline_keyboard
+                elif isinstance(kwargs['reply_markup'], telegram.ReplyKeyboardMarkup):
+                    self.last_message_keyboard = self.bot.send_message(parse_mode="HTML", *args, **kwargs)
+                    rtn = self.last_message_keyboard
+            else:
+                self.last_message = self.bot.send_message(parse_mode="HTML", *args, **kwargs)
+                rtn = self.last_message
+            return rtn
 
         @catch_telegram_errors
         def edit_message_text(self, *args, **kwargs):

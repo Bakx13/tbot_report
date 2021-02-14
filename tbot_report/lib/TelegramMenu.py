@@ -131,16 +131,14 @@ class TelegramAdminHandler(TelegramHandler):
         # отображаем текущий список бассейнов:
 
         swimpools = self.worker.session.query(db.SwimPool).filter_by().all()
-        swimpool_names = [swimpool.name for swimpool in swimpools]
         keyboard_nice = []
         for swimpool in swimpools:
             swimpool_name = swimpool.name
             sw_id = swimpool.id
             keyboard_nice.append(
-                [telegram.InlineKeyboardButton(f"✅ {swimpool_name}", callback_data=f"SwimpoolList.{sw_id}")])
+                [telegram.InlineKeyboardButton(swimpool_name, callback_data=f"SwimpoolList#{sw_id}")])
         reply_markup = telegram.InlineKeyboardMarkup(keyboard_nice)
-        self.worker.bot.send_message(self.worker.chat.id, '<b color="red">Выберите бассейн для удалению</b>',
-                                     reply_markup=reply_markup)
+        self.worker.bot.send_message(self.worker.chat.id, "<b>Список бассейнов:</b>", reply_markup=reply_markup)
         return keyboard, msg_txt
 
     def AddSwimpool(self, tMenu, menuname):
@@ -149,7 +147,11 @@ class TelegramAdminHandler(TelegramHandler):
         # переопределяем клавиатуру для выбранного пункта меню
         self.set_menu_by_bpmn(menuname, tMenu)
         keyboard = self.get_keyboard()
-        sw_fileds = TelegramSecondMenu.collect_object_fields(self.worker, ["Введите название", "Введите адрес", "Введите стоимость разового посещения"],[])
+        sw_fileds = TelegramSecondMenu.collect_object_fields(self.worker,
+                                                             [self.worker.loc.get("questions_name"),
+                                                              self.worker.loc.get("questions_address"),
+                                                              self.worker.loc.get("questions_swimpool_cost")],
+                                                             [])
         swpool = db.SwimPool(distict_id=1, timetable_id=1, address=sw_fileds[1], name=sw_fileds[0], price=sw_fileds[2])
         self.worker.session.add(swpool)
         self.worker.session.commit()
@@ -181,13 +183,47 @@ class TelegramAdminHandler(TelegramHandler):
 
 
 class TelegramSecondMenu():
-    def __init__(self):
-        return
+    def __init__(self, worker: Worker):
+        self.worker = worker
 
     @staticmethod
     def startHandler(worker, updates: telegram.Update):
-        worker.bot.send_message(worker.chat.id,
-                                f"Ой, вы нажали кнопочку из дополнительного меню с обработчиком: {updates.callback_query.data}")
+        message = worker.bot.last_message_inline_keyboard
+        callback_query = updates.callback_query.data
+        lst = callback_query.split('#')
+        handlername = lst[0]
+        object_id = lst[1]
+        menu = TelegramSecondMenu(worker)
+        log.debug(f"object_id={object_id}")
+        reply_markup = menu.call_handler_by_name(handlername, object_id)
+        log.debug(f"reply_markup={reply_markup}")
+        try:
+            msg_id = message.message_id
+        except:
+            log.debug(f"Ой-ой. Кто-то позвал обработчик, а сообщений то не было!")
+            return
+        worker.bot.edit_message_reply_markup(chat_id=message.chat_id, message_id=msg_id,
+                                             reply_markup=reply_markup)
+        # worker.bot.send_message(worker.chat.id,
+        #                        f"Ой, вы нажали кнопочку из дополнительного меню с обработчиком: {worker.bot.last_message_inline_keyboard}")
+        return
+
+    def SwimpoolList(self, object_id: int):
+        log.debug(f"begin SwimpoolList second menu handler")
+        swimpools = self.worker.session.query(db.SwimPool).filter_by().all()
+        object_id = int(object_id)
+        keyboard_nice = []
+        for swimpool in swimpools:
+            swimpool_name = swimpool.name
+            sw_id = int(swimpool.id)
+            if sw_id == object_id: swimpool_name = f"✅ {swimpool_name}"
+            keyboard_nice.append(
+                [telegram.InlineKeyboardButton(swimpool_name, callback_data=f"SwimpoolList#{sw_id}")])
+        reply_markup = telegram.InlineKeyboardMarkup(keyboard_nice)
+        return reply_markup
+
+    @staticmethod
+    def draw_selected_menu(worker, updates: telegram.Update):
         return
 
     @staticmethod
@@ -202,6 +238,9 @@ class TelegramSecondMenu():
                 return None
             lst.append(update.message.text)
         return lst
+
+    def call_handler_by_name(self, methodname, *args, **kwargs):
+        return getattr(self, methodname)(*args, **kwargs)
 
 
 class TelegramMenu(NuConfig):
