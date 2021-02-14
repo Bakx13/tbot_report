@@ -391,7 +391,7 @@ class SwimPool(DeferredReflection, TableDeclarativeBase):
     address = Column(String, nullable=False)
 
     # Название бассейна
-    name = Column(String)
+    name = Column(String, nullable=False)
 
     # Описание бассейна
     description = Column(Text)

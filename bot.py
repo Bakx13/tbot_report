@@ -4,7 +4,7 @@ import threading
 import sqlalchemy
 import sqlalchemy.ext.declarative as sed
 import sqlalchemy.orm
-
+from datetime import datetime
 
 try:
     import coloredlogs
@@ -68,7 +68,34 @@ def main():
     database.TableDeclarativeBase.metadata.create_all()
     log.debug("Preparing the tables through deferred reflection...")
     sed.DeferredReflection.prepare(engine)
+    '''
+    добавляем тестовые данные
+    '''
+    if ENV_LEVEL == 'dev':
+        '''Удаляем все данные из таблиц'''
+        meta = database.TableDeclarativeBase.metadata
+        con = engine.connect()
+        trans = con.begin()
+        for table in meta.sorted_tables:
+            #con.execute(f'ALTER TABLE "{table.name}" DISABLE TRIGGER ALL;')
+            con.execute(table.delete())
+            #con.execute(f'ALTER TABLE "{table.name}" ENABLE TRIGGER ALL;')
+        trans.commit()
+        '''Создаем тестовые данные
+        @todo Переделать, чтобы брать данные из файликов для каждой таблицы'''
+        session = sqlalchemy.orm.sessionmaker(bind=engine)()
+        city = database.City(name="Москва", description="Столица России")
+        session.add(city)
 
+        district = database.District(city_id = city.id, name = "Строгино", description="Спальный район на западе Москвы")
+        session.add(district)
+        timetable = database.TimeTable(creation_date=datetime.now())
+        session.add(timetable)
+        spool = database.SwimPool(distict_id=district.id, timetable_id=timetable.id, address="Живописная 11", name="Энигма")
+        spool2 = database.SwimPool(distict_id=district.id, timetable_id=timetable.id, address="Где-то на западе", name="Западный бассейн")
+        session.add(spool)
+        session.add(spool2)
+        session.commit()
 
     bot = tbotlogic.TBot.initbot(config_all)
 

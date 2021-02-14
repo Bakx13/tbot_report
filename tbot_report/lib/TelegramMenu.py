@@ -130,9 +130,13 @@ class TelegramAdminHandler(TelegramHandler):
 
         swimpools = self.worker.session.query(db.SwimPool).filter_by(deleted=False).all()
         swimpool_names = [swimpool.name for swimpool in swimpools]
-
-
-return keyboard, msg_txt
+        keyboard_nice = []
+        for swimpool_name in swimpool_names:
+            keyboard_nice.append([telegram.InlineKeyboardButton(swimpool_name, callback_data=swimpool_name)])
+        reply_markup = telegram.InlineKeyboardMarkup(keyboard_nice)
+        self.worker.bot.send_message(self.worker.chat.id, 'please select the judge or select all for showing all',
+                                reply_markup=reply_markup)
+        return keyboard, msg_txt
 
     def AddSwimpool(self, tMenu, menuname):
         msg_txt = "menu_all_swimpool_list_text"
