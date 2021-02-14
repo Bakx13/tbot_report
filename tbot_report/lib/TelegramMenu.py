@@ -59,8 +59,10 @@ class TelegramHandler():
         self.keyboard.reverse()
         log.debug("End set_menu_by_bpmn")
         return
+
     def call_handler_by_name(self, methodname, *args, **kwargs):
         return getattr(self, methodname)(*args, **kwargs)
+
 
 class TelegramCoachHandler(TelegramHandler):
     def __init__(self, worker: Worker, bpmnfile):
@@ -131,11 +133,14 @@ class TelegramAdminHandler(TelegramHandler):
         swimpools = self.worker.session.query(db.SwimPool).filter_by().all()
         swimpool_names = [swimpool.name for swimpool in swimpools]
         keyboard_nice = []
-        for swimpool_name in swimpool_names:
-            keyboard_nice.append([telegram.InlineKeyboardButton(swimpool_name, callback_data=swimpool_name)])
+        for swimpool in swimpools:
+            swimpool_name = swimpool.name
+            sw_id = swimpool.id
+            keyboard_nice.append(
+                [telegram.InlineKeyboardButton(f"✅ {swimpool_name}", callback_data=f"SwimpoolList.{sw_id}")])
         reply_markup = telegram.InlineKeyboardMarkup(keyboard_nice)
-        self.worker.bot.send_message(self.worker.chat.id, 'please select the judge or select all for showing all',
-                                reply_markup=reply_markup)
+        self.worker.bot.send_message(self.worker.chat.id, '<b color="red">Выберите бассейн для удалению</b>',
+                                     reply_markup=reply_markup)
         return keyboard, msg_txt
 
     def AddSwimpool(self, tMenu, menuname):
@@ -144,6 +149,10 @@ class TelegramAdminHandler(TelegramHandler):
         # переопределяем клавиатуру для выбранного пункта меню
         self.set_menu_by_bpmn(menuname, tMenu)
         keyboard = self.get_keyboard()
+        sw_fileds = TelegramSecondMenu.collect_object_fields(self.worker, ["Введите название", "Введите адрес", "Введите стоимость разового посещения"],[])
+        swpool = db.SwimPool(distict_id=1, timetable_id=1, address=sw_fileds[1], name=sw_fileds[0], price=sw_fileds[2])
+        self.worker.session.add(swpool)
+        self.worker.session.commit()
         return keyboard, msg_txt
 
     def DelSwimpool(self, tMenu, menuname):
@@ -180,6 +189,19 @@ class TelegramSecondMenu():
         worker.bot.send_message(worker.chat.id,
                                 f"Ой, вы нажали кнопочку из дополнительного меню с обработчиком: {updates.callback_query.data}")
         return
+
+    @staticmethod
+    def collect_object_fields(worker, user_questions, stopwordlst):
+        lst = []
+        for user_question in user_questions:
+            worker.bot.send_message(worker.chat.id, f"{user_question}")
+            # Get the next update
+            update = worker.receive_next_update()
+            # Check if the message is contained in the list
+            if update.message.text in stopwordlst:
+                return None
+            lst.append(update.message.text)
+        return lst
 
 
 class TelegramMenu(NuConfig):
@@ -272,7 +294,7 @@ class TelegramMenu(NuConfig):
         c = get_class(handlerclass)
         log.debug(f"worker in draw_menu {worker}")
         classHandler = c(worker, camunda_schema)
-        #exec("classHandler =" + handlerclass + f"(worker,camunda_schema)")
+        # exec("classHandler =" + handlerclass + f"(worker,camunda_schema)")
         # classHandler = type(classHandler, (object, ), dict())
         classHandler.set_menu_by_bpmn(menustart, self)
         keyboard = classHandler.get_keyboard()
@@ -303,11 +325,11 @@ class TelegramMenu(NuConfig):
             worker.update_user()
 
             # Вызываем обработчик в зависимости от выбранной команды.
-            #try:
+            # try:
             keyboard, header_txt = classHandler.call_handler_by_name(handlername, self, menuname)
-            #m = getattr(classHandler, handlername)
-            #keyboard, header_txt = m(classHandler, menuname)
-            #except AttributeError as exc:
+            # m = getattr(classHandler, handlername)
+            # keyboard, header_txt = m(classHandler, menuname)
+            # except AttributeError as exc:
             #    header_txt = "menu_all_inbuilding_txt"
         return
 

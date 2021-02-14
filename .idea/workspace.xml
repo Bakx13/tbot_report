@@ -3,9 +3,8 @@
   <component name="ChangeListManager">
     <list default="true" id="d83d59a8-8a03-460f-953b-d8ceae5adfef" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bot.py" beforeDir="false" afterPath="$PROJECT_DIR$/bot.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tbot_report/database/database.py" beforeDir="false" afterPath="$PROJECT_DIR$/tbot_report/database/database.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tbot_report/lib/TelegramMenu.py" beforeDir="false" afterPath="$PROJECT_DIR$/tbot_report/lib/TelegramMenu.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tbot_report/lib/worker.py" beforeDir="false" afterPath="$PROJECT_DIR$/tbot_report/lib/worker.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -388,7 +387,21 @@
       <option name="project" value="LOCAL" />
       <updated>1613292324979</updated>
     </task>
-    <option name="localTasksCounter" value="39" />
+    <task id="LOCAL-00039" summary="Теперь при каждом запуске в режиме дев очищаются все таблицы и добавляются тестовые данные&#10;Отображение бассейнов в виде меню в админке">
+      <created>1613295507740</created>
+      <option name="number" value="00039" />
+      <option name="presentableId" value="LOCAL-00039" />
+      <option name="project" value="LOCAL" />
+      <updated>1613295507740</updated>
+    </task>
+    <task id="LOCAL-00040" summary="Выводим первые данные из базы данных пользователю!!!">
+      <created>1613295718799</created>
+      <option name="number" value="00040" />
+      <option name="presentableId" value="LOCAL-00040" />
+      <option name="project" value="LOCAL" />
+      <updated>1613295718799</updated>
+    </task>
+    <option name="localTasksCounter" value="41" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -425,6 +438,8 @@
     <MESSAGE value="Добавляю первую версию меню в исполнении bpmn.&#10;Для редактирования лучше использовать камунда моделер.&#10;пример и ссылка на страничке с требованиями - https://konstantinshin.atlassian.net/wiki/spaces/SWIMDEV/pages/262309" />
     <MESSAGE value="fixup! Update README.md" />
     <MESSAGE value="Переделал меню админа и тренера, вынес общие вещи в draw_menu()&#10;Меню админы убрал из worker и перенес в TelegramMenu" />
-    <option name="LAST_COMMIT_MESSAGE" value="Переделал меню админа и тренера, вынес общие вещи в draw_menu()&#10;Меню админы убрал из worker и перенес в TelegramMenu" />
+    <MESSAGE value="Теперь при каждом запуске в режиме дев очищаются все таблицы и добавляются тестовые данные&#10;Отображение бассейнов в виде меню в админке" />
+    <MESSAGE value="Выводим первые данные из базы данных пользователю!!!" />
+    <option name="LAST_COMMIT_MESSAGE" value="Выводим первые данные из базы данных пользователю!!!" />
   </component>
 </project>

@@ -260,6 +260,23 @@ class Worker(threading.Thread):
             self.__graceful_stop(data)
         # Return the received update
         return data
+    def receive_next_update(self) -> telegram.Update:
+        """Get the next update from the queue.
+        If no update is found, block the process until one is received.
+        If a stop signal is sent, try to gracefully stop the thread."""
+        # Pop data from the queue
+        try:
+            data = self.queue.get(timeout=self.cfg.telegram["conversation_timeout"])
+        except queuem.Empty:
+            # If the conversation times out, gracefully stop the thread
+            self.__graceful_stop(StopSignal("timeout"))
+        # Check if the data is a stop signal instance
+        if isinstance(data, StopSignal):
+            # Gracefully stop the process
+            log.debug("Waiting for a specific message...")
+            self.__graceful_stop(data)
+        # Return the received update
+        return data
 
     def __wait_for_specific_message(self,
                                     items: List[str],
