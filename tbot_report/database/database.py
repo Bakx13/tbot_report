@@ -328,12 +328,18 @@ class TimeTableItem(DeferredReflection, TableDeclarativeBase):
 
 
 class District(DeferredReflection, TableDeclarativeBase):
-    """Одна строчка из расписания занятий"""
+    """Район города"""
 
     # The unique item id
     id = Column(Integer, primary_key=True)
-    # The product that is being ordered
+
+    #Ссылка на город, в котором расположен район
+    city_id = Column(BigInteger, ForeignKey("city.id"), primary_key=False)
+    city = relationship("City")
+
+    # Название района
     name = Column(String, nullable=False)
+    # краткое описание, может быть пустым
     description = Column(String)
 
     # Extra table parameters
@@ -345,12 +351,13 @@ class District(DeferredReflection, TableDeclarativeBase):
     def __repr__(self):
         return f"<TimeTableItem {self.id}>"
 class City(DeferredReflection, TableDeclarativeBase):
-    """Одна строчка из расписания занятий"""
+    """Города страны, в которых мы предоставляем услугу"""
 
     # The unique item id
     id = Column(Integer, primary_key=True)
-    # The product that is being ordered
+    # Название города
     name = Column(String, nullable=False)
+
     description = Column(String)
 
     # Extra table parameters
@@ -365,14 +372,9 @@ class City(DeferredReflection, TableDeclarativeBase):
 #---- swimbot tables
 
 class SwimPool(DeferredReflection, TableDeclarativeBase):
-    """A purchasable product."""
-
+    """Бассейн, в который можно записаться"""
     # Product id
     id = Column(Integer, primary_key=True)
-
-    # ссылка на таблицу с города
-    city_id = Column(BigInteger, ForeignKey("city.id"), primary_key=False)
-    district = relationship("City")
 
     # ссылка на таблицы с районами города
     distict_id = Column(BigInteger, ForeignKey("district.id"), primary_key=False)
@@ -382,7 +384,7 @@ class SwimPool(DeferredReflection, TableDeclarativeBase):
     timetable_id = Column(BigInteger, ForeignKey("timetable.id"), primary_key=False)
     timetable = relationship("TimeTable")    # Permissions
 
-    # картинка бассейна
+    # фото бассейна
     image = Column(LargeBinary)
 
     # адрес бассейна

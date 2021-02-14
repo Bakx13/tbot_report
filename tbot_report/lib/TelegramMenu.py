@@ -12,6 +12,7 @@ from tbot_report.lib.nuconfig import NuConfig
 import tbot_report.lib.loadconfig as MConfig
 import tbot_report.localization.localization as localization
 import tbot_report.lib.worker as Worker
+import tbot_report.database.database as db
 
 log = logging.getLogger(__name__)
 
@@ -125,7 +126,13 @@ class TelegramAdminHandler(TelegramHandler):
         # переопределяем клавиатуру для выбранного пункта меню
         self.set_menu_by_bpmn(menuname, tMenu)
         keyboard = self.get_keyboard()
-        return keyboard, msg_txt
+        # отображаем текущий список бассейнов:
+
+        swimpools = self.worker.session.query(db.SwimPool).filter_by(deleted=False).all()
+        swimpool_names = [swimpool.name for swimpool in swimpools]
+
+
+return keyboard, msg_txt
 
     def AddSwimpool(self, tMenu, menuname):
         msg_txt = "menu_all_swimpool_list_text"
