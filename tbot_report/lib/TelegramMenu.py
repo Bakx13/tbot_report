@@ -128,7 +128,7 @@ class TelegramAdminHandler(TelegramHandler):
         keyboard = self.get_keyboard()
         # отображаем текущий список бассейнов:
 
-        swimpools = self.worker.session.query(db.SwimPool).filter_by(deleted=False).all()
+        swimpools = self.worker.session.query(db.SwimPool).filter_by().all()
         swimpool_names = [swimpool.name for swimpool in swimpools]
         keyboard_nice = []
         for swimpool_name in swimpool_names:
