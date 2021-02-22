@@ -2,13 +2,13 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d83d59a8-8a03-460f-953b-d8ceae5adfef" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/config/comunda_user_menu.bpmn" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tests/test_data.toml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bot.py" beforeDir="false" afterPath="$PROJECT_DIR$/bot.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/config/comunda_admin_menu.bpmn" beforeDir="false" afterPath="$PROJECT_DIR$/config/comunda_admin_menu.bpmn" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/config_devel.toml" beforeDir="false" afterPath="$PROJECT_DIR$/config/config_devel.toml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tbot_report/lib/TelegramMenu.py" beforeDir="false" afterPath="$PROJECT_DIR$/tbot_report/lib/TelegramMenu.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tbot_report/localization/locale/ru.py" beforeDir="false" afterPath="$PROJECT_DIR$/tbot_report/localization/locale/ru.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tbot_report/models/menus/coach_menu.toml" beforeDir="false" afterPath="$PROJECT_DIR$/tbot_report/models/menus/coach_menu.toml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tbot_report/lib/loadconfig.py" beforeDir="false" afterPath="$PROJECT_DIR$/tbot_report/lib/loadconfig.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -57,16 +57,16 @@
     <property name="DefaultHtmlFileTemplate" value="HTML File" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/config" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/tests" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PythonContentEntriesConfigurable" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/tests" />
       <recent name="$PROJECT_DIR$/config" />
       <recent name="$PROJECT_DIR$/tbot_report/models/menus" />
       <recent name="$PROJECT_DIR$/tbot_report/lib" />
       <recent name="$PROJECT_DIR$/tbot_report/database" />
-      <recent name="$PROJECT_DIR$/tbot_report/localization" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$" />
@@ -426,7 +426,21 @@
       <option name="project" value="LOCAL" />
       <updated>1613985461029</updated>
     </task>
-    <option name="localTasksCounter" value="44" />
+    <task id="LOCAL-00044" summary="Добавлен в админа пункт меню - перейти в режим пользователя. Переименовал таки меню для перехода в режим тренера в &quot;режим тренера&quot;). &#10;Обратите внимание, изменилось требование к bpmn  схемам. Добавил в поле Description возможность сортировки пунктов меню как надо, а не как получилось. Поскольку мне было лень, то обратная совместимость не поддерживается.">
+      <created>1613990030838</created>
+      <option name="number" value="00044" />
+      <option name="presentableId" value="LOCAL-00044" />
+      <option name="project" value="LOCAL" />
+      <updated>1613990030838</updated>
+    </task>
+    <task id="LOCAL-00045" summary="Поправил bpmn схему для тренера, чтобы не ломалось после предыдущего коммита">
+      <created>1613990208490</created>
+      <option name="number" value="00045" />
+      <option name="presentableId" value="LOCAL-00045" />
+      <option name="project" value="LOCAL" />
+      <updated>1613990208490</updated>
+    </task>
+    <option name="localTasksCounter" value="46" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -442,8 +456,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="досоздаем структуру каталогов. часть 1" />
-    <MESSAGE value="добавляем зависимости" />
     <MESSAGE value="разносим main по библиотекам и меняем print на logging" />
     <MESSAGE value="добавляем работу с аргументами вызова и конфиг файлами" />
     <MESSAGE value="добавляем работу с аргументами вызова и конфиг файлами 2" />
@@ -467,6 +479,8 @@
     <MESSAGE value="Первая версия добавления бассейна админом. Простенькая, без дочерних таблиц" />
     <MESSAGE value="А теперь inlinekeyboard умеет галочками выделяться. По факту делается через edit_inline_keyboard, по сути редактирование сообщения с меню и замена названия меню на название меню с галочкой впереди." />
     <MESSAGE value="Сделано красивое меню для списка бассейнов" />
-    <option name="LAST_COMMIT_MESSAGE" value="Сделано красивое меню для списка бассейнов" />
+    <MESSAGE value="Добавлен в админа пункт меню - перейти в режим пользователя. Переименовал таки меню для перехода в режим тренера в &quot;режим тренера&quot;). &#10;Обратите внимание, изменилось требование к bpmn  схемам. Добавил в поле Description возможность сортировки пунктов меню как надо, а не как получилось. Поскольку мне было лень, то обратная совместимость не поддерживается." />
+    <MESSAGE value="Поправил bpmn схему для тренера, чтобы не ломалось после предыдущего коммита" />
+    <option name="LAST_COMMIT_MESSAGE" value="Поправил bpmn схему для тренера, чтобы не ломалось после предыдущего коммита" />
   </component>
 </project>

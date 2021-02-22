@@ -40,4 +40,5 @@ level = "DEBUG"
 #INFO 20
 #DEBUG 10
 #NOTSET 0
-
+[Path]
+test_data = "tests/test_data.toml"

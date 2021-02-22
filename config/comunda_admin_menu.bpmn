@@ -4,7 +4,7 @@
     <bpmn:endEvent id="EndEvent_0ofyivj" name="three">
       <bpmn:incoming>Flow_0n7xfm6</bpmn:incoming>
     </bpmn:endEvent>
-    <bpmn:exclusiveGateway id="menu_all_swimpool_list" name="4#Список бассейнов&#10;&#10;">
+    <bpmn:exclusiveGateway id="menu_all_swimpool_list" name="4#Список бассейнов&#10;">
       <bpmn:extensionElements>
         <camunda:properties>
           <camunda:property name="handler" value="SwimpoolList" />
@@ -49,7 +49,7 @@
       <bpmn:incoming>menu_all_timetable_st</bpmn:incoming>
       <bpmn:outgoing>Flow_0wheafk</bpmn:outgoing>
     </bpmn:exclusiveGateway>
-    <bpmn:endEvent id="menu_all_add_swimpool">
+    <bpmn:endEvent id="menu_all_add_swimpool" name="1#Добавить Бассейн">
       <bpmn:extensionElements>
         <camunda:properties>
           <camunda:property name="handler" value="AddSwimpool" />
@@ -58,10 +58,10 @@
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_add_swimpool</bpmn:incoming>
     </bpmn:endEvent>
-    <bpmn:endEvent id="menu_all_del_swimpool">
+    <bpmn:endEvent id="menu_all_del_swimpool" name="2#Удалить Бассейн">
       <bpmn:incoming>Flow_del_swimpool</bpmn:incoming>
     </bpmn:endEvent>
-    <bpmn:endEvent id="menu_all_cancel">
+    <bpmn:endEvent id="menu_all_cancel" name="3#Отменить операцию">
       <bpmn:incoming>Flow_Cancel</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:exclusiveGateway id="menu_admin_coach_mode" name="5#Перейти в режим тренера">
@@ -221,7 +221,7 @@
       <bpmndi:BPMNShape id="Gateway_0v1bhfx_di" bpmnElement="menu_all_swimpool_list" isMarkerVisible="true">
         <dc:Bounds x="625" y="539" width="50" height="50" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="624" y="596" width="54" height="53" />
+          <dc:Bounds x="624" y="596" width="54" height="40" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Gateway_0w9ztd8_di" bpmnElement="menu_admin_client_list" isMarkerVisible="true">
@@ -247,12 +247,21 @@
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_082f88f_di" bpmnElement="menu_all_add_swimpool">
         <dc:Bounds x="792" y="492" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="780" y="535" width="61" height="27" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_1f3zdum_di" bpmnElement="menu_all_del_swimpool">
         <dc:Bounds x="792" y="546" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="783" y="589" width="55" height="27" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_18p0snj_di" bpmnElement="menu_all_cancel">
         <dc:Bounds x="792" y="602" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="779" y="645" width="63" height="27" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Gateway_08qjarb_di" bpmnElement="menu_admin_coach_mode" isMarkerVisible="true">
         <dc:Bounds x="625" y="735" width="50" height="50" />

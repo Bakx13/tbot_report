@@ -1,21 +1,18 @@
 import logging
-import string
 
+import bpmn_dmn.bpmn as BPMN
 import telegram
-import random
-
-# подключаем библиотеку по работе с bpmn-схемами
-
 from SpiffWorkflow.bpmn.serializer.BpmnSerializer import BpmnSerializer
 from SpiffWorkflow.bpmn.workflow import BpmnWorkflow
-import bpmn_dmn.bpmn as BPMN
 
+import tbot_report.database.database as db
+import tbot_report.lib.loadconfig as MConfig
+import tbot_report.lib.worker as Worker
+import tbot_report.localization.localization as localization
 # подключаем свои библиотеки
 from tbot_report.lib.nuconfig import NuConfig
-import tbot_report.lib.loadconfig as MConfig
-import tbot_report.localization.localization as localization
-import tbot_report.lib.worker as Worker
-import tbot_report.database.database as db
+
+# подключаем библиотеку по работе с bpmn-схемами
 
 log = logging.getLogger(__name__)
 
@@ -48,7 +45,7 @@ class TelegramHandler():
         log.debug("Start set_menu_by_bpmn")
         task = self.runner.workflow.get_tasks_from_spec_name(step_name)
         task_list = task[0].children
-        log.debug(f"task_list: {task_list}")
+        log.debug(f'task_list: {task_list}')
         # Если дошли до конца - возвращаемся на стартовую страницу
         if not task_list:
             task = self.runner.workflow.get_tasks_from_spec_name("MenuStart")
@@ -56,10 +53,12 @@ class TelegramHandler():
         self.keyboard = []
         for_menus = []
         for menuitem in task_list:
-            menuitem_desc = menuitem.task_spec.description.split('#')
+            log.debug(f"task_list={menuitem.task_spec.__dict__}")
             try:
+                menuitem_desc = menuitem.task_spec.description.split('#')
                 menuitem_id = menuitem_desc[0]
             except:
+                log.debug(f"menuitem_desc={menuitem.task_spec.description}")
                 log.debug(f"Ошибка в формировании bpmn-схемы. Поле Description должно быть формата 1#Описание, где 1 - это порядковый номер меню.")
                 return
             menuitem = menuitem.task_spec.name

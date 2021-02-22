@@ -6,6 +6,8 @@ import sqlalchemy.ext.declarative as sed
 import sqlalchemy.orm
 from datetime import datetime
 
+from tbot_report.lib.nuconfig import NuConfig
+
 try:
     import coloredlogs
 except ImportError:
@@ -60,7 +62,6 @@ def main():
 
     # подключаем СУБД
     log.debug("Creating the sqlalchemy engine...")
-    # TODO Не забыть выключить отладку для БД. Либо обернуть в логику уровня логирования.
     engine = sqlalchemy.create_engine(config_all.database["engine"], echo=False)
     log.debug("Binding metadata to the engine...")
     database.TableDeclarativeBase.metadata.bind = engine
@@ -84,19 +85,33 @@ def main():
         '''Создаем тестовые данные
         @todo Переделать, чтобы брать данные из файликов для каждой таблицы'''
         session = sqlalchemy.orm.sessionmaker(bind=engine)()
-        city = database.City(name="Москва", description="Столица России")
-        session.add(city)
 
-        district = database.District(city_id=city.id, name="Строгино", description="Спальный район на западе Москвы")
-        session.add(district)
+        # загружаем файлик с тестовыми данными
+        file_test_data = config_all.test_data
+        f_test_data = open(file_test_data, encoding="utf8")
+        test_data = NuConfig(f_test_data)
+        cities = test_data['City']
+        for city_id in cities:
+            city = cities[city_id]
+            log.debug(f"Загружаем тестовый город: {city['name']}")
+            city = database.City(id=city_id, name=city['name'], description=city['description'])
+            session.add(city)
+        districts = test_data['District']
+        for district_id in districts:
+            district = districts[district_id]
+            log.debug(f"Загружаем тестовый район: {district['name']}")
+            district = database.District(id=district_id, city_id=district['city_id'], name=district['name'], description=district['description'])
+            session.add(district)
+
         timetable = database.TimeTable(creation_date=datetime.now())
         session.add(timetable)
-        spool = database.SwimPool(distict_id=district.id, timetable_id=timetable.id, address="Живописная 11",
-                                  name="Энигма", price="500 руб")
-        spool2 = database.SwimPool(distict_id=district.id, timetable_id=timetable.id, address="Где-то на западе",
-                                   name="Западный бассейн", price="300 руб")
-        session.add(spool)
-        session.add(spool2)
+        swimpools = test_data['SwimPool']
+        for swimpool_id in swimpools:
+            swimpool = swimpools[swimpool_id]
+            log.debug(f"Загружаем тестовый бассейн: {swimpool['name']}")
+            spool = database.SwimPool(id=swimpool_id, distict_id=swimpool['distict_id'], timetable_id=swimpool['timetable_id'],
+                                      address=swimpool['address'], name=swimpool['name'], price=swimpool['price'])
+            session.add(spool)
         session.commit()
 
     bot = tbotlogic.TBot.initbot(config_all)
