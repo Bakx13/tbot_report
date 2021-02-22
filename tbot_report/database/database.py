@@ -8,6 +8,7 @@ from sqlalchemy import Column, ForeignKey, UniqueConstraint, ARRAY
 from sqlalchemy import Integer, BigInteger, String, Text, LargeBinary, DateTime, Boolean
 from sqlalchemy.ext.declarative import declarative_base, DeferredReflection
 from sqlalchemy.orm import relationship, backref
+import sqlalchemy as sqla
 
 import tbot_report.lib.utils as utils
 
@@ -404,7 +405,14 @@ class SwimPool(DeferredReflection, TableDeclarativeBase):
     # Extra table parameters
     __tablename__ = "swimpool"
 
+    # Get all list jf swimpool
+
+    def get_all_swimpool(self, SwimPool: list):
+        swimpool = session.query(SwimPool).all()
+        return swimpool
     # No __init__ is needed, the default one is sufficient
+
+
 
     def text(self, w: "worker.Worker", *, style: str = "full", cart_qty: int = None):
         """Return the product details formatted with Telegram HTML. The image is omitted."""
@@ -435,9 +443,10 @@ class SwimPool(DeferredReflection, TableDeclarativeBase):
                                       "parse_mode": "HTML"})
         return r.json()
 
-    def set_image(self, file: telegram.File):
+    def set_image(self, file: telegram):
         """Download an image from Telegram and store it in the image column.
-        This is a slow blocking function. Try to avoid calling it directly, use a thread if possible."""
+        This is a slow blocking function. Try to avoid calling it directly, use a thread if possible.
+        :type file: object"""
         # Download the photo through a get request
         r = requests.get(file.file_path)
         # Store the photo in the database record

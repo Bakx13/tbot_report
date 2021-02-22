@@ -3,7 +3,7 @@
 # Path parameters
 [Path]
 #home directory
-tbot_home = "/project/bots/tbot_report/"
+tbot_home = "PycharmProjects/tbot_report/"
 logs_dir = "logs/"
 dev_conf = "config/config_devel.toml"
 test_conf = "config/config_test.toml"

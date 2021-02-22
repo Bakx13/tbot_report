@@ -52,6 +52,7 @@ class TelegramHandler():
 
     def set_menu_by_bpmn(self, step_name, tMenu):
         log.debug("Start set_menu_by_bpmn")
+        log.debug(step_name)
         task = self.runner.workflow.get_tasks_from_spec_name(step_name)
         task_list = task[0].children
         log.debug(f'task_list: {task_list}')
@@ -112,12 +113,21 @@ class TelegramCoachHandler(TelegramHandler):
         keyboard = self.get_keyboard()
         return keyboard, msg_txt
 
+    def AddAddressSwimPool(self,message):
+        self.worker.bot.send_message(self.worker.chat.id, message)
+        return
+
     def DelSwimpool(self, tMenu, menuname):
         log.debug(f"begin Del_Swimpool handler")
         msg_txt = "menu_all_swimpool_list_text"
         # переопределяем клавиатуру для выбранного пункта меню
         self.set_menu_by_bpmn(menuname, tMenu)
         keyboard = self.get_keyboard()
+
+        List = []
+        List.append('Back')
+        sent = self.worker.bot.send_message(self.worker.chat.id, 'Вы находитесь в режиме добавления бассейна. Введите адрес бассейна:')
+        self.worker.wait_for_specific_message(self,List , False,'Stop')
         return keyboard, msg_txt
 
     def Cancel(self, tMenu, menuname):
@@ -216,11 +226,26 @@ class TelegramAdminHandler(TelegramHandler):
 
     def ClientList(self, tMenu, menuname):
         log.debug(f"begin CoachList handler")
+        log.debug(menuname)
         msg_txt = "menu_coach_main_txt"
         # переопределяем клавиатуру для выбранного пункта меню
         self.set_menu_by_bpmn(menuname, tMenu)
         keyboard = self.get_keyboard()
+
+        CoachList = self.worker.session.query(db.Qoach).filter_by().all()
+        Coach_names = [qoach.user for qoach in CoachList]
+        keyboard_nice = []
+        for qoach in CoachList:
+            coach_name = qoach.about
+            ch_id = qoach.id
+            keyboard_nice.append(
+                [telegram.InlineKeyboardButton(f"✅ {coach_name}", callback_data=f"CoachList.{ch_id}")])
+        reply_markup = telegram.InlineKeyboardMarkup(keyboard_nice)
+        self.worker.bot.send_message(self.worker.chat.id, '<b color="red">Выберите трененра</b>',
+                                     reply_markup=reply_markup)
         return keyboard, msg_txt
+
+
 
 
 class TelegramSecondMenu():

@@ -3,6 +3,7 @@ import sys
 import time
 import traceback
 
+import telegram
 import telegram.error
 import telegram
 
