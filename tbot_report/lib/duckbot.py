@@ -73,10 +73,12 @@ def factory(cfg: MConfig):
                 if isinstance(kwargs['reply_markup'], telegram.InlineKeyboardMarkup):
                     self.last_message_inline_keyboard = self.bot.send_message(parse_mode="HTML", *args, **kwargs)
                     rtn = self.last_message_inline_keyboard
+                    self.last_message = rtn
                     log.debug(f"update last_message_inline_keyboard")
                 elif isinstance(kwargs['reply_markup'], telegram.ReplyKeyboardMarkup):
                     self.last_message_keyboard = self.bot.send_message(parse_mode="HTML", *args, **kwargs)
                     rtn = self.last_message_keyboard
+                    self.last_message = rtn
                     log.debug(f"update ReplyKeyboardMarkup")
             else:
                 self.last_message = self.bot.send_message(parse_mode="HTML", *args, **kwargs)

@@ -2,13 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d83d59a8-8a03-460f-953b-d8ceae5adfef" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/tests/test_data.toml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bot.py" beforeDir="false" afterPath="$PROJECT_DIR$/bot.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/comunda_admin_menu.bpmn" beforeDir="false" afterPath="$PROJECT_DIR$/config/comunda_admin_menu.bpmn" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/config_devel.toml" beforeDir="false" afterPath="$PROJECT_DIR$/config/config_devel.toml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tbot_report/database/database.py" beforeDir="false" afterPath="$PROJECT_DIR$/tbot_report/database/database.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tbot_report/lib/TelegramMenu.py" beforeDir="false" afterPath="$PROJECT_DIR$/tbot_report/lib/TelegramMenu.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tbot_report/lib/loadconfig.py" beforeDir="false" afterPath="$PROJECT_DIR$/tbot_report/lib/loadconfig.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tbot_report/lib/duckbot.py" beforeDir="false" afterPath="$PROJECT_DIR$/tbot_report/lib/duckbot.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tbot_report/lib/worker.py" beforeDir="false" afterPath="$PROJECT_DIR$/tbot_report/lib/worker.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/test_data.toml" beforeDir="false" afterPath="$PROJECT_DIR$/tests/test_data.toml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -440,7 +439,14 @@
       <option name="project" value="LOCAL" />
       <updated>1613990208490</updated>
     </task>
-    <option name="localTasksCounter" value="46" />
+    <task id="LOCAL-00046" summary="Переделал загрузку тестовых данных из файла. Чуток починил bpmn для админа">
+      <created>1613993852057</created>
+      <option name="number" value="00046" />
+      <option name="presentableId" value="LOCAL-00046" />
+      <option name="project" value="LOCAL" />
+      <updated>1613993852057</updated>
+    </task>
+    <option name="localTasksCounter" value="47" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -456,7 +462,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="разносим main по библиотекам и меняем print на logging" />
     <MESSAGE value="добавляем работу с аргументами вызова и конфиг файлами" />
     <MESSAGE value="добавляем работу с аргументами вызова и конфиг файлами 2" />
     <MESSAGE value="перенесли всю загрузку конфигов в отдельную библиотеку.&#10;Убрал нафиг старый бизнес-код&#10;разделил конфиги на два уровня: общий для всех сред (дев, тест и пром) и разные." />
@@ -481,6 +486,7 @@
     <MESSAGE value="Сделано красивое меню для списка бассейнов" />
     <MESSAGE value="Добавлен в админа пункт меню - перейти в режим пользователя. Переименовал таки меню для перехода в режим тренера в &quot;режим тренера&quot;). &#10;Обратите внимание, изменилось требование к bpmn  схемам. Добавил в поле Description возможность сортировки пунктов меню как надо, а не как получилось. Поскольку мне было лень, то обратная совместимость не поддерживается." />
     <MESSAGE value="Поправил bpmn схему для тренера, чтобы не ломалось после предыдущего коммита" />
-    <option name="LAST_COMMIT_MESSAGE" value="Поправил bpmn схему для тренера, чтобы не ломалось после предыдущего коммита" />
+    <MESSAGE value="Переделал загрузку тестовых данных из файла. Чуток починил bpmn для админа" />
+    <option name="LAST_COMMIT_MESSAGE" value="Переделал загрузку тестовых данных из файла. Чуток починил bpmn для админа" />
   </component>
 </project>

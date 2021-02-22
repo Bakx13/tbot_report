@@ -399,6 +399,8 @@ class SwimPool(DeferredReflection, TableDeclarativeBase):
     # Стоимость разового посещения
     price = Column(Integer)
 
+    # Product has been deleted
+    deleted = Column(Boolean, nullable=False, default=False)
     # Extra table parameters
     __tablename__ = "swimpool"
 

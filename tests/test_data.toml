@@ -50,3 +50,61 @@ timetable_id=1
 address="Это Питер, детка"
 name="Адмиралтейский бассейн"
 price="700 руб"
+
+[SwimPool.4]
+distict_id=1
+timetable_id=1
+address="Живописная 11"
+name="Энигма 2"
+price="600 руб"
+
+[SwimPool.5]
+distict_id=1
+timetable_id=1
+address="Живописная 11"
+name="Энигма 3"
+price="700 руб"
+
+[SwimPool.6]
+distict_id=1
+timetable_id=1
+address="Живописная 11"
+name="Энигма 4"
+price="800 руб"
+
+[SwimPool.7]
+distict_id=1
+timetable_id=1
+address="Живописная 11"
+name="Энигма 5"
+price="900 руб"
+
+[SwimPool.8]
+distict_id=1
+timetable_id=1
+address="Живописная 11"
+name="Энигма 6"
+price="1000 руб"
+
+[SwimPool.9]
+distict_id=1
+timetable_id=1
+address="Живописная 11"
+name="Энигма 7"
+price="1100 руб"
+
+[SwimPool.10]
+distict_id=1
+timetable_id=1
+address="Живописная 11"
+name="Энигма 8"
+price="1200 руб"
+
+[SwimPool.11]
+distict_id=1
+timetable_id=1
+address="Живописная 11"
+name="Энигма 9"
+price="1300 руб"
+
+

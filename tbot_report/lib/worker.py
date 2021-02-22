@@ -68,6 +68,9 @@ class Worker(threading.Thread):
         # The price class of this worker.
         self.Price = self.price_factory()
 
+        self.menu = None
+        self.second_menu = None
+
     def __repr__(self):
         return f"<{self.__class__.__qualname__} {self.chat.id}>"
 
@@ -505,8 +508,8 @@ class Worker(threading.Thread):
         """Эта функция запускается, если с ботом начинается общение с ролью - тренер"""
 
         menu_file = TelegramMenu.get_menu_file(self.cfg, "coach_menu")
-        tMenu = TelegramMenu(menu_file, self.loc, "Coach")
-        tMenu.coach_menu("MenuStart", "menu_coach_main_txt",self)
+        self.menu = TelegramMenu(menu_file, self.loc, "Coach")
+        self.menu.coach_menu("MenuStart", "menu_coach_main_txt", self)
 
         return
     def __order_menu(self):
@@ -913,8 +916,8 @@ class Worker(threading.Thread):
         Administrative bot actions should be placed here."""
         log.debug("Displaying __admin_menu")
         menu_file = TelegramMenu.get_menu_file(self.cfg, "coach_menu")
-        tMenu = TelegramMenu(menu_file, self.loc, "Admin")
-        tMenu.admin_menu("MenuStart", "menu_admin_main_txt",self)
+        self.menu = TelegramMenu(menu_file, self.loc, "Admin")
+        self.menu.admin_menu("MenuStart", "menu_admin_main_txt", self)
         return
     def __products_menu(self):
         """Display the admin menu to select a product to edit."""
