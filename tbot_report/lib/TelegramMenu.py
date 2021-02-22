@@ -1,5 +1,8 @@
 import logging
+import string
+
 import telegram
+import random
 
 # подключаем библиотеку по работе с bpmn-схемами
 
@@ -129,15 +132,8 @@ class TelegramAdminHandler(TelegramHandler):
         self.set_menu_by_bpmn(menuname, tMenu)
         keyboard = self.get_keyboard()
         # отображаем текущий список бассейнов:
-
-        swimpools = self.worker.session.query(db.SwimPool).filter_by().all()
-        keyboard_nice = []
-        for swimpool in swimpools:
-            swimpool_name = swimpool.name
-            sw_id = swimpool.id
-            keyboard_nice.append(
-                [telegram.InlineKeyboardButton(swimpool_name, callback_data=f"SwimpoolList#{sw_id}")])
-        reply_markup = telegram.InlineKeyboardMarkup(keyboard_nice)
+        menu = TelegramSecondMenu(self.worker)
+        reply_markup = menu.SwimpoolList(0)
         self.worker.bot.send_message(self.worker.chat.id, "<b>Список бассейнов:</b>", reply_markup=reply_markup)
         return keyboard, msg_txt
 
@@ -194,18 +190,22 @@ class TelegramSecondMenu():
         handlername = lst[0]
         object_id = lst[1]
         menu = TelegramSecondMenu(worker)
-        log.debug(f"object_id={object_id}")
         reply_markup = menu.call_handler_by_name(handlername, object_id)
-        log.debug(f"reply_markup={reply_markup}")
         try:
             msg_id = message.message_id
         except:
             log.debug(f"Ой-ой. Кто-то позвал обработчик, а сообщений то не было!")
             return
-        worker.bot.edit_message_reply_markup(chat_id=message.chat_id, message_id=msg_id,
+        log.debug(f"worker.bot.last_message_inline_keyboard.reply_markup={worker.bot.last_message_inline_keyboard.reply_markup}")
+        log.debug(f"reply_markup={reply_markup}")
+        # за каким-то лешим если отправить в edit_message_reply_markup тоже самое меню,
+        # то api telegram выдает исключение
+        if (reply_markup.__eq__(worker.bot.last_message_inline_keyboard.reply_markup)):
+            #@todo не забыть убрать в localization
+            worker.bot.send_message(worker.chat.id, "Пункт меню уже выбран")
+        else:
+            worker.bot.edit_message_reply_markup(chat_id=message.chat_id, message_id=msg_id,
                                              reply_markup=reply_markup)
-        # worker.bot.send_message(worker.chat.id,
-        #                        f"Ой, вы нажали кнопочку из дополнительного меню с обработчиком: {worker.bot.last_message_inline_keyboard}")
         return
 
     def SwimpoolList(self, object_id: int):
@@ -213,12 +213,22 @@ class TelegramSecondMenu():
         swimpools = self.worker.session.query(db.SwimPool).filter_by().all()
         object_id = int(object_id)
         keyboard_nice = []
+        keyboard_nice.append([telegram.InlineKeyboardButton("Название бассейна", callback_data="none"),
+                              telegram.InlineKeyboardButton("Стоимость", callback_data="none"),
+                              telegram.InlineKeyboardButton("Выбрать", callback_data="none")])
         for swimpool in swimpools:
-            swimpool_name = swimpool.name
             sw_id = int(swimpool.id)
-            if sw_id == object_id: swimpool_name = f"✅ {swimpool_name}"
-            keyboard_nice.append(
-                [telegram.InlineKeyboardButton(swimpool_name, callback_data=f"SwimpoolList#{sw_id}")])
+            swimpool_name = str(swimpool.name)
+            if swimpool.price is None: swimpool_price = "не задана"
+            else: swimpool_price = str(swimpool.price)
+
+            #@todo не забыть убрать в localization"
+            choice = "✔️"
+            if sw_id == object_id: choice = f"✅"
+            keyboard_nice.append([telegram.InlineKeyboardButton(swimpool_name, callback_data="none"),
+                                  telegram.InlineKeyboardButton(swimpool_price, callback_data="none"),
+                                  telegram.InlineKeyboardButton(choice, callback_data=f"SwimpoolList#{sw_id}")])
+
         reply_markup = telegram.InlineKeyboardMarkup(keyboard_nice)
         return reply_markup
 
@@ -285,17 +295,6 @@ class TelegramMenu(NuConfig):
         cfg_file = open(file_menu_path + file_menu, encoding="utf8")
         return cfg_file
 
-    @staticmethod
-    def send_msg_nicekeyboard(worker):
-        keyboard = [[telegram.InlineKeyboardButton("Hackerearth", callback_data='HElist8'),
-                     telegram.InlineKeyboardButton("Hackerrank", callback_data='HRlist8')],
-                    [telegram.InlineKeyboardButton("Codechef", callback_data='CClist8'),
-                     telegram.InlineKeyboardButton("Spoj", callback_data='SPlist8')],
-                    [telegram.InlineKeyboardButton("Codeforces", callback_data='CFlist8'),
-                     telegram.InlineKeyboardButton("ALL", callback_data='ALLlist8')]]
-        reply_markup = telegram.InlineKeyboardMarkup(keyboard)
-        worker.bot.send_message(worker.chat.id, 'please select the judge or select all for showing all',
-                                reply_markup=reply_markup)
 
     def get_menuname_by_name(self, name):
         return self.loc_menu[name][1]

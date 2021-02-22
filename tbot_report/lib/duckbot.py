@@ -57,8 +57,7 @@ def factory(cfg: MConfig):
 
     class DuckBot:
         def __init__(self, *args, **kwargs):
-            log.debug("init duckbot")
-            self.bot = telegram.Bot(token=cfg.telegram["token"] , *args, **kwargs)
+            self.bot = telegram.Bot(token=cfg.telegram["token"], *args, **kwargs)
             self.last_message_inline_keyboard = telegram.Message
             self.last_message = telegram.Message
             self.last_message_keyboard = telegram.Message
@@ -67,16 +66,22 @@ def factory(cfg: MConfig):
         def send_message(self, *args, **kwargs):
             # All messages are sent in HTML parse mode
             # Добавляем в бота данные по последнему сообщению
+            log.debug(f"send message as duckbot")
+            rtn = None
             if 'reply_markup' in kwargs:
+                log.debug(f"send reply_markup as duckbot")
                 if isinstance(kwargs['reply_markup'], telegram.InlineKeyboardMarkup):
                     self.last_message_inline_keyboard = self.bot.send_message(parse_mode="HTML", *args, **kwargs)
                     rtn = self.last_message_inline_keyboard
+                    log.debug(f"update last_message_inline_keyboard")
                 elif isinstance(kwargs['reply_markup'], telegram.ReplyKeyboardMarkup):
                     self.last_message_keyboard = self.bot.send_message(parse_mode="HTML", *args, **kwargs)
                     rtn = self.last_message_keyboard
+                    log.debug(f"update ReplyKeyboardMarkup")
             else:
                 self.last_message = self.bot.send_message(parse_mode="HTML", *args, **kwargs)
                 rtn = self.last_message
+                log.debug(f"send last_message")
             return rtn
 
         @catch_telegram_errors
@@ -91,7 +96,19 @@ def factory(cfg: MConfig):
 
         @catch_telegram_errors
         def edit_message_reply_markup(self, *args, **kwargs):
-            return self.bot.edit_message_reply_markup(*args, **kwargs)
+            log.debug(f"edit reply_markup as duckbot")
+            rtn = None
+            if 'reply_markup' in kwargs:
+                if isinstance(kwargs['reply_markup'], telegram.InlineKeyboardMarkup):
+                    self.last_message_inline_keyboard = self.bot.edit_message_reply_markup(*args, **kwargs)
+                    rtn = self.last_message_inline_keyboard
+                    log.debug(f"edit last_message_inline_keyboard")
+                elif isinstance(kwargs['reply_markup'], telegram.ReplyKeyboardMarkup):
+                    self.last_message_keyboard = self.bot.edit_message_reply_markup(*args, **kwargs)
+                    rtn = self.last_message_keyboard
+                    log.debug(f"edit ReplyKeyboardMarkup")
+            else: return None
+            return rtn
 
         @catch_telegram_errors
         def get_updates(self, *args, **kwargs):
