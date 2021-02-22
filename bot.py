@@ -14,18 +14,17 @@ except ImportError:
     coloredlogs = None
 
 # подгружаем свои библиотеки
-import tbot_report.lib.picture
 import tbot_report.lib.loadarguments as loadarguments
 import tbot_report.lib.loadconfig as MConfig
 import tbot_report.localization.localization as localization
-import tbot_report.lib.tbotlogic as tbotlogic
+from tbot_report.lib.tbotlogic import TBot
 import tbot_report.database.database as database
 
 
 def main():
     """The core code of the program. Should be run only in the main process!"""
     # init variables
-    CONFIG_COMMON = "config/config_common.toml"
+    CONFIG_COMMON = "/Users/a16673010/PycharmProjects/tbot_report/config/config_common.toml"
     threading.current_thread().name = "Core"
     log = logging.getLogger(threading.current_thread().name)
     logging.basicConfig(filename='logs/' + threading.current_thread().name + '.log', filemode='w',
@@ -113,10 +112,14 @@ def main():
                                       address=swimpool['address'], name=swimpool['name'], price=swimpool['price'])
             session.add(spool)
         session.commit()
+        qoach = database.Qoach(user_id = 1, timetable_id = 1, about = "I'm suoer")
+        session.add(qoach)
 
-    bot = tbotlogic.TBot.initbot(config_all)
+        session.commit()
 
-    tbotlogic.TBot.run(config_all, default_loc, bot, engine)
+    bot = TBot.initbot(config_all)
+
+    TBot.run(config_all, default_loc, bot, engine)
 
 
 if __name__ == '__main__':

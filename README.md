@@ -16,6 +16,13 @@ Camunda Modeler - https://camunda.com/download/modeler/ <br>
 import sqlalchemy, необходимо отдельно поставить.
 
 В докере развернул:<br>
+Установить необходимые пакеты для проекта: 
+sqlalcheme
+impl
+telegramm
+tbot_report.lib
+requests
+
 debian - взял с официального сайта<br>
   внутри дополнительно:<br>
     python3 --version<br>
