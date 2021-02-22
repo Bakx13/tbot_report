@@ -2,9 +2,13 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d83d59a8-8a03-460f-953b-d8ceae5adfef" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/config/comunda_user_menu.bpmn" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bot.py" beforeDir="false" afterPath="$PROJECT_DIR$/bot.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/comunda_admin_menu.bpmn" beforeDir="false" afterPath="$PROJECT_DIR$/config/comunda_admin_menu.bpmn" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tbot_report/lib/TelegramMenu.py" beforeDir="false" afterPath="$PROJECT_DIR$/tbot_report/lib/TelegramMenu.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tbot_report/lib/duckbot.py" beforeDir="false" afterPath="$PROJECT_DIR$/tbot_report/lib/duckbot.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tbot_report/localization/locale/ru.py" beforeDir="false" afterPath="$PROJECT_DIR$/tbot_report/localization/locale/ru.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tbot_report/models/menus/coach_menu.toml" beforeDir="false" afterPath="$PROJECT_DIR$/tbot_report/models/menus/coach_menu.toml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -415,7 +419,14 @@
       <option name="project" value="LOCAL" />
       <updated>1613333438874</updated>
     </task>
-    <option name="localTasksCounter" value="43" />
+    <task id="LOCAL-00043" summary="Сделано красивое меню для списка бассейнов">
+      <created>1613985461029</created>
+      <option name="number" value="00043" />
+      <option name="presentableId" value="LOCAL-00043" />
+      <option name="project" value="LOCAL" />
+      <updated>1613985461029</updated>
+    </task>
+    <option name="localTasksCounter" value="44" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -431,7 +442,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="csdfsdf" />
     <MESSAGE value="досоздаем структуру каталогов. часть 1" />
     <MESSAGE value="добавляем зависимости" />
     <MESSAGE value="разносим main по библиотекам и меняем print на logging" />
@@ -456,6 +466,7 @@
     <MESSAGE value="Выводим первые данные из базы данных пользователю!!!" />
     <MESSAGE value="Первая версия добавления бассейна админом. Простенькая, без дочерних таблиц" />
     <MESSAGE value="А теперь inlinekeyboard умеет галочками выделяться. По факту делается через edit_inline_keyboard, по сути редактирование сообщения с меню и замена названия меню на название меню с галочкой впереди." />
-    <option name="LAST_COMMIT_MESSAGE" value="А теперь inlinekeyboard умеет галочками выделяться. По факту делается через edit_inline_keyboard, по сути редактирование сообщения с меню и замена названия меню на название меню с галочкой впереди." />
+    <MESSAGE value="Сделано красивое меню для списка бассейнов" />
+    <option name="LAST_COMMIT_MESSAGE" value="Сделано красивое меню для списка бассейнов" />
   </component>
 </project>

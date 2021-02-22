@@ -54,12 +54,24 @@ class TelegramHandler():
             task = self.runner.workflow.get_tasks_from_spec_name("MenuStart")
             task_list = task[0].children
         self.keyboard = []
+        for_menus = []
         for menuitem in task_list:
+            menuitem_desc = menuitem.task_spec.description.split('#')
+            try:
+                menuitem_id = menuitem_desc[0]
+            except:
+                log.debug(f"Ошибка в формировании bpmn-схемы. Поле Description должно быть формата 1#Описание, где 1 - это порядковый номер меню.")
+                return
             menuitem = menuitem.task_spec.name
             handler, locname = tMenu.loc_menu[menuitem]
             log.debug(f"add menu point handler = {handler} lname= {locname} to keyboard")
+            for_menus.append((menuitem_id, menuitem, handler, locname))
+        log.debug(f"меню до сортировки: {for_menus}")
+        for_menus = sorted(for_menus, key=lambda menu: menu[0])
+        log.debug(f"меню после сортировки: {for_menus}")
+        for menuitem_id, menuitem, handler, locname in for_menus:
             self.keyboard.append([telegram.KeyboardButton(locname)])
-        self.keyboard.reverse()
+        #self.keyboard.reverse()
         log.debug("End set_menu_by_bpmn")
         return
 
@@ -123,6 +135,14 @@ class TelegramAdminHandler(TelegramHandler):
         log.debug(f"worker = {self.worker}")
         tMenu.coach_menu("MenuStart", "menu_coach_main_txt", self.worker)
         log.debug(f"end admin SwitchAdminToCoach handler")
+        return
+    def SwitchAdminToUser(self, tMenu, menuname):
+        msg_txt = "menu_all_swimpool_list_text"
+        log.debug(f"begin admin SwitchAdminToUser handler")
+        # Start the bot in user mode
+        log.debug(f"worker = {self.worker}")
+        tMenu.user_menu("MenuStart", "menu_coach_main_txt", self.worker)
+        log.debug(f"end admin SwitchAdminToUser handler")
         return
 
     def SwimpoolList(self, tMenu, menuname):
@@ -376,9 +396,6 @@ class TelegramMenu(NuConfig):
         # переопределяем сами себя из-за возможного перехода из другого режима, например Admin-> Coach
         menu_file = TelegramMenu.get_menu_file(worker.cfg, "coach_menu")
         self.__init__(menu_file, self.loc, "Coach")
-        # @todo не забыть убрать. Только для теста красивого меню
-        self.send_msg_nicekeyboard(worker)
-
         self.draw_menu(header_txt, worker, "Coach", "TelegramCoachHandler", "config/comunda_coach_menu.bpmn",
                        menustart)
         return
@@ -424,3 +441,15 @@ class TelegramMenu(NuConfig):
                 # Generate the .csv file
                 self.__transactions_file()
         '''
+
+
+    def user_menu(self, menustart, header_txt, worker: Worker):
+        log.debug(f"Start coach_menu")
+        # переопределяем сами себя из-за возможного перехода из другого режима, например Admin-> Coach
+        menu_file = TelegramMenu.get_menu_file(worker.cfg, "coach_menu")
+        self.__init__(menu_file, self.loc, "User")
+        self.draw_menu(header_txt, worker, "User", "TelegramCoachHandler", "config/comunda_user_menu.bpmn",
+                       menustart)
+        return
+
+
