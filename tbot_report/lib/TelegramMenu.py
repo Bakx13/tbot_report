@@ -63,6 +63,8 @@ class TelegramHandler():
         for_menus = []
         for menuitem in task_list:
             try:
+                log.debug(f'menuitem.task_spec.description: {menuitem.task_spec}')
+                log.debug(f'menuitem.task_spec.name: {menuitem.task_spec.name}')
                 menuitem_desc = menuitem.task_spec.description.split('#')
                 menuitem_id = menuitem_desc[0]
             except:
