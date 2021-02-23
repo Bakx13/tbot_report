@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.5.0">
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.6.0">
   <bpmn:process id="Coach" name="Coach" isExecutable="false">
     <bpmn:endEvent id="EndEvent_0ofyivj" name="three">
       <bpmn:incoming>Flow_0n7xfm6</bpmn:incoming>
@@ -63,14 +63,6 @@
     <bpmn:endEvent id="menu_all_cancel">
       <bpmn:incoming>Flow_Cancel</bpmn:incoming>
     </bpmn:endEvent>
-    <bpmn:exclusiveGateway id="menu_admin_coach_mode" name="Перейти в режим тренера">
-      <bpmn:incoming>menu_all_training_method_st</bpmn:incoming>
-      <bpmn:outgoing>Flow_1nqyuy7</bpmn:outgoing>
-    </bpmn:exclusiveGateway>
-    <bpmn:endEvent id="Event_08dfncv">
-      <bpmn:incoming>Flow_1nqyuy7</bpmn:incoming>
-    </bpmn:endEvent>
-    <bpmn:sequenceFlow id="Flow_1nqyuy7" sourceRef="menu_admin_coach_mode" targetRef="Event_08dfncv" />
     <bpmn:endEvent id="Event_1fmj4an">
       <bpmn:incoming>Flow_0wheafk</bpmn:incoming>
     </bpmn:endEvent>
@@ -78,9 +70,6 @@
     <bpmn:startEvent id="Event_0yaqot0">
       <bpmn:outgoing>Flow_0ucdpa1</bpmn:outgoing>
     </bpmn:startEvent>
-    <bpmn:sequenceFlow id="menu_all_training_method_st" sourceRef="MenuStart" targetRef="menu_admin_coach_mode">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">lorder.menuname=="menu_all_training_method"</bpmn:conditionExpression>
-    </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="menu_all_swimpool_list_st" sourceRef="MenuStart" targetRef="menu_all_swimpool_list">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">lorder.menuname=="menu_all_swimpool_list"</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
@@ -102,7 +91,6 @@
       <bpmn:outgoing>menu_coach_client_list_st</bpmn:outgoing>
       <bpmn:outgoing>menu_all_timetable_st</bpmn:outgoing>
       <bpmn:outgoing>menu_coach_client_request_st</bpmn:outgoing>
-      <bpmn:outgoing>menu_all_training_method_st</bpmn:outgoing>
       <bpmn:outgoing>menu_all_swimpool_list_st</bpmn:outgoing>
     </bpmn:exclusiveGateway>
   </bpmn:process>
@@ -143,21 +131,9 @@
           <dc:Bounds x="509" y="537" width="87" height="53" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_15j7fu3_di" bpmnElement="menu_all_training_method_st">
-        <di:waypoint x="454" y="589" />
-        <di:waypoint x="454" y="760" />
-        <di:waypoint x="625" y="760" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="512" y="733" width="87" height="53" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0wheafk_di" bpmnElement="Flow_0wheafk">
         <di:waypoint x="675" y="410" />
         <di:waypoint x="822" y="410" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_1nqyuy7_di" bpmnElement="Flow_1nqyuy7">
-        <di:waypoint x="675" y="760" />
-        <di:waypoint x="792" y="760" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_1v4cj3d_di" bpmnElement="Flow_1v4cj3d">
         <di:waypoint x="675" y="250" />
@@ -231,15 +207,6 @@
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_18p0snj_di" bpmnElement="menu_all_cancel">
         <dc:Bounds x="792" y="602" width="36" height="36" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Gateway_08qjarb_di" bpmnElement="menu_admin_coach_mode" isMarkerVisible="true">
-        <dc:Bounds x="625" y="735" width="50" height="50" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="606" y="792" width="89" height="27" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_08dfncv_di" bpmnElement="Event_08dfncv">
-        <dc:Bounds x="792" y="742" width="36" height="36" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_1fmj4an_di" bpmnElement="Event_1fmj4an">
         <dc:Bounds x="822" y="392" width="36" height="36" />
