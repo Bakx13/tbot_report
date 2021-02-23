@@ -4,7 +4,7 @@
     <bpmn:endEvent id="EndEvent_0ofyivj" name="three">
       <bpmn:incoming>Flow_0n7xfm6</bpmn:incoming>
     </bpmn:endEvent>
-    <bpmn:exclusiveGateway id="menu_all_swimpool_list" name="Список бассейнов&#10;&#10;">
+    <bpmn:exclusiveGateway id="menu_all_swimpool_list" name="12#Список бассейнов&#10;&#10;">
       <bpmn:extensionElements>
         <camunda:properties>
           <camunda:property name="handler" value="SwimpoolList" />
@@ -26,7 +26,7 @@
     <bpmn:sequenceFlow id="Flow_Cancel" name="отменить операцию" sourceRef="menu_all_swimpool_list" targetRef="menu_all_cancel">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">lorder.menuname=="menu_all_cancel"</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
-    <bpmn:exclusiveGateway id="menu_admin_client_list" name="Список клиентов">
+    <bpmn:exclusiveGateway id="menu_coach_client_list" name="1#Список клиентов">
       <bpmn:extensionElements>
         <camunda:properties>
           <camunda:property name="handler" />
@@ -35,16 +35,16 @@
       <bpmn:incoming>menu_coach_client_list_st</bpmn:incoming>
       <bpmn:outgoing>Flow_0n7xfm6</bpmn:outgoing>
     </bpmn:exclusiveGateway>
-    <bpmn:sequenceFlow id="Flow_0n7xfm6" sourceRef="menu_admin_client_list" targetRef="EndEvent_0ofyivj" />
-    <bpmn:exclusiveGateway id="menu_admin_client_request" name="Запросы от клиентов">
+    <bpmn:sequenceFlow id="Flow_0n7xfm6" sourceRef="menu_coach_client_list" targetRef="EndEvent_0ofyivj" />
+    <bpmn:exclusiveGateway id="menu_coach_client_request" name="4#Запросы от клиентов">
       <bpmn:incoming>menu_coach_client_request_st</bpmn:incoming>
       <bpmn:outgoing>Flow_1v4cj3d</bpmn:outgoing>
     </bpmn:exclusiveGateway>
     <bpmn:endEvent id="Event_0mkzivi">
       <bpmn:incoming>Flow_1v4cj3d</bpmn:incoming>
     </bpmn:endEvent>
-    <bpmn:sequenceFlow id="Flow_1v4cj3d" sourceRef="menu_admin_client_request" targetRef="Event_0mkzivi" />
-    <bpmn:exclusiveGateway id="menu_all_inventor" name=" Инвентарь для плавания">
+    <bpmn:sequenceFlow id="Flow_1v4cj3d" sourceRef="menu_coach_client_request" targetRef="Event_0mkzivi" />
+    <bpmn:exclusiveGateway id="menu_all_inventor" name=" 8#Инвентарь для плавания">
       <bpmn:incoming>menu_all_timetable_st</bpmn:incoming>
       <bpmn:outgoing>Flow_0wheafk</bpmn:outgoing>
     </bpmn:exclusiveGateway>
@@ -73,13 +73,13 @@
     <bpmn:sequenceFlow id="menu_all_swimpool_list_st" sourceRef="MenuStart" targetRef="menu_all_swimpool_list">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">lorder.menuname=="menu_all_swimpool_list"</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
-    <bpmn:sequenceFlow id="menu_coach_client_request_st" sourceRef="MenuStart" targetRef="menu_admin_client_request">
+    <bpmn:sequenceFlow id="menu_coach_client_request_st" sourceRef="MenuStart" targetRef="menu_coach_client_request">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">lorder.menuname=="menu_coach_client_request"</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="menu_all_timetable_st" sourceRef="MenuStart" targetRef="menu_all_inventor">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">lorder.menuname=="menu_all_timetable"</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
-    <bpmn:sequenceFlow id="menu_coach_client_list_st" sourceRef="MenuStart" targetRef="menu_admin_client_list">
+    <bpmn:sequenceFlow id="menu_coach_client_list_st" sourceRef="MenuStart" targetRef="menu_coach_client_list">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">lorder.menuname=="menu_coach_client_list"</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="Flow_0ucdpa1" sourceRef="Event_0yaqot0" targetRef="MenuStart" />
@@ -175,19 +175,19 @@
       <bpmndi:BPMNShape id="Gateway_0v1bhfx_di" bpmnElement="menu_all_swimpool_list" isMarkerVisible="true">
         <dc:Bounds x="625" y="539" width="50" height="50" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="624" y="596" width="54" height="53" />
+          <dc:Bounds x="623" y="596" width="56" height="53" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Gateway_0w9ztd8_di" bpmnElement="menu_admin_client_list" isMarkerVisible="true">
+      <bpmndi:BPMNShape id="Gateway_0w9ztd8_di" bpmnElement="menu_coach_client_list" isMarkerVisible="true">
         <dc:Bounds x="625" y="76" width="50" height="50" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="607" y="133" width="87" height="14" />
+          <dc:Bounds x="626" y="133" width="49" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Gateway_003k2fe_di" bpmnElement="menu_admin_client_request" isMarkerVisible="true">
+      <bpmndi:BPMNShape id="Gateway_003k2fe_di" bpmnElement="menu_coach_client_request" isMarkerVisible="true">
         <dc:Bounds x="625" y="225" width="50" height="50" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="621" y="282" width="59" height="27" />
+          <dc:Bounds x="615" y="282" width="71" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_0mkzivi_di" bpmnElement="Event_0mkzivi">
@@ -196,7 +196,7 @@
       <bpmndi:BPMNShape id="Gateway_0dg8wfq_di" bpmnElement="menu_all_inventor" isMarkerVisible="true">
         <dc:Bounds x="625" y="385" width="50" height="50" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="615" y="442" width="77" height="27" />
+          <dc:Bounds x="612" y="442" width="83" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_082f88f_di" bpmnElement="menu_all_add_swimpool">

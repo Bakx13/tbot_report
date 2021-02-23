@@ -73,6 +73,7 @@ class TelegramHandler():
                     f"Ошибка в формировании bpmn-схемы. Поле Description должно быть формата 1#Описание, где 1 - это порядковый номер меню.")
                 return
             menuitem = menuitem.task_spec.name
+            log.debug(f"tMenu.loc_menu={tMenu.loc_menu}")
             handler, locname = tMenu.loc_menu[menuitem]
             log.debug(f"add menu point handler = {handler} lname= {locname} to keyboard")
             for_menus.append((menuitem_id, menuitem, handler, locname))
@@ -471,8 +472,11 @@ class TelegramMenu(NuConfig):
         # Loop used to returning to the menu after executing a command
         while True:
             #если предыдущее сообщение такое же, не будем дублировать
-            if str(worker.bot.last_message.text_html).__eq__(worker.loc.get(header_txt)): needupdatekeyboard = False
+            if str(worker.bot.last_message.text_html).__eq__(worker.loc.get(header_txt)):
+                needupdatekeyboard = False
+                log.debug("Предыдушее сообщение равно текущему")
             # Send the previously created keyboard to the user (ensuring it can be clicked only 1 time)
+            log.debug(f"needupdatekeyboard={needupdatekeyboard}")
             if needupdatekeyboard:
                 worker.bot.send_message(worker.chat.id, worker.loc.get(header_txt),
                                         reply_markup=telegram.ReplyKeyboardMarkup(keyboard, one_time_keyboard=False,
