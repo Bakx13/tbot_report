@@ -21,4 +21,5 @@
 **/bpmn.dmn/
 **/python-telegram-bot/
 /tmp.py
-/.idea/
+/.idea/workspace.xml
+.idea/
