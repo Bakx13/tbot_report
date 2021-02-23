@@ -21,3 +21,4 @@
 **/bpmn.dmn/
 **/python-telegram-bot/
 /tmp.py
+/.idea/
