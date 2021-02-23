@@ -47,6 +47,7 @@ menu_all_cancel="Cancel"
 [Admin.MenuStart]
 
 menu_admin_client_list = "ClientList"
+menu_admin_coach_list = "CoachList"
 menu_admin_client_request = "ClientRequest"
 menu_all_swimpool_list = "SwimpoolList"
 

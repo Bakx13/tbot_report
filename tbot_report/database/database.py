@@ -206,7 +206,7 @@ class Transaction(DeferredReflection, TableDeclarativeBase):
         return f"<Transaction {self.transaction_id} for User {self.user_id}>"
 '''
 
-class Qoach(DeferredReflection, TableDeclarativeBase):
+class Сoach(DeferredReflection, TableDeclarativeBase):
     """A greed administrator with his permissions."""
 
     # The telegram id
@@ -219,9 +219,27 @@ class Qoach(DeferredReflection, TableDeclarativeBase):
     about = Column(String, nullable=False)
     picture = Column(String)
     # Extra table parameters
-    __tablename__ = "qoachs"
+    __tablename__ = "сoachs"
     def __repr__(self):
-        return f"<Qoach {self.user_id}>"
+        return f"<Coach {self.user_id}>"
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        return
+    def create(self, w: "worker.Worker", user: User, **kwargs):
+        # Initialize the super
+        super().__init__(**kwargs)
+        # Get the data from telegram
+        self.user_id = w.telegram_user.id
+        self.first_name = w.telegram_user.first_name
+        self.last_name = w.telegram_user.last_name
+        self.username = w.telegram_user.username
+        if w.telegram_user.language_code:
+            self.language = w.telegram_user.language_code
+        else:
+            self.language = w.cfg.language["default_language"]
+        # The starting wallet value is 0
+        self.credit = 0
 
 class Admin(DeferredReflection, TableDeclarativeBase):
     """Описание класса для работы с таблицей бассейнов"""

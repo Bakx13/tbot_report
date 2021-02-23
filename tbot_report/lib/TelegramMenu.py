@@ -67,7 +67,7 @@ class TelegramHandler():
                 log.debug(f'menuitem.task_spec.description: {menuitem.task_spec}')
                 log.debug(f'menuitem.task_spec.name: {menuitem.task_spec.name}')
                 menuitem_desc = menuitem.task_spec.description.split('#')
-                menuitem_id = menuitem_desc[0]
+                menuitem_id = int(menuitem_desc[0])
             except:
                 log.debug(
                     f"Ошибка в формировании bpmn-схемы. Поле Description должно быть формата 1#Описание, где 1 - это порядковый номер меню.")
@@ -76,7 +76,9 @@ class TelegramHandler():
             handler, locname = tMenu.loc_menu[menuitem]
             log.debug(f"add menu point handler = {handler} lname= {locname} to keyboard")
             for_menus.append((menuitem_id, menuitem, handler, locname))
+        log.debug(f"for_menus до сортировки={for_menus}")
         for_menus = sorted(for_menus, key=lambda menu: menu[0])
+        log.debug(f"for_menus after сортировки={for_menus}")
         for menuitem_id, menuitem, handler, locname in for_menus:
             self.keyboard.append([telegram.KeyboardButton(locname)])
         # self.keyboard.reverse()
@@ -173,7 +175,24 @@ class TelegramAdminHandler(TelegramHandler):
             menu = TelegramSecondMenu(self.worker)
             self.worker.second_menu = menu
         reply_markup = self.worker.second_menu.SwimpoolList(0)
+        #@todo не забыть убрать в локализацию
         self.worker.bot.send_message(self.worker.chat.id, "<b>Список бассейнов:</b>", reply_markup=reply_markup)
+        return keyboard, msg_txt
+
+    def CoachList(self, tMenu, menuname):
+        msg_txt = "menu_all_swimpool_list_text"
+        log.debug(f"begin admin Swimpoollist handler")
+        log.debug(f"menuname={menuname}")
+        # переопределяем клавиатуру для выбранного пункта меню
+        self.set_menu_by_bpmn(menuname, tMenu)
+        keyboard = self.get_keyboard()
+        # отображаем текущий список тренеров:
+        if self.worker.second_menu is None:
+            menu = TelegramSecondMenu(self.worker)
+            self.worker.second_menu = menu
+        reply_markup = self.worker.second_menu.CoachList(0)
+        #@todo не забыть убрать в локализацию
+        self.worker.bot.send_message(self.worker.chat.id, "<b>Список тренеров:</b>", reply_markup=reply_markup)
         return keyboard, msg_txt
 
     def AddSwimpool(self, tMenu, menuname):
@@ -308,6 +327,43 @@ class TelegramSecondMenu():
         reply_markup = telegram.InlineKeyboardMarkup(keyboard_nice)
         return reply_markup
 
+    def CoachList(self, object_id: int):
+        log.debug(f"begin SwimpoolList second menu handler")
+        column_names = [telegram.InlineKeyboardButton("        Имя        ", callback_data="none"),
+                        telegram.InlineKeyboardButton("Стоимость занятия", callback_data="none"),
+                        telegram.InlineKeyboardButton("Выбрать", callback_data="none")]
+        reply_markup = self.draw_object_list(object_id, "Coach", column_names)
+        return reply_markup
+    @staticmethod
+    def get_db_class_by_name(class_name):
+        return class_name
+    def draw_object_list(self, object_id: int, db_class_name: str, column_names):
+
+        log.debug(f"begin draw_object_list second menu handler")
+        db_class_name = self.get_db_class_by_name(db_class_name)
+        swimpools = self.worker.session.query(db_class_name).filter_by(deleted=False).all()
+        object_id = int(object_id)
+        keyboard_nice = []
+
+        keyboard_nice.append()
+        keyboard_nice.append(column_names)
+        for swimpool in swimpools:
+            sw_id = int(swimpool.id)
+            swimpool_name = str(swimpool.name)
+            if swimpool.price is None:
+                swimpool_price = "не задана"
+            else:
+                swimpool_price = str(swimpool.price)
+
+            # @todo не забыть убрать в localization"
+            choice = "✔️"
+            if sw_id == object_id: choice = f"✅"
+            keyboard_nice.append([telegram.InlineKeyboardButton(swimpool_name, callback_data="none"),
+                                  telegram.InlineKeyboardButton(swimpool_price, callback_data="none"),
+                                  telegram.InlineKeyboardButton(choice, callback_data=f"SwimpoolList#{sw_id}")])
+
+        reply_markup = telegram.InlineKeyboardMarkup(keyboard_nice)
+        return reply_markup
     @staticmethod
     def draw_selected_menu(worker, updates: telegram.Update):
         return

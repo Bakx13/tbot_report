@@ -175,7 +175,8 @@ menu_admin_main_txt = "Вы 💼 <b>администратор</b> этого б
 menu_admin_user_mode = "👤 Режим клиента"
 menu_admin_coach_mode = "👤 Режим Тренера"
 menu_admin_del_swimpool = "🏊 Изменить бассейн"
-menu_admin_client_list = "👔 Список тренеров"
+menu_admin_client_list = "👔 Список клиентов"
+menu_admin_coach_list = "🏅 Список тренеров"
 menu_admin_client_request = "Новые клиенты"
 
 #----общие вопросы

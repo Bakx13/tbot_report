@@ -61,6 +61,7 @@ class Worker(threading.Thread):
         # Get the user db data from the users and admin tables
         self.user: Optional[db.User] = None
         self.admin: Optional[db.Admin] = None
+        self.coach: Optional[db.Coach] = None
         # The sending pipe is stored in the Worker class, allowing the forwarding of messages to the chat process
         self.queue = queuem.Queue()
         # The current active invoice payload; reject all invoices with a different payload
@@ -172,6 +173,7 @@ class Worker(threading.Thread):
         log.debug(f"user id = {self.chat.id}")
         self.user = self.session.query(db.User).filter(db.User.user_id == self.chat.id).one_or_none()
         self.admin = self.session.query(db.Admin).filter(db.Admin.user_id == self.chat.id).one_or_none()
+        #self.coach = self.session.query(db.Coach).filter(db.Coach.user_id == self.chat.id).one_or_none()
         # If the user isn't registered, create a new record and add it to the db
         if self.user is None:
             # Check if there are other registered users: if there aren't any, the first user will be owner of the bot

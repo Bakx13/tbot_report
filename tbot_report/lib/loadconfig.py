@@ -52,6 +52,7 @@ class MyConfig(object):
             'test': common_cfg["Path"]["test_conf"],
             'prod': common_cfg["Path"]["prod_conf"],
         }
+        #Трудности одновременной отладки. Поэтому конфиг в режиме дев для каждого разрабочика свои.
         if env_level == 'dev':
             CONFIG_FILE = f"{tmp[env_level]}_{dev_name}.toml"
         else:

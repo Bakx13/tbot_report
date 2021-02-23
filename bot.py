@@ -113,8 +113,8 @@ def main():
                                       address=swimpool['address'], name=swimpool['name'], price=swimpool['price'])
             session.add(spool)
         session.commit()
-        qoach = database.Qoach(user_id = 1, timetable_id = 1, about = "I'm suoer")
-        session.add(qoach)
+        coach = database.Сoach(user_id=1, timetable_id=1, about="I'm suoer")
+        session.add(coach)
 
         session.commit()
 

@@ -2,15 +2,16 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d83d59a8-8a03-460f-953b-d8ceae5adfef" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/config/config_devel_anton.toml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/config/config_devel_konstantin.toml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/deploy/build_anton.sh" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bot.py" beforeDir="false" afterPath="$PROJECT_DIR$/bot.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/config_common.toml" beforeDir="false" afterPath="$PROJECT_DIR$/config/config_common.toml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/config_devel.toml" beforeDir="false" afterPath="$PROJECT_DIR$/config/config_devel.toml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tbot_report/lib/loadarguments.py" beforeDir="false" afterPath="$PROJECT_DIR$/tbot_report/lib/loadarguments.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/comunda_admin_menu.bpmn" beforeDir="false" afterPath="$PROJECT_DIR$/config/comunda_admin_menu.bpmn" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/comunda_coach_menu.bpmn" beforeDir="false" afterPath="$PROJECT_DIR$/config/comunda_coach_menu.bpmn" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tbot_report/database/database.py" beforeDir="false" afterPath="$PROJECT_DIR$/tbot_report/database/database.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tbot_report/lib/TelegramMenu.py" beforeDir="false" afterPath="$PROJECT_DIR$/tbot_report/lib/TelegramMenu.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tbot_report/lib/loadconfig.py" beforeDir="false" afterPath="$PROJECT_DIR$/tbot_report/lib/loadconfig.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tbot_report/lib/worker.py" beforeDir="false" afterPath="$PROJECT_DIR$/tbot_report/lib/worker.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tbot_report/localization/locale/ru.py" beforeDir="false" afterPath="$PROJECT_DIR$/tbot_report/localization/locale/ru.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tbot_report/models/menus/coach_menu.toml" beforeDir="false" afterPath="$PROJECT_DIR$/tbot_report/models/menus/coach_menu.toml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -99,7 +100,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="build.sh" type="ShConfigurationType" temporary="true">
+    <configuration name="build.sh" type="ShConfigurationType">
       <option name="INDEPENDENT_SCRIPT_PATH" value="true" />
       <option name="SCRIPT_PATH" value="$PROJECT_DIR$/deploy/build.sh" />
       <option name="SCRIPT_OPTIONS" value="" />
@@ -114,7 +115,6 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Shell Script.build.sh" />
         <item itemvalue="Python.loadarguments" />
       </list>
     </recent_temporary>
@@ -127,13 +127,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1610139296442</updated>
-    </task>
-    <task id="LOCAL-00001" summary="csdfsdf">
-      <created>1610140087184</created>
-      <option name="number" value="00001" />
-      <option name="presentableId" value="LOCAL-00001" />
-      <option name="project" value="LOCAL" />
-      <updated>1610140087184</updated>
     </task>
     <task id="LOCAL-00002" summary="добавляем зависимости">
       <created>1610140628783</created>
@@ -471,7 +464,14 @@
       <option name="project" value="LOCAL" />
       <updated>1614019559790</updated>
     </task>
-    <option name="localTasksCounter" value="50" />
+    <task id="LOCAL-00050" summary="разделяем конфиги по разработчикам.&#10;Плюс отдельный сборщик для Антона">
+      <created>1614078120130</created>
+      <option name="number" value="00050" />
+      <option name="presentableId" value="LOCAL-00050" />
+      <option name="project" value="LOCAL" />
+      <updated>1614078120130</updated>
+    </task>
+    <option name="localTasksCounter" value="51" />
     <servers />
   </component>
   <component name="Vcs.Log.History.Properties">
@@ -497,7 +497,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="перенесли всю загрузку конфигов в отдельную библиотеку.&#10;Убрал нафиг старый бизнес-код&#10;разделил конфиги на два уровня: общий для всех сред (дев, тест и пром) и разные." />
     <MESSAGE value="чуток рефакторинга" />
     <MESSAGE value="добавляем локализацию и еще немного рефакторинга" />
     <MESSAGE value="добавляем работу с БД" />
@@ -522,6 +521,7 @@
     <MESSAGE value="Переделал загрузку тестовых данных из файла. Чуток починил bpmn для админа" />
     <MESSAGE value="Добавлена обработка удаления бассейнов. Добавил новый реквизит и на самом деле бассейн просто помечается как удаленный. Ну на всякий случай, чтобы потом не чинить полбазы из-за нарушенной связи по ключам" />
     <MESSAGE value="проверяем" />
-    <option name="LAST_COMMIT_MESSAGE" value="проверяем" />
+    <MESSAGE value="разделяем конфиги по разработчикам.&#10;Плюс отдельный сборщик для Антона" />
+    <option name="LAST_COMMIT_MESSAGE" value="разделяем конфиги по разработчикам.&#10;Плюс отдельный сборщик для Антона" />
   </component>
 </project>
