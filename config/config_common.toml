@@ -5,7 +5,7 @@
 #home directory
 tbot_home = "PycharmProjects/tbot_report/"
 logs_dir = "logs/"
-dev_conf = "config/config_devel.toml"
+dev_conf = "config/config_devel"
 test_conf = "config/config_test.toml"
 prod_conf = "config/config_prod.toml"
 menu_dir = "tbot_report/models/menus/"

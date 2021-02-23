@@ -10,5 +10,7 @@ class ArgParses(object):
     def createParser():
         parser = argparse.ArgumentParser()
         parser.add_argument ('-e', '--env', choices=['dev', 'test', 'prod'], default='prod')
-        namespace = parser.parse_args(sys.argv[1:])
+        parser.add_argument('-p', '--programmist', choices=['anton', 'konstantin'], default='konstantin')
+        #namespace = parser.parse_args(sys.argv[1:])
+        namespace = parser.parse_args()
         return namespace

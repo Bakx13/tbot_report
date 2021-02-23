@@ -12,8 +12,7 @@ engine = "sqlite:///database.sqlite"
 # Telegram bot parameters
 [Telegram]
 # Your bot token goes here. Get one from https://t.me/BotFather!
-
-token = "966917460:AAEssBFBIRI7eQuTl2Vqc595bep7AOFJKLU"
+token = "1630336212:AAF9EszQO_AEqVilK7vXvhZMfp-SUjUerpw"
 # proxy configuration
 proxy_string = "socks4://24.181.205.134:54321"
 # Time in seconds before a conversation (thread) with no new messages expires

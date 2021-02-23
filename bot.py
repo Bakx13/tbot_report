@@ -24,7 +24,7 @@ import tbot_report.database.database as database
 def main():
     """The core code of the program. Should be run only in the main process!"""
     # init variables
-    CONFIG_COMMON = "/Users/a16673010/PycharmProjects/tbot_report/config/config_common.toml"
+    CONFIG_COMMON = "config/config_common.toml"
     threading.current_thread().name = "Core"
     log = logging.getLogger(threading.current_thread().name)
     logging.basicConfig(filename='logs/' + threading.current_thread().name + '.log', filemode='w',
@@ -36,9 +36,11 @@ def main():
         log.fatal(CONFIG_COMMON + " does not exist!")
         exit(254)
     # разбираем параметр запуска bot.py env -среда исполнения. От этого зависит какой второй конфиг мы подтянем.
-    ENV_LEVEL = loadarguments.ArgParses.createParser().env
+    arguments = loadarguments.ArgParses.createParser()
+    ENV_LEVEL = arguments.env
+    dev_name = arguments.programmist
     config_all = MConfig.MyConfig()
-    config_all.Load(CONFIG_COMMON, ENV_LEVEL)
+    config_all.Load(CONFIG_COMMON, ENV_LEVEL, dev_name)
 
     # Обновляем настройки логирования после загрузку конфигов
 
@@ -58,7 +60,6 @@ def main():
     # подтягиваем локализацию
     default_language = config_all.language["default_language"]
     default_loc = localization.Localization(language=default_language, fallback=default_language)
-
     # подключаем СУБД
     log.debug("Creating the sqlalchemy engine...")
     engine = sqlalchemy.create_engine(config_all.database["engine"], echo=False)

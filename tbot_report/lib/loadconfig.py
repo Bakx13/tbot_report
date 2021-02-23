@@ -24,7 +24,7 @@ class MyConfig(object):
         self.menu_dir = ""
         self.menu = {}
         self.test_data = ""
-    def Load(self, file_conf, env_level):
+    def Load(self, file_conf, env_level, dev_name):
         log.debug("load config")
         #заполняем настройки из общего конфига
         cfg_file = open(file_conf, encoding="utf8")
@@ -52,7 +52,10 @@ class MyConfig(object):
             'test': common_cfg["Path"]["test_conf"],
             'prod': common_cfg["Path"]["prod_conf"],
         }
-        CONFIG_FILE = tmp[env_level]
+        if env_level == 'dev':
+            CONFIG_FILE = f"{tmp[env_level]}_{dev_name}.toml"
+        else:
+            CONFIG_FILE = tmp[env_level]
         cfg_file.close()
         #Загружаем конфиг среды запуска
         log.debug("Open env config: "+CONFIG_FILE)
