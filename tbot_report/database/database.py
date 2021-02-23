@@ -1,6 +1,6 @@
 import logging
 import typing
-import importlib
+import sys
 
 import requests
 import telegram
@@ -16,7 +16,8 @@ if typing.TYPE_CHECKING:
     import worker
 
 log = logging.getLogger(__name__)
-
+current_module = sys.modules[__name__]
+current_module_name = __name__
 
 # Create a base class to define all the database subclasses
 TableDeclarativeBase = declarative_base()
@@ -90,6 +91,7 @@ class User(DeferredReflection, TableDeclarativeBase):
 
     def __repr__(self):
         return f"<User {self.mention()} having {self.credit} credit>"
+
 
 '''
 class Product(DeferredReflection, TableDeclarativeBase):
@@ -206,6 +208,7 @@ class Transaction(DeferredReflection, TableDeclarativeBase):
         return f"<Transaction {self.transaction_id} for User {self.user_id}>"
 '''
 
+
 class Client(DeferredReflection, TableDeclarativeBase):
     """A greed administrator with his permissions."""
 
@@ -213,41 +216,40 @@ class Client(DeferredReflection, TableDeclarativeBase):
     user_id = Column(BigInteger, ForeignKey("users.user_id"), primary_key=True)
     user = relationship("User")
 
-
-
-    id = Column(BigInteger, primary_key=False)
+    id = Column(BigInteger, primary_key=False, autoincrement=True)
     timetable_id = Column(BigInteger, ForeignKey("timetable.id"), primary_key=True)
     timetable = relationship("TimeTable")  # Permissions
-    #coach_id = Column(BigInteger, ForeignKey("coachs.user_id"), primary_key=False)
-    #coach = relationship("Coach")
-
+    # coach_id = Column(BigInteger, ForeignKey("coachs.user_id"), primary_key=False)
+    # coach = relationship("Coach")
 
     # Extra table parameters
     __tablename__ = "client"
 
 
-
-
-class Сoach(DeferredReflection, TableDeclarativeBase):
+class Coach(DeferredReflection, TableDeclarativeBase):
     """A greed administrator with his permissions."""
 
     # The telegram id
     user_id = Column(BigInteger, ForeignKey("users.user_id"), primary_key=True)
     user = relationship("User")
     timetable_id = Column(BigInteger, ForeignKey("timetable.id"), primary_key=True)
-    timetable = relationship("TimeTable")    # Permissions
+    timetable = relationship("TimeTable")  # Permissions
 
-    id = Column(BigInteger, primary_key=False)
+    id = Column(BigInteger, primary_key=False, autoincrement=True)
     about = Column(String, nullable=False)
     picture = Column(String)
+
+    deleted = Column(Boolean, nullable=False, default=False)
     # Extra table parameters
     __tablename__ = "сoachs"
+
     def __repr__(self):
         return f"<Coach {self.user_id}>"
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         return
+
     def create(self, w: "worker.Worker", user: User, **kwargs):
         # Initialize the super
         super().__init__(**kwargs)
@@ -263,6 +265,7 @@ class Сoach(DeferredReflection, TableDeclarativeBase):
         # The starting wallet value is 0
         self.credit = 0
 
+
 class Admin(DeferredReflection, TableDeclarativeBase):
     """Описание класса для работы с таблицей бассейнов"""
 
@@ -270,7 +273,7 @@ class Admin(DeferredReflection, TableDeclarativeBase):
     user_id = Column(BigInteger, ForeignKey("users.user_id"), primary_key=True)
     user = relationship("User")
 
-    id = Column(BigInteger, primary_key=False)
+    id = Column(BigInteger, primary_key=False, autoincrement=True)
     # Permissions
 
     edit_products = Column(Boolean, default=False)
@@ -283,6 +286,7 @@ class Admin(DeferredReflection, TableDeclarativeBase):
 
     # Extra table parameters
     __tablename__ = "admins"
+
     def __repr__(self):
         return f"<Admin {self.user_id}>"
 
@@ -292,7 +296,7 @@ class TimeTable(DeferredReflection, TableDeclarativeBase):
     It may include multiple products, available in the OrderItem table."""
 
     # The unique order id
-    id = Column(Integer, primary_key=True)
+    id = Column(Integer, primary_key=True, autoincrement=True)
     # Date of creation
     creation_date = Column(DateTime, nullable=False)
     # Date of delivery
@@ -305,7 +309,6 @@ class TimeTable(DeferredReflection, TableDeclarativeBase):
     train_period: typing.List["TimeTableItem"] = relationship("TimeTableItem")
     # Extra details specified by the purchasing user
     notes = Column(Text)
-
 
     # Extra table parameters
     __tablename__ = "timetable"
@@ -348,11 +351,12 @@ class TimeTable(DeferredReflection, TableDeclarativeBase):
                    (w.loc.get("refund_reason", reason=self.refund_reason) if self.refund_date is not None else "")
         '''
 
+
 class TimeTableItem(DeferredReflection, TableDeclarativeBase):
     """Одна строчка из расписания занятий"""
 
     # The unique item id
-    id = Column(Integer, primary_key=True)
+    id = Column(Integer, primary_key=True, autoincrement=True)
     # The product that is being ordered
     item = Column(String, nullable=False)
 
@@ -372,9 +376,9 @@ class District(DeferredReflection, TableDeclarativeBase):
     """Район города"""
 
     # The unique item id
-    id = Column(Integer, primary_key=True)
+    id = Column(Integer, primary_key=True, autoincrement=True)
 
-    #Ссылка на город, в котором расположен район
+    # Ссылка на город, в котором расположен район
     city_id = Column(BigInteger, ForeignKey("city.id"), primary_key=False)
     city = relationship("City")
 
@@ -391,11 +395,13 @@ class District(DeferredReflection, TableDeclarativeBase):
 
     def __repr__(self):
         return f"<TimeTableItem {self.id}>"
+
+
 class City(DeferredReflection, TableDeclarativeBase):
     """Города страны, в которых мы предоставляем услугу"""
 
     # The unique item id
-    id = Column(Integer, primary_key=True)
+    id = Column(Integer, primary_key=True, autoincrement=True)
     # Название города
     name = Column(String, nullable=False)
 
@@ -410,12 +416,14 @@ class City(DeferredReflection, TableDeclarativeBase):
     def __repr__(self):
         return f"<city {self.id}>"
 
-#---- swimbot tables
+
+# ---- swimbot tables
+
 
 class SwimPool(DeferredReflection, TableDeclarativeBase):
     """Бассейн, в который можно записаться"""
     # Product id
-    id = Column(Integer, primary_key=True)
+    id = Column(Integer, primary_key=True, autoincrement=True)
 
     # ссылка на таблицы с районами города
     distict_id = Column(BigInteger, ForeignKey("district.id"), primary_key=False)
@@ -423,7 +431,7 @@ class SwimPool(DeferredReflection, TableDeclarativeBase):
 
     # ссылка на таблицу с расписанием занятий
     timetable_id = Column(BigInteger, ForeignKey("timetable.id"), primary_key=False)
-    timetable = relationship("TimeTable")    # Permissions
+    timetable = relationship("TimeTable")  # Permissions
 
     # фото бассейна
     image = Column(LargeBinary)
@@ -450,9 +458,8 @@ class SwimPool(DeferredReflection, TableDeclarativeBase):
     def get_all_swimpool(self, SwimPool: list):
         swimpool = session.query(SwimPool).all()
         return swimpool
+
     # No __init__ is needed, the default one is sufficient
-
-
 
     def text(self, w: "worker.Worker", *, style: str = "full", cart_qty: int = None):
         """Return the product details formatted with Telegram HTML. The image is omitted."""
@@ -491,8 +498,3 @@ class SwimPool(DeferredReflection, TableDeclarativeBase):
         r = requests.get(file.file_path)
         # Store the photo in the database record
         self.image = r.content
-
-
-
-
-

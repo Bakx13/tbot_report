@@ -1,4 +1,7 @@
 import logging
+import inspect
+import sys
+import difflib
 
 import bpmn_dmn.bpmn as BPMN
 import telegram
@@ -73,13 +76,10 @@ class TelegramHandler():
                     f"Ошибка в формировании bpmn-схемы. Поле Description должно быть формата 1#Описание, где 1 - это порядковый номер меню.")
                 return
             menuitem = menuitem.task_spec.name
-            log.debug(f"tMenu.loc_menu={tMenu.loc_menu}")
             handler, locname = tMenu.loc_menu[menuitem]
             log.debug(f"add menu point handler = {handler} lname= {locname} to keyboard")
             for_menus.append((menuitem_id, menuitem, handler, locname))
-        log.debug(f"for_menus до сортировки={for_menus}")
         for_menus = sorted(for_menus, key=lambda menu: menu[0])
-        log.debug(f"for_menus after сортировки={for_menus}")
         for menuitem_id, menuitem, handler, locname in for_menus:
             self.keyboard.append([telegram.KeyboardButton(locname)])
         # self.keyboard.reverse()
@@ -272,9 +272,9 @@ class TelegramAdminHandler(TelegramHandler):
         CoachList = self.worker.session.query(db.Qoach).filter_by().all()
         Coach_names = [qoach.user for qoach in CoachList]
         keyboard_nice = []
-        for qoach in CoachList:
-            coach_name = qoach.about
-            ch_id = qoach.id
+        for сoach in CoachList:
+            coach_name = сoach.about
+            ch_id = сoach.id
             keyboard_nice.append(
                 [telegram.InlineKeyboardButton(f"✅ {coach_name}", callback_data=f"CoachList.{ch_id}")])
         reply_markup = telegram.InlineKeyboardMarkup(keyboard_nice)
@@ -373,39 +373,46 @@ class TelegramSecondMenu():
 
     def CoachList(self, object_id: int):
         log.debug(f"begin SwimpoolList second menu handler")
-        column_names = [telegram.InlineKeyboardButton("        Имя        ", callback_data="none"),
-                        telegram.InlineKeyboardButton("Стоимость занятия", callback_data="none"),
+        column_names = [telegram.InlineKeyboardButton("        Тренер        ", callback_data="none"),
                         telegram.InlineKeyboardButton("Выбрать", callback_data="none")]
-        reply_markup = self.draw_object_list(object_id, "Coach", column_names)
+        reply_markup = self.draw_object_list(object_id, "Coach", column_names, ["about", "id"], "CoachList")
         return reply_markup
+
     @staticmethod
-    def get_db_class_by_name(class_name):
-        return class_name
-    def draw_object_list(self, object_id: int, db_class_name: str, column_names):
+    def get_db_class_by_name(class_name: str):
+        clsmembers = inspect.getmembers(sys.modules[db.current_module_name], inspect.isclass)
+        for cls in clsmembers:
+            if str(class_name) == str(cls[0]):
+                return cls[1]
+        return None
 
-        log.debug(f"begin draw_object_list second menu handler")
+    def draw_object_list(self, object_id: int, db_class_name: str, column_names, columns, call_back_data):
+        log.debug(f"begin draw_object_list second menu")
         db_class_name = self.get_db_class_by_name(db_class_name)
-        swimpools = self.worker.session.query(db_class_name).filter_by(deleted=False).all()
+        objects = self.worker.session.query(db_class_name).filter_by(deleted=False).all()
         object_id = int(object_id)
-        keyboard_nice = []
-
-        keyboard_nice.append()
-        keyboard_nice.append(column_names)
-        for swimpool in swimpools:
-            sw_id = int(swimpool.id)
-            swimpool_name = str(swimpool.name)
-            if swimpool.price is None:
-                swimpool_price = "не задана"
-            else:
-                swimpool_price = str(swimpool.price)
-
-            # @todo не забыть убрать в localization"
+        keyboard_nice = [column_names]
+        for object in objects:
+            lst = []
             choice = "✔️"
-            if sw_id == object_id: choice = f"✅"
-            keyboard_nice.append([telegram.InlineKeyboardButton(swimpool_name, callback_data="none"),
-                                  telegram.InlineKeyboardButton(swimpool_price, callback_data="none"),
-                                  telegram.InlineKeyboardButton(choice, callback_data=f"SwimpoolList#{sw_id}")])
-
+            sw_id = ""
+            for column in columns:
+                property = getattr(object, column)
+                log.debug(f"{column} = {property}")
+                if property is None:
+                    #@todo не забыть убрать в localization"
+                    property = "не задана"
+                if column == "id":
+                    property = int(property)
+                    sw_id = property
+                    if property == object_id: choice = f"✅"
+                else:
+                    property = str(property)
+                    lst.append(telegram.InlineKeyboardButton(property, callback_data="none"))
+            lst.append(telegram.InlineKeyboardButton(choice, callback_data=f"{call_back_data}#{sw_id}"))
+            log.debug(f"lst={lst}")
+            keyboard_nice.append(lst)
+        log.debug(f"keyboard_nice={keyboard_nice}")
         reply_markup = telegram.InlineKeyboardMarkup(keyboard_nice)
         return reply_markup
     @staticmethod
