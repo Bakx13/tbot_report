@@ -143,6 +143,23 @@ class TelegramCoachHandler(TelegramHandler):
         keyboard = self.get_keyboard()
         return keyboard, msg_txt
 
+    def ClientList(self, tMenu, menuname):
+        msg_txt = "menu_coach_client_list_text"
+        log.debug(f"begin Coach ClientList handler")
+        log.debug(f"menuname={menuname}")
+        # переопределяем клавиатуру для выбранного пункта меню
+        self.set_menu_by_bpmn(menuname, tMenu)
+        keyboard = self.get_keyboard()
+        # отображаем текущий список тренеров:
+        if self.worker.second_menu is None:
+            menu = TelegramSecondMenu(self.worker)
+            self.worker.second_menu = menu
+        # to do разобраться с получением списка клиентов для тренера SwimpoolList заменить на нужный метод
+        reply_markup = self.worker.second_menu.SwimpoolList(0)
+        # @todo не забыть убрать в локализацию
+        self.worker.bot.send_message(self.worker.chat.id, "<b>Список клиентов:</b>", reply_markup=reply_markup)
+        return keyboard, msg_txt
+
 
 class TelegramAdminHandler(TelegramHandler):
     def __init__(self, worker: Worker, bpmnfile):
@@ -305,6 +322,32 @@ class TelegramSecondMenu():
     def SwimpoolList(self, object_id: int):
         log.debug(f"begin SwimpoolList second menu handler")
         swimpools = self.worker.session.query(db.SwimPool).filter_by(deleted=False).all()
+        object_id = int(object_id)
+        keyboard_nice = []
+        keyboard_nice.append([telegram.InlineKeyboardButton("Название бассейна", callback_data="none"),
+                              telegram.InlineKeyboardButton("Стоимость", callback_data="none"),
+                              telegram.InlineKeyboardButton("Выбрать", callback_data="none")])
+        for swimpool in swimpools:
+            sw_id = int(swimpool.id)
+            swimpool_name = str(swimpool.name)
+            if swimpool.price is None:
+                swimpool_price = "не задана"
+            else:
+                swimpool_price = str(swimpool.price)
+
+            # @todo не забыть убрать в localization"
+            choice = "✔️"
+            if sw_id == object_id: choice = f"✅"
+            keyboard_nice.append([telegram.InlineKeyboardButton(swimpool_name, callback_data="none"),
+                                  telegram.InlineKeyboardButton(swimpool_price, callback_data="none"),
+                                  telegram.InlineKeyboardButton(choice, callback_data=f"SwimpoolList#{sw_id}")])
+
+        reply_markup = telegram.InlineKeyboardMarkup(keyboard_nice)
+        return reply_markup
+
+    def CoachClientList(self, object_id: int):
+        log.debug(f"begin CoachClientList second menu handler")
+        swimpools = self.worker.session.query(db.Client).filter_by(deleted=False).all()
         object_id = int(object_id)
         keyboard_nice = []
         keyboard_nice.append([telegram.InlineKeyboardButton("Название бассейна", callback_data="none"),
