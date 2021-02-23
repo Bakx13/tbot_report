@@ -206,6 +206,28 @@ class Transaction(DeferredReflection, TableDeclarativeBase):
         return f"<Transaction {self.transaction_id} for User {self.user_id}>"
 '''
 
+class Client(DeferredReflection, TableDeclarativeBase):
+    """A greed administrator with his permissions."""
+
+    # The telegram id
+    user_id = Column(BigInteger, ForeignKey("users.user_id"), primary_key=True)
+    user = relationship("User")
+
+
+
+    id = Column(BigInteger, primary_key=False)
+    timetable_id = Column(BigInteger, ForeignKey("timetable.id"), primary_key=True)
+    timetable = relationship("TimeTable")  # Permissions
+    #coach_id = Column(BigInteger, ForeignKey("coachs.user_id"), primary_key=False)
+    #coach = relationship("Coach")
+
+
+    # Extra table parameters
+    __tablename__ = "client"
+
+
+
+
 class Сoach(DeferredReflection, TableDeclarativeBase):
     """A greed administrator with his permissions."""
 
@@ -469,4 +491,8 @@ class SwimPool(DeferredReflection, TableDeclarativeBase):
         r = requests.get(file.file_path)
         # Store the photo in the database record
         self.image = r.content
+
+
+
+
 
