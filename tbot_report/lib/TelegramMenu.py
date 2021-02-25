@@ -147,6 +147,18 @@ class TelegramCoachHandler(TelegramHandler):
         msg_txt = "menu_coach_client_list_text"
         log.debug(f"begin Coach ClientList handler")
         log.debug(f"menuname={menuname}")
+        clientlist = self.worker.session.query(db.Client).filter_by().all()
+       # object_id = int(object_id)
+        keyboard_nice = []
+        keyboard_nice.append([telegram.InlineKeyboardButton("ФИО", callback_data="none")])
+        for clients in clientlist:
+            cl_id = int(clients.id)
+            keyboard_nice.append([telegram.InlineKeyboardButton(cl_id, callback_data="none"),
+                             ])
+
+        reply_markup = telegram.InlineKeyboardMarkup(keyboard_nice)
+        return reply_markup
+
         # переопределяем клавиатуру для выбранного пункта меню
         self.set_menu_by_bpmn(menuname, tMenu)
         keyboard = self.get_keyboard()
@@ -562,6 +574,8 @@ class TelegramMenu(NuConfig):
         # переопределяем сами себя из-за возможного перехода из другого режима, например Admin-> Coach
         menu_file = TelegramMenu.get_menu_file(worker.cfg, "coach_menu")
         self.__init__(menu_file, self.loc, "Coach")
+        log.debug(f"header_txt: {header_txt}")
+        log.debug(f" menustart: {menustart}")
         self.draw_menu(header_txt, worker, "Coach", "TelegramCoachHandler", "config/comunda_coach_menu.bpmn",
                        menustart)
         return
