@@ -219,8 +219,8 @@ class Client(DeferredReflection, TableDeclarativeBase):
     id = Column(BigInteger, primary_key=False, autoincrement=True)
     timetable_id = Column(BigInteger, ForeignKey("timetable.id"), primary_key=True)
     timetable = relationship("TimeTable")  # Permissions
-    # coach_id = Column(BigInteger, ForeignKey("coachs.user_id"), primary_key=False)
-    # coach = relationship("Coach")
+    coach_id = Column(BigInteger, ForeignKey("coachs.user_id"), primary_key=False)
+    coach = relationship("Coach")
 
     # Extra table parameters
     __tablename__ = "client"
@@ -241,7 +241,7 @@ class Coach(DeferredReflection, TableDeclarativeBase):
 
     deleted = Column(Boolean, nullable=False, default=False)
     # Extra table parameters
-    __tablename__ = "сoachs"
+    __tablename__ = "coachs"
 
     def __repr__(self):
         return f"<Coach {self.user_id}>"
