@@ -144,33 +144,21 @@ class TelegramCoachHandler(TelegramHandler):
         return keyboard, msg_txt
 
     def ClientList(self, tMenu, menuname):
-        msg_txt = "menu_coach_client_list_text"
-        log.debug(f"begin Coach ClientList handler")
+        msg_txt = "menu_all_client_list_text"
+        log.debug(f"begin admin ClientList handler")
         log.debug(f"menuname={menuname}")
-        clientlist = self.worker.session.query(db.Client).filter_by().all()
-       # object_id = int(object_id)
-        keyboard_nice = []
-        keyboard_nice.append([telegram.InlineKeyboardButton("ФИО", callback_data="none")])
-        for clients in clientlist:
-            cl_id = int(clients.id)
-            keyboard_nice.append([telegram.InlineKeyboardButton(cl_id, callback_data="none"),
-                             ])
-
-        reply_markup = telegram.InlineKeyboardMarkup(keyboard_nice)
-        return reply_markup
-
         # переопределяем клавиатуру для выбранного пункта меню
         self.set_menu_by_bpmn(menuname, tMenu)
         keyboard = self.get_keyboard()
-        # отображаем текущий список тренеров:
+        # отображаем текущий список бассейнов:
         if self.worker.second_menu is None:
             menu = TelegramSecondMenu(self.worker)
             self.worker.second_menu = menu
-        # to do разобраться с получением списка клиентов для тренера SwimpoolList заменить на нужный метод
-        reply_markup = self.worker.second_menu.SwimpoolList(0)
-        # @todo не забыть убрать в локализацию
+        reply_markup = self.worker.second_menu.CoachClientList(0)
+        #@todo не забыть убрать в локализацию
         self.worker.bot.send_message(self.worker.chat.id, "<b>Список клиентов:</b>", reply_markup=reply_markup)
         return keyboard, msg_txt
+
 
 
 class TelegramAdminHandler(TelegramHandler):
@@ -359,26 +347,16 @@ class TelegramSecondMenu():
 
     def CoachClientList(self, object_id: int):
         log.debug(f"begin CoachClientList second menu handler")
-        swimpools = self.worker.session.query(db.Client).filter_by(deleted=False).all()
-        object_id = int(object_id)
+        msg_txt = "menu_coach_client_list_text"
+        log.debug(f"begin Coach ClientList handler")
+        clientlist = self.worker.session.query(db.Client).filter_by().all()
+        # object_id = int(object_id)
         keyboard_nice = []
-        keyboard_nice.append([telegram.InlineKeyboardButton("Название бассейна", callback_data="none"),
-                              telegram.InlineKeyboardButton("Стоимость", callback_data="none"),
-                              telegram.InlineKeyboardButton("Выбрать", callback_data="none")])
-        for swimpool in swimpools:
-            sw_id = int(swimpool.id)
-            swimpool_name = str(swimpool.name)
-            if swimpool.price is None:
-                swimpool_price = "не задана"
-            else:
-                swimpool_price = str(swimpool.price)
-
-            # @todo не забыть убрать в localization"
-            choice = "✔️"
-            if sw_id == object_id: choice = f"✅"
-            keyboard_nice.append([telegram.InlineKeyboardButton(swimpool_name, callback_data="none"),
-                                  telegram.InlineKeyboardButton(swimpool_price, callback_data="none"),
-                                  telegram.InlineKeyboardButton(choice, callback_data=f"SwimpoolList#{sw_id}")])
+        keyboard_nice.append([telegram.InlineKeyboardButton("ФИО:", callback_data="none")])
+        for clients in clientlist:
+            cl_id = int(clients.id)
+            keyboard_nice.append([telegram.InlineKeyboardButton(cl_id, callback_data="none"),
+                                  ])
 
         reply_markup = telegram.InlineKeyboardMarkup(keyboard_nice)
         return reply_markup
@@ -562,6 +540,9 @@ class TelegramMenu(NuConfig):
 
             # Вызываем обработчик в зависимости от выбранной команды.
             # try:
+            log.debug(f"Drawmenu handlername: {handlername}")
+            log.debug(f"Drawmenu menuname: {menuname}")
+            log.debug(f"Drawmenu HandlerClass: {handlerclass}")
             keyboard, header_txt = classHandler.call_handler_by_name(handlername, self, menuname)
             # m = getattr(classHandler, handlername)
             # keyboard, header_txt = m(classHandler, menuname)

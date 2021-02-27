@@ -161,6 +161,7 @@ menu_coach_client_list = "👔👔👔 Список клиентов"
 menu_coach_personal_card = "Личная карточка тренера"
 
 menu_coach_client_list_text = "Список клиентов.\n"
+menu_all_client_list_text = "Список клиентов.\n"
 
 menu_coach_client_request = "Новые клиенты"
 menu_coach_finance = "Мои финансы"
