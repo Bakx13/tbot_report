@@ -100,7 +100,8 @@ def main():
         for district_id in districts:
             district = districts[district_id]
             log.debug(f"Загружаем тестовый район: {district['name']}")
-            district = database.District(id=district_id, city_id=district['city_id'], name=district['name'], description=district['description'])
+            district = database.District(id=district_id, city_id=district['city_id'], name=district['name'],
+                                         description=district['description'])
             session.add(district)
 
         timetable = database.TimeTable(creation_date=datetime.now())
@@ -109,16 +110,37 @@ def main():
         for swimpool_id in swimpools:
             swimpool = swimpools[swimpool_id]
             log.debug(f"Загружаем тестовый бассейн: {swimpool['name']}")
-            spool = database.SwimPool(id=swimpool_id, distict_id=swimpool['distict_id'], timetable_id=swimpool['timetable_id'],
+            spool = database.SwimPool(id=swimpool_id, distict_id=swimpool['distict_id'],
+                                      timetable_id=swimpool['timetable_id'],
                                       address=swimpool['address'], name=swimpool['name'], price=swimpool['price'])
             session.add(spool)
-        session.commit()
-        coach = database.Coach(id=1, user_id=1, timetable_id=1, about="I'm super")
-        session.add(coach)
-        coach = database.Coach(id=2, user_id=2, timetable_id=1, about="I'm super2")
-        session.add(coach)
-        coach = database.Coach(id=3, user_id=3, timetable_id=1, about="I'm super3")
-        session.add(coach)
+
+        coachs = test_data['Coach']
+        for coach_id in coachs:
+            coach = coachs[coach_id]
+            log.debug(f"Загружаем тестовых тренеров: {coach['about']}")
+            cch = database.Coach(user_id=coach['user_id'], timetable_id=coach['timetable_id'], id=coach_id,
+                                 about=coach['about'])
+
+            session.add(cch)
+
+        clients = test_data['Client']
+        for client_id in clients:
+            client = clients[client_id]
+            log.debug(f"Загружаем тестовых клиентов: {client['id']}")
+            cl = database.Client(id=client_id, user_id=client['user_id'], timetable_id=client['timetable_id'],
+                                 coach_id=client['coach_id'])
+
+            session.add(cl)
+
+      #  users = test_data['User']
+       # for user_id in users:
+        #    user = users[user_id]
+         #   log.debug(f"Загружаем тестовых пользователей: {user['first_name']}")
+          #  usr = database.User(user_id=user_id, first_name=user['first_name'], last_name=user['last_name'],
+          #                      username=user['username'], language=user['language'], w = user['w'])
+
+        #    session.add(usr)
 
         session.commit()
 
