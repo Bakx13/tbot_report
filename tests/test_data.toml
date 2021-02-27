@@ -108,3 +108,58 @@ name="Энигма 9"
 price="1300 руб"
 
 
+# Telegram data Users
+    #user_id
+    #first_name
+    #last_name
+    #username
+    #language
+
+[User.1]
+    user_id = 1
+    first_name = "Arkhipov"
+    last_name = "Anton"
+    username = "Arkhipov Anton"
+    language = "ru"
+    w = 716847699
+
+[User.2]
+    user_id = 2
+    first_name = "Shin"
+    last_name = "Konstantin"
+    username = "konst"
+    language = "ru"
+
+
+# Data Client
+   # user_id
+   # id = Column(BigInteger, primary_key=False, autoincrement=True)
+   # timetable_id
+   # coach_id
+[Client.1]
+   user_id = 123123
+   id = 1
+   timetable_id = 1
+   coach_id = 1
+
+
+#Data Coach
+   # user_id = Column(BigInteger, ForeignKey("users.user_id"), primary_key=True)
+   # user = relationship("User")
+   # timetable_id = Column(BigInteger, ForeignKey("timetable.id"), primary_key=True)
+   # timetable = relationship("TimeTable")  # Permissions
+
+   # id = Column(BigInteger, primary_key=False, autoincrement=True)
+   # about = Column(String, nullable=False)
+   # picture = Column(String)
+
+   # Тренер User.2
+[Coach.1]
+    user_id = 716847699
+    timetable_id = 2
+    id = 2
+    about = "I'm the best"
+
+
+
+

@@ -349,8 +349,19 @@ class TelegramSecondMenu():
         log.debug(f"begin CoachClientList second menu handler")
         msg_txt = "menu_coach_client_list_text"
         log.debug(f"begin Coach ClientList handler")
-        clientlist = self.worker.session.query(db.Client).filter_by().all()
-        # object_id = int(object_id)
+        object_id = int(object_id)
+
+        user_id = int(self.worker.chat.id)
+        log.debug(f"Object_id:{user_id}")
+        coach_id_list = self.worker.session.query(db.Coach).filter_by(user_id = user_id).all()
+        log.debug(f"coach_id:{coach_id_list}")
+
+        for coach in coach_id_list:
+            c_id = int(coach.id)
+
+        clientlist = self.worker.session.query(db.Client).filter_by(coach_id = c_id).all()
+        log.debug(f"clientList:{clientlist}")
+
         keyboard_nice = []
         keyboard_nice.append([telegram.InlineKeyboardButton("ФИО:", callback_data="none")])
         for clients in clientlist:
