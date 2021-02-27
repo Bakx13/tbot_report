@@ -116,7 +116,7 @@ class TelegramCoachHandler(TelegramHandler):
         keyboard = self.get_keyboard()
         return keyboard, msg_txt
 
-    def AddAddressSwimPool(self,message):
+    def AddAddressSwimPool(self, message):
         self.worker.bot.send_message(self.worker.chat.id, message)
         return
 
@@ -129,8 +129,9 @@ class TelegramCoachHandler(TelegramHandler):
 
         List = []
         List.append('Back')
-        sent = self.worker.bot.send_message(self.worker.chat.id, 'Вы находитесь в режиме добавления бассейна. Введите адрес бассейна:')
-        self.worker.wait_for_specific_message(self,List , False,'Stop')
+        sent = self.worker.bot.send_message(self.worker.chat.id,
+                                            'Вы находитесь в режиме добавления бассейна. Введите адрес бассейна:')
+        self.worker.wait_for_specific_message(self, List, False, 'Stop')
         return keyboard, msg_txt
 
     def Cancel(self, tMenu, menuname):
@@ -193,7 +194,7 @@ class TelegramAdminHandler(TelegramHandler):
             menu = TelegramSecondMenu(self.worker)
             self.worker.second_menu = menu
         reply_markup = self.worker.second_menu.SwimpoolList(0)
-        #@todo не забыть убрать в локализацию
+        # @todo не забыть убрать в локализацию
         self.worker.bot.send_message(self.worker.chat.id, "<b>Список бассейнов:</b>", reply_markup=reply_markup)
         return keyboard, msg_txt
 
@@ -209,7 +210,8 @@ class TelegramAdminHandler(TelegramHandler):
             menu = TelegramSecondMenu(self.worker)
             self.worker.second_menu = menu
         reply_markup = self.worker.second_menu.CoachList(0)
-        #@todo не забыть убрать в локализацию
+
+        # @todo не забыть убрать в локализацию
         self.worker.bot.send_message(self.worker.chat.id, "<b>Список тренеров:</b>", reply_markup=reply_markup)
         return keyboard, msg_txt
 
@@ -238,7 +240,7 @@ class TelegramAdminHandler(TelegramHandler):
                                                                   deleted=False).one()
             sw.deleted = True
             self.worker.session.commit()
-            #удалили, теперь обновляем менюшечку с бассейнами
+            # удалили, теперь обновляем менюшечку с бассейнами
             message = self.worker.bot.last_message_inline_keyboard
             reply_markup = self.worker.second_menu.SwimpoolList(0)
             self.worker.bot.edit_message_reply_markup(chat_id=message.chat_id, message_id=message.message_id,
@@ -281,7 +283,6 @@ class TelegramAdminHandler(TelegramHandler):
         self.worker.bot.send_message(self.worker.chat.id, '<b color="red">Выберите трененра</b>',
                                      reply_markup=reply_markup)
         return keyboard, msg_txt
-
 
 
 
@@ -373,18 +374,58 @@ class TelegramSecondMenu():
 
     def CoachList(self, object_id: int):
         log.debug(f"begin SwimpoolList second menu handler")
-        column_names = [telegram.InlineKeyboardButton("        Тренер        ", callback_data="none"),
-                        telegram.InlineKeyboardButton("Выбрать", callback_data="none")]
-        reply_markup = self.draw_object_list(object_id, "Coach", column_names, ["about", "id"], "CoachList")
+        column_names = ["ФИО", "О тренере"]
+        coach_table = self.worker.session.query(db.Coach).filter_by(deleted=False).all()
+        columns = []
+        for coach in coach_table:
+            id = coach.id
+            user_id = coach.user_id
+            about = coach.about
+            user = self.worker.session.query(db.User).filter_by().one()
+            name = f"{user.last_name} {user.first_name}" if user is not None else "Не задано"
+            column = [id, name, about]
+            columns.append(column)
+        reply_markup = self.draw_object_list_light(object_id, column_names, columns, "CoachList")
+        # reply_markup = self.draw_object_list(object_id, "Coach", column_names, ["id","about"], "CoachList")
         return reply_markup
 
+    ''' метод формирует произвольное inline меню телеграмма для вывода таблицы с данными
+        Автоматические добавляет еще одну колонку в конце для возможности выбора конкретной строки
+        Параметры:
+        object_id - напротив объекта с этим id будет выставлен признак выбран ✅
+        column_names - название колонок таблицы в виде списка []
+        columns - список строк с данными, каждая строка - тоже список [[],[],[]]. Первый элемент в каждой строке должен быть id объекта.
+        Он в меню не выводится
+        call_back_data - добавляем в возвращаемое значение при нажатии на меню
+    '''
     @staticmethod
-    def get_db_class_by_name(class_name: str):
-        clsmembers = inspect.getmembers(sys.modules[db.current_module_name], inspect.isclass)
-        for cls in clsmembers:
-            if str(class_name) == str(cls[0]):
-                return cls[1]
-        return None
+    def draw_object_list_light(object_id, column_names, columns, call_back_data):
+        log.debug(f"begin draw_object_list_light second menu")
+        column_names_full = []
+        for column_name in column_names:
+            column_name = telegram.InlineKeyboardButton(column_name, callback_data="none")
+            column_names_full.append(column_name)
+        # добавить стандартную колонку для проставления галочки
+        column_name = telegram.InlineKeyboardButton("Выбрать", callback_data="none")
+        column_names_full.append(column_name)
+        keyboard_nice = [column_names_full]
+        for column in columns:
+            lst = []
+            choice = "✔️"
+            sw_id = 0
+            id = 0
+            for element in column:
+                if sw_id == 0:
+                    element = int(element)
+                    id = element
+                    if element == int(object_id): choice = "✅"
+                    sw_id = 1
+                    continue
+                lst.append(telegram.InlineKeyboardButton(element, callback_data="none"))
+            lst.append(telegram.InlineKeyboardButton(choice, callback_data=f"{call_back_data}#{id}"))
+            keyboard_nice.append(lst)
+        reply_markup = telegram.InlineKeyboardMarkup(keyboard_nice)
+        return reply_markup
 
     def draw_object_list(self, object_id: int, db_class_name: str, column_names, columns, call_back_data):
         log.debug(f"begin draw_object_list second menu")
@@ -400,7 +441,7 @@ class TelegramSecondMenu():
                 property = getattr(object, column)
                 log.debug(f"{column} = {property}")
                 if property is None:
-                    #@todo не забыть убрать в localization"
+                    # @todo не забыть убрать в localization"
                     property = "не задана"
                 if column == "id":
                     property = int(property)
@@ -415,6 +456,7 @@ class TelegramSecondMenu():
         log.debug(f"keyboard_nice={keyboard_nice}")
         reply_markup = telegram.InlineKeyboardMarkup(keyboard_nice)
         return reply_markup
+
     @staticmethod
     def draw_selected_menu(worker, updates: telegram.Update):
         return
@@ -434,6 +476,14 @@ class TelegramSecondMenu():
 
     def call_handler_by_name(self, methodname, *args, **kwargs):
         return getattr(self, methodname)(*args, **kwargs)
+
+    @staticmethod
+    def get_db_class_by_name(class_name: str):
+        clsmembers = inspect.getmembers(sys.modules[db.current_module_name], inspect.isclass)
+        for cls in clsmembers:
+            if str(class_name) == str(cls[0]):
+                return cls[1]
+        return None
 
 
 class TelegramMenu(NuConfig):
@@ -521,7 +571,7 @@ class TelegramMenu(NuConfig):
         needupdatekeyboard = True
         # Loop used to returning to the menu after executing a command
         while True:
-            #если предыдущее сообщение такое же, не будем дублировать
+            # если предыдущее сообщение такое же, не будем дублировать
             if str(worker.bot.last_message.text_html).__eq__(worker.loc.get(header_txt)):
                 needupdatekeyboard = False
                 log.debug("Предыдушее сообщение равно текущему")

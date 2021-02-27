@@ -55,7 +55,9 @@ menu_all_inventor = "Inventory"
 
 menu_admin_user_mode = "SwitchAdminToUser"
 menu_admin_coach_mode = "SwitchAdminToCoach"
-
+menu_admin_add_coach = "AddCoach"
+menu_admin_del_coach = "DelCoach"
+menu_admin_coach_list_cancel = "Cancel"
 [Admin.MenuSwimpool]
 menu_all_add_swimpool = "AddSwimpool"
 menu_all_del_swimpool = "DelSwimpool"
