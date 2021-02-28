@@ -394,7 +394,7 @@ class TelegramSecondMenu():
                 user = self.worker.session.query(db.User).filter_by(user_id=user_id).one()
                 name = f"{user.last_name} {user.first_name}"
             except:
-                name = "не задано"
+                name = "Ваш список клиентов пуст!"
             keyboard_nice.append([telegram.InlineKeyboardButton(f"{name}", callback_data="none"),
                                   ])
 

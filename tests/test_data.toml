@@ -151,10 +151,46 @@ coach_id = 2
 
 [Coach.1]
 user_id = 716847699
-timetable_id = 2
+timetable_id = 1
 about = "I'm the best"
 [Coach.2]
 user_id = 224459637
 timetable_id = 2
 about = "I'm the best too"
+
+# Расписание для тренера 716847699
+# The unique order id
+#id = Column(Integer, primary_key=True, autoincrement=True)
+# Date of creation
+#creation_date = Column(DateTime, nullable=False)
+## Date of delivery
+# List of items in the order
+#train_period: typing.List["TimeTableItem"] = relationship("TimeTableItem")
+# Extra details specified by the purchasing user
+#notes = Column(Text)
+[TimeTable.1]
+id = 1
+creation_date = 2021-01-01 20:39:29.574437
+coach_id = 1
+swimpool_id = 1
+
+
+    # The unique item id
+    #id = Column(Integer, primary_key=True, autoincrement=True)
+    # The product that is being ordered
+    #item = Column(String, nullable=False)
+    #timetable_id = Column(Integer, ForeignKey("timetable.id"), nullable=False)
+
+[TimeTableItem.1]
+id = 1
+item = "Круглосуточно"
+day_of_week = "Четверг"
+prop = "Каждый"
+start_time = 2021-01-01 09:00:00.000000
+end_time = 2021-01-01 20:39:29.574437
+timetable_id = 1
+
+
+
+
 
