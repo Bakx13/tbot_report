@@ -232,7 +232,7 @@ class Coach(DeferredReflection, TableDeclarativeBase):
     # The telegram id
     user_id = Column(BigInteger, ForeignKey("users.user_id"), primary_key=True)
     user = relationship("User")
-    timetable_id = Column(BigInteger, ForeignKey("timetable.id"), primary_key=True)
+    timetable_id = Column(BigInteger, ForeignKey("timetable.coach_id"), primary_key=True)
     timetable = relationship("TimeTable")  # Permissions
 
     id = Column(BigInteger, primary_key=False, autoincrement=True)
@@ -299,14 +299,22 @@ class TimeTable(DeferredReflection, TableDeclarativeBase):
     id = Column(Integer, primary_key=True, autoincrement=True)
     # Date of creation
     creation_date = Column(DateTime, nullable=False)
+
+    #  Связь с тренером
+    coach_id = Column(Integer, nullable=False)
+
+    #  Связь с бассейном
+    swimpool_id = Column(Integer, nullable=False)
+
+
+
     # Date of delivery
-    delivery_date = Column(DateTime)
+    # delivery_date = Column(DateTime)
     # Date of refund: if null, product hasn't been refunded
-    refund_date = Column(DateTime)
+    # refund_date = Column(DateTime)
     # Refund reason: if null, product hasn't been refunded
-    refund_reason = Column(Text)
+    # refund_reason = Column(Text)
     # List of items in the order
-    train_period: typing.List["TimeTableItem"] = relationship("TimeTableItem")
     # Extra details specified by the purchasing user
     notes = Column(Text)
 
@@ -360,7 +368,21 @@ class TimeTableItem(DeferredReflection, TableDeclarativeBase):
     # The product that is being ordered
     item = Column(String, nullable=False)
 
+    #День недели
+    day_of_week = Column(String)
+
+    #Признак повторения
+    prop = Column(String)
+
+    # Время начала периода
+    start_time = Column(DateTime, nullable=False)
+
+    #Время окончания периода
+    end_time = Column(DateTime, nullable=False)
+
     timetable_id = Column(Integer, ForeignKey("timetable.id"), nullable=False)
+
+
 
     # Extra table parameters
     __tablename__ = "timetableitems"
@@ -430,7 +452,7 @@ class SwimPool(DeferredReflection, TableDeclarativeBase):
     district = relationship("District")
 
     # ссылка на таблицу с расписанием занятий
-    timetable_id = Column(BigInteger, ForeignKey("timetable.id"), primary_key=False)
+    timetable_id = Column(BigInteger, ForeignKey("timetable.swimpool_id"), primary_key=False)
     timetable = relationship("TimeTable")  # Permissions
 
     # фото бассейна

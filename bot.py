@@ -104,8 +104,25 @@ def main():
                                          description=district['description'])
             session.add(district)
 
-        timetable = database.TimeTable(creation_date=datetime.now())
-        session.add(timetable)
+        #timetable = database.TimeTable(creation_date=datetime.now())
+        #session.add(timetable)
+        timetables = test_data['TimeTable']
+
+        for timetable_id in timetables:
+            timetable = timetables[timetable_id]
+            ttable = database.TimeTable(id=timetable_id, creation_date=timetable['creation_date'],coach_id = timetable['coach_id'],
+                                        swimpool_id = timetable['swimpool_id'])
+            session.add(ttable)
+
+        timetableitems = test_data['TimeTableItem']
+
+        for timetableitem_id in timetableitems:
+            timetableitem = timetableitems[timetableitem_id]
+            ttableitem = database.TimeTableItem(id=timetableitem_id, item=timetableitem['item'], day_of_week = timetableitem['day_of_week'],
+                                                prop = timetableitem['prop'],start_time = timetableitem['start_time'],
+                                                end_time=timetableitem['end_time'], timetable_id=timetableitem['timetable_id'])
+            session.add(ttableitem)
+
         swimpools = test_data['SwimPool']
         for swimpool_id in swimpools:
             swimpool = swimpools[swimpool_id]
