@@ -127,7 +127,7 @@ def main():
         clients = test_data['Client']
         for client_id in clients:
             client = clients[client_id]
-            log.debug(f"Загружаем тестовых клиентов: {client['id']}")
+            log.debug(f"Загружаем тестовых клиентов: {client['user_id']}")
             cl = database.Client(id=client_id, user_id=client['user_id'], timetable_id=client['timetable_id'],
                                  coach_id=client['coach_id'])
 

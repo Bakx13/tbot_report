@@ -48,7 +48,7 @@
       <bpmn:incoming>menu_all_timetable_st</bpmn:incoming>
       <bpmn:outgoing>Flow_0wheafk</bpmn:outgoing>
     </bpmn:exclusiveGateway>
-    <bpmn:endEvent id="menu_all_add_swimpool">
+    <bpmn:endEvent id="menu_all_add_swimpool" name="1#добавить">
       <bpmn:extensionElements>
         <camunda:properties>
           <camunda:property name="handler" value="AddSwimpool" />
@@ -57,10 +57,10 @@
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_add_swimpool</bpmn:incoming>
     </bpmn:endEvent>
-    <bpmn:endEvent id="menu_all_del_swimpool">
+    <bpmn:endEvent id="menu_all_del_swimpool" name="4#удалить">
       <bpmn:incoming>Flow_del_swimpool</bpmn:incoming>
     </bpmn:endEvent>
-    <bpmn:endEvent id="menu_all_cancel">
+    <bpmn:endEvent id="menu_all_cancel" name="8#отменить">
       <bpmn:incoming>Flow_Cancel</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:endEvent id="Event_1fmj4an">
@@ -201,12 +201,21 @@
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_082f88f_di" bpmnElement="menu_all_add_swimpool">
         <dc:Bounds x="792" y="492" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="781" y="535" width="60" height="14" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_1f3zdum_di" bpmnElement="menu_all_del_swimpool">
         <dc:Bounds x="792" y="546" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="784" y="589" width="54" height="14" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_18p0snj_di" bpmnElement="menu_all_cancel">
         <dc:Bounds x="792" y="602" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="781" y="645" width="60" height="14" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_1fmj4an_di" bpmnElement="Event_1fmj4an">
         <dc:Bounds x="822" y="392" width="36" height="36" />

@@ -1,7 +1,7 @@
 import logging
 import inspect
 import sys
-import difflib
+import traceback
 
 import bpmn_dmn.bpmn as BPMN
 import telegram
@@ -58,7 +58,6 @@ class TelegramHandler():
         log.debug(step_name)
         task = self.runner.workflow.get_tasks_from_spec_name(step_name)
         task_list = task[0].children
-        log.debug(f'task_list: {task_list}')
         # Если дошли до конца - возвращаемся на стартовую страницу
         if not task_list:
             task = self.runner.workflow.get_tasks_from_spec_name("MenuStart")
@@ -156,10 +155,9 @@ class TelegramCoachHandler(TelegramHandler):
             menu = TelegramSecondMenu(self.worker)
             self.worker.second_menu = menu
         reply_markup = self.worker.second_menu.CoachClientList(0)
-        #@todo не забыть убрать в локализацию
+        # @todo не забыть убрать в локализацию
         self.worker.bot.send_message(self.worker.chat.id, "<b>Список клиентов:</b>", reply_markup=reply_markup)
         return keyboard, msg_txt
-
 
 
 class TelegramAdminHandler(TelegramHandler):
@@ -199,7 +197,7 @@ class TelegramAdminHandler(TelegramHandler):
         return keyboard, msg_txt
 
     def CoachList(self, tMenu, menuname):
-        msg_txt = "menu_all_swimpool_list_text"
+        msg_txt = "menu_admin_coach_list_txt"
         log.debug(f"begin admin Swimpoollist handler")
         log.debug(f"menuname={menuname}")
         # переопределяем клавиатуру для выбранного пункта меню
@@ -247,9 +245,35 @@ class TelegramAdminHandler(TelegramHandler):
                                                       reply_markup=reply_markup)
             log.debug(f"Удаляем бассейн с именем:{sw.name} и id: {sw.id}")
         except:
+            # @todo убрать в локализацию
             self.worker.bot.send_message(self.worker.chat.id, "Вы не выбрали бассейн для удаления")
         menuname = self.get_parent_menu(menuname)
 
+        self.set_menu_by_bpmn(menuname, tMenu)
+        keyboard = self.get_keyboard()
+        log.debug(f"menuname={menuname}")
+        return keyboard, msg_txt
+
+    def DelCoach(self, tMenu, menuname):
+        log.debug(f"begin TelegramAdminHandler.DelCoach handler")
+        msg_txt = "menu_admin_coach_list_txt"
+        # переопределяем клавиатуру для выбранного пункта меню
+        try:
+            sw = self.worker.session.query(db.Coach).filter_by(id=self.worker.second_menu.object_id,
+                                                                  deleted=False).one()
+            sw.deleted = True
+            self.worker.session.commit()
+            # удалили, теперь обновляем менюшечку с тренерами
+            message = self.worker.bot.last_message_inline_keyboard
+            reply_markup = self.worker.second_menu.CoachList(0)
+            self.worker.bot.edit_message_reply_markup(chat_id=message.chat_id, message_id=message.message_id,
+                                                      reply_markup=reply_markup)
+            log.debug(f"Удаляем тренера с '{sw.about}' и id: {sw.id}")
+        except Exception as error:
+            # @todo убрать в локализацию
+            self.worker.bot.send_message(self.worker.chat.id, "Вы не выбрали тренера для удаления")
+            log.debug(f"Ошибка:\n {traceback.format_exc()}")
+        menuname = self.get_parent_menu(menuname)
         self.set_menu_by_bpmn(menuname, tMenu)
         keyboard = self.get_keyboard()
         log.debug(f"menuname={menuname}")
@@ -283,7 +307,6 @@ class TelegramAdminHandler(TelegramHandler):
         self.worker.bot.send_message(self.worker.chat.id, '<b color="red">Выберите трененра</b>',
                                      reply_markup=reply_markup)
         return keyboard, msg_txt
-
 
 
 class TelegramSecondMenu():
@@ -351,23 +374,28 @@ class TelegramSecondMenu():
         msg_txt = "menu_coach_client_list_text"
         log.debug(f"begin Coach ClientList handler")
         object_id = int(object_id)
-
-        user_id = int(self.worker.chat.id)
+        c_id = 0
+        user_id = int(self.worker.telegram_user.id)
         log.debug(f"Object_id:{user_id}")
-        coach_id_list = self.worker.session.query(db.Coach).filter_by(user_id = user_id).all()
-        log.debug(f"coach_id:{coach_id_list}")
-
-        for coach in coach_id_list:
-            c_id = int(coach.id)
-
-        clientlist = self.worker.session.query(db.Client).filter_by(coach_id = c_id).all()
-        log.debug(f"clientList:{clientlist}")
+        coach = self.worker.session.query(db.Coach).filter_by(user_id=user_id).one()
+        log.debug(f"coach_id:{coach}")
+        c_id = int(coach.id)
+        clientlist = self.worker.session.query(db.Client).filter_by(coach_id=c_id).all()
+        log.debug(f"c_id:{c_id}")
 
         keyboard_nice = []
         keyboard_nice.append([telegram.InlineKeyboardButton("ФИО:", callback_data="none")])
         for clients in clientlist:
             cl_id = int(clients.id)
-            keyboard_nice.append([telegram.InlineKeyboardButton(cl_id, callback_data="none"),
+            coach_id = int(clients.coach_id)
+            user_id = int(clients.user_id)
+
+            try:
+                user = self.worker.session.query(db.User).filter_by(user_id=user_id).one()
+                name = f"{user.last_name} {user.first_name}"
+            except:
+                name = "не задано"
+            keyboard_nice.append([telegram.InlineKeyboardButton(f"{name}", callback_data="none"),
                                   ])
 
         reply_markup = telegram.InlineKeyboardMarkup(keyboard_nice)
@@ -399,6 +427,7 @@ class TelegramSecondMenu():
         Он в меню не выводится
         call_back_data - добавляем в возвращаемое значение при нажатии на меню
     '''
+
     @staticmethod
     def draw_object_list_light(object_id, column_names, columns, call_back_data):
         log.debug(f"begin draw_object_list_light second menu")
@@ -407,6 +436,7 @@ class TelegramSecondMenu():
             column_name = telegram.InlineKeyboardButton(column_name, callback_data="none")
             column_names_full.append(column_name)
         # добавить стандартную колонку для проставления галочки
+        # @todo не забыть убрать в локализацию
         column_name = telegram.InlineKeyboardButton("Выбрать", callback_data="none")
         column_names_full.append(column_name)
         keyboard_nice = [column_names_full]
