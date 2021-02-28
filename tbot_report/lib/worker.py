@@ -17,9 +17,8 @@ import telegram
 import tbot_report.database.database as db
 import tbot_report.localization.localization as localization
 import tbot_report.lib.loadconfig as MConfig
+from tbot_report.lib.TelegramMenu import TelegramMenu
 import tbot_report.lib.utils as utils
-#import tbot_report.lib.TelegramMenu
-from tbot_report.lib.TelegramMenu import TelegramMenu, TelegramCoachHandler, TelegramAdminHandler
 
 log = logging.getLogger(__name__)
 
@@ -70,7 +69,13 @@ class Worker(threading.Thread):
         self.Price = self.price_factory()
 
         self.menu = None
+        self.second_menu_coach = None
+        self.second_menu_admin = None
+        self.second_menu_user = None
+        # current second menu
         self.second_menu = None
+        self.role = ""
+        return
 
     def __repr__(self):
         return f"<{self.__class__.__qualname__} {self.chat.id}>"
@@ -172,8 +177,10 @@ class Worker(threading.Thread):
         # Get the user db data from the users and admin tables
         log.debug(f"user id = {self.chat.id}")
         self.user = self.session.query(db.User).filter(db.User.user_id == self.chat.id).one_or_none()
+        self.coach = self.session.query(db.Coach).filter(db.Coach.user_id == self.chat.id).one_or_none()
+        if self.coach is not None: self.role = utils.ROLES[1]
         self.admin = self.session.query(db.Admin).filter(db.Admin.user_id == self.chat.id).one_or_none()
-        #self.coach = self.session.query(db.Coach).filter(db.Coach.user_id == self.chat.id).one_or_none()
+        if self.admin is not None: self.role = utils.ROLES[2]
         # If the user isn't registered, create a new record and add it to the db
         if self.user is None:
             # Check if there are other registered users: if there aren't any, the first user will be owner of the bot
@@ -196,6 +203,7 @@ class Worker(threading.Thread):
                                       live_mode=False)
                 # Add the admin to the transaction
                 self.session.add(self.admin)
+                self.role = utils.ROLES[2]
             # Commit the transaction
             self.session.commit()
             log.info(f"Created new user: {self.user}")
@@ -265,11 +273,13 @@ class Worker(threading.Thread):
             self.__graceful_stop(data)
         # Return the received update
         return data
+
     def receive_next_update(self) -> telegram.Update:
         """Get the next update from the queue.
         If no update is found, block the process until one is received.
         If a stop signal is sent, try to gracefully stop the thread."""
         # Pop data from the queue
+        data = ""
         try:
             data = self.queue.get(timeout=self.cfg.telegram["conversation_timeout"])
         except queuem.Empty:
@@ -313,9 +323,10 @@ class Worker(threading.Thread):
                 continue
             # Return the message text
             return update.message.text
+
     def wait_for_specific_message(self,
-                                    items: List[str],
-                                    cancellable: bool = False) -> Union[str, CancelSignal]:
+                                  items: List[str],
+                                  cancellable: bool = False) -> Union[str, CancelSignal]:
         """Continue getting updates until until one of the strings contained in the list is received as a message."""
         log.debug("Waiting for a specific message...")
         while True:
@@ -503,9 +514,11 @@ class Worker(threading.Thread):
                 self.bot.send_message(self.chat.id, self.loc.get("error_user_does_not_exist"))
                 continue
             return user
+
     def get_menu_by_step(self):
 
         return
+
     def __user_menu(self):
         """Эта функция запускается, если с ботом начинается общение с ролью - тренер"""
 
@@ -514,6 +527,7 @@ class Worker(threading.Thread):
         self.menu.coach_menu("MenuStart", "menu_coach_main_txt", self)
 
         return
+
     def __order_menu(self):
         """User menu to order products from the shop."""
         log.debug("Displaying __order_menu")
@@ -921,6 +935,7 @@ class Worker(threading.Thread):
         self.menu = TelegramMenu(menu_file, self.loc, "Admin")
         self.menu.admin_menu("MenuStart", "menu_admin_main_txt", self)
         return
+
     def __products_menu(self):
         """Display the admin menu to select a product to edit."""
         log.debug("Displaying __products_menu")

@@ -2,6 +2,8 @@ import logging
 
 log = logging.getLogger(__name__)
 
+ROLES = ["USER", "COACH", "ADMIN"]
+
 
 def telegram_html_escape(string: str):
     return string.replace("<", "&lt;") \
@@ -22,3 +24,15 @@ def mkinst(cls, *args, **kwargs):
         return globals()[cls](*args, **kwargs)
     except:
         raise NameError("Class %s is not defined" % cls)
+
+
+def IsAdmin(role):
+    return True if ROLES.count(role) > 0 else False
+
+
+def IsCoach(role):
+    return True if ROLES.count(role) > 0 else False
+
+
+def IsRegisterUser(role):
+    return True if ROLES.count(role) > 0 else False

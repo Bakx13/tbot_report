@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.6.0">
   <bpmn:process id="Coach" name="Coach" isExecutable="false">
-    <bpmn:endEvent id="menu_coach_client_list_s" name="three">
+    <bpmn:endEvent id="menu_coach_client_list_s" name="1#three">
       <bpmn:incoming>Flow_0n7xfm6</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:exclusiveGateway id="menu_all_swimpool_list" name="12#Список бассейнов&#10;&#10;">
@@ -169,7 +169,7 @@
       <bpmndi:BPMNShape id="EndEvent_0ofyivj_di" bpmnElement="menu_coach_client_list_s">
         <dc:Bounds x="822" y="83" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="827" y="126" width="26" height="14" />
+          <dc:Bounds x="821" y="126" width="38" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Gateway_0v1bhfx_di" bpmnElement="menu_all_swimpool_list" isMarkerVisible="true">
