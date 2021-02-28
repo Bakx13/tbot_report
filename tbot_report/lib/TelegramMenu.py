@@ -755,8 +755,6 @@ class TelegramMenu(NuConfig):
             log.debug(f"Drawmenu menuname: {menuname}")
             log.debug(f"Drawmenu HandlerClass: {handlerclass}")
             keyboard, header_txt = classHandler.call_handler_by_name(handlername, self, menuname)
-            # m = getattr(classHandler, handlername)
-            # keyboard, header_txt = m(classHandler, menuname)
             # except AttributeError as exc:
             #    header_txt = "menu_all_inbuilding_txt"
         return
