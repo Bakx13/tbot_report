@@ -2,6 +2,7 @@ import logging
 import inspect
 import sys
 import traceback
+import re
 
 import bpmn_dmn.bpmn as BPMN
 import telegram
@@ -12,6 +13,7 @@ import tbot_report.database.database as db
 import tbot_report.lib.loadconfig as MConfig
 import tbot_report.lib.worker as Worker
 import tbot_report.localization.localization as localization
+import tbot_report.lib.utils as utils
 # подключаем свои библиотеки
 from tbot_report.lib.nuconfig import NuConfig
 
@@ -66,20 +68,22 @@ class TelegramHandler():
         for_menus = []
         for menuitem in task_list:
             try:
-                log.debug(f'menuitem.task_spec.description: {menuitem.task_spec}')
-                log.debug(f'menuitem.task_spec.name: {menuitem.task_spec.name}')
                 menuitem_desc = menuitem.task_spec.description.split('#')
                 menuitem_id = int(menuitem_desc[0])
+                # удаляем всякое возможное непотребство типа перевода строк из имени обработчика
+                reg = re.compile('[^a-zA-Z0-9]')
+                menuitem_handler = reg.sub('', str(menuitem_desc[1]))
             except:
                 log.debug(
                     f"Ошибка в формировании bpmn-схемы. Поле Description должно быть формата 1#Описание, где 1 - это порядковый номер меню.")
                 return
             menuitem = menuitem.task_spec.name
-            handler, locname = tMenu.loc_menu[menuitem]
-            log.debug(f"add menu point handler = {handler} lname= {locname} to keyboard")
-            for_menus.append((menuitem_id, menuitem, handler, locname))
+            #handler, locname = self.worker.menu.loc_menu[menuitem]
+            for_menus.append((menuitem_id, menuitem, menuitem_handler, self.worker.loc.get(menuitem)))
         for_menus = sorted(for_menus, key=lambda menu: menu[0])
+        self.worker.menu.loc_menu = {}
         for menuitem_id, menuitem, handler, locname in for_menus:
+            self.worker.menu.loc_menu[menuitem] = [handler, locname]
             self.keyboard.append([telegram.KeyboardButton(locname)])
         # self.keyboard.reverse()
         log.debug("End set_menu_by_bpmn")
@@ -151,10 +155,11 @@ class TelegramCoachHandler(TelegramHandler):
         self.set_menu_by_bpmn(menuname, tMenu)
         keyboard = self.get_keyboard()
         # отображаем текущий список бассейнов:
-        if self.worker.second_menu is None:
-            menu = TelegramSecondMenu(self.worker)
+        if self.worker.second_menu_coach is None:
+            menu = TelegramSecondMenuCoach(self.worker)
             self.worker.second_menu = menu
-        reply_markup = self.worker.second_menu.CoachClientList(0)
+            self.worker.second_menu_coach = menu
+        reply_markup = self.worker.second_menu_coach.CoachClientList(0)
         # @todo не забыть убрать в локализацию
         self.worker.bot.send_message(self.worker.chat.id, "<b>Список клиентов:</b>", reply_markup=reply_markup)
         return keyboard, msg_txt
@@ -168,6 +173,7 @@ class TelegramAdminHandler(TelegramHandler):
         msg_txt = "menu_all_swimpool_list_text"
         log.debug(f"begin admin SwitchAdminToCoach handler")
         # Start the bot in user mode
+        self.worker.role = utils.ROLES[1]
         tMenu.coach_menu("MenuStart", "menu_coach_main_txt", self.worker)
         log.debug(f"end admin SwitchAdminToCoach handler")
         return
@@ -188,10 +194,11 @@ class TelegramAdminHandler(TelegramHandler):
         self.set_menu_by_bpmn(menuname, tMenu)
         keyboard = self.get_keyboard()
         # отображаем текущий список бассейнов:
-        if self.worker.second_menu is None:
-            menu = TelegramSecondMenu(self.worker)
+        if self.worker.second_menu_admin is None:
+            menu = TelegramSecondMenuAdmin(self.worker)
             self.worker.second_menu = menu
-        reply_markup = self.worker.second_menu.SwimpoolList(0)
+            self.worker.second_menu_admin = menu
+        reply_markup = self.worker.second_menu_admin.SwimpoolList(0)
         # @todo не забыть убрать в локализацию
         self.worker.bot.send_message(self.worker.chat.id, "<b>Список бассейнов:</b>", reply_markup=reply_markup)
         return keyboard, msg_txt
@@ -204,10 +211,11 @@ class TelegramAdminHandler(TelegramHandler):
         self.set_menu_by_bpmn(menuname, tMenu)
         keyboard = self.get_keyboard()
         # отображаем текущий список тренеров:
-        if self.worker.second_menu is None:
-            menu = TelegramSecondMenu(self.worker)
+        if self.worker.second_menu_admin is None:
+            menu = TelegramSecondMenuAdmin(self.worker)
             self.worker.second_menu = menu
-        reply_markup = self.worker.second_menu.CoachList(0)
+            self.worker.second_menu_admin = menu
+        reply_markup = self.worker.second_menu_admin.CoachList(0)
 
         # @todo не забыть убрать в локализацию
         self.worker.bot.send_message(self.worker.chat.id, "<b>Список тренеров:</b>", reply_markup=reply_markup)
@@ -219,7 +227,7 @@ class TelegramAdminHandler(TelegramHandler):
         # переопределяем клавиатуру для выбранного пункта меню
         self.set_menu_by_bpmn(menuname, tMenu)
         keyboard = self.get_keyboard()
-        sw_fileds = TelegramSecondMenu.collect_object_fields(self.worker,
+        sw_fileds = TelegramSecondMenuAdmin.collect_object_fields(self.worker,
                                                              [self.worker.loc.get("questions_name"),
                                                               self.worker.loc.get("questions_address"),
                                                               self.worker.loc.get("questions_swimpool_cost")],
@@ -234,13 +242,13 @@ class TelegramAdminHandler(TelegramHandler):
         msg_txt = "menu_all_swimpool_list_text"
         # переопределяем клавиатуру для выбранного пункта меню
         try:
-            sw = self.worker.session.query(db.SwimPool).filter_by(id=self.worker.second_menu.object_id,
+            sw = self.worker.session.query(db.SwimPool).filter_by(id=self.worker.second_menu_admin.object_id,
                                                                   deleted=False).one()
             sw.deleted = True
             self.worker.session.commit()
             # удалили, теперь обновляем менюшечку с бассейнами
             message = self.worker.bot.last_message_inline_keyboard
-            reply_markup = self.worker.second_menu.SwimpoolList(0)
+            reply_markup = self.worker.second_menu_admin.SwimpoolList(0)
             self.worker.bot.edit_message_reply_markup(chat_id=message.chat_id, message_id=message.message_id,
                                                       reply_markup=reply_markup)
             log.debug(f"Удаляем бассейн с именем:{sw.name} и id: {sw.id}")
@@ -259,13 +267,13 @@ class TelegramAdminHandler(TelegramHandler):
         msg_txt = "menu_admin_coach_list_txt"
         # переопределяем клавиатуру для выбранного пункта меню
         try:
-            sw = self.worker.session.query(db.Coach).filter_by(id=self.worker.second_menu.object_id,
-                                                                  deleted=False).one()
+            sw = self.worker.session.query(db.Coach).filter_by(id=self.worker.second_menu_admin.object_id,
+                                                               deleted=False).one()
             sw.deleted = True
             self.worker.session.commit()
             # удалили, теперь обновляем менюшечку с тренерами
             message = self.worker.bot.last_message_inline_keyboard
-            reply_markup = self.worker.second_menu.CoachList(0)
+            reply_markup = self.worker.second_menu_admin.CoachList(0)
             self.worker.bot.edit_message_reply_markup(chat_id=message.chat_id, message_id=message.message_id,
                                                       reply_markup=reply_markup)
             log.debug(f"Удаляем тренера с '{sw.about}' и id: {sw.id}")
@@ -281,6 +289,16 @@ class TelegramAdminHandler(TelegramHandler):
 
     def Cancel(self, tMenu, menuname):
         log.debug(f"begin Cancel handler")
+        log.debug(f"begin menuname =  {menuname}")
+        msg_txt = "menu_coach_main_txt"
+        # переопределяем клавиатуру для выбранного пункта меню
+        self.set_menu_by_bpmn(menuname, tMenu)
+        keyboard = self.get_keyboard()
+        return keyboard, msg_txt
+
+    def ClientDetails(self, tMenu, menuname):
+        log.debug(f"begin ClientDetails handler")
+        log.debug(f"begin menuname =  {menuname}")
         msg_txt = "menu_coach_main_txt"
         # переопределяем клавиатуру для выбранного пункта меню
         self.set_menu_by_bpmn(menuname, tMenu)
@@ -295,7 +313,7 @@ class TelegramAdminHandler(TelegramHandler):
         self.set_menu_by_bpmn(menuname, tMenu)
         keyboard = self.get_keyboard()
 
-        CoachList = self.worker.session.query(db.Qoach).filter_by().all()
+        CoachList = self.worker.session.query(db.Coach).filter_by().all()
         Coach_names = [qoach.user for qoach in CoachList]
         keyboard_nice = []
         for сoach in CoachList:
@@ -309,22 +327,26 @@ class TelegramAdminHandler(TelegramHandler):
         return keyboard, msg_txt
 
 
-class TelegramSecondMenu():
+'''
+    Базовый класс для SecondMenu
+'''
+
+
+class TelegramSecondMenuBase():
     def __init__(self, worker: Worker):
         self.worker = worker
         self.object_id = 0
         self.handler_name = None
+        return
 
-    @staticmethod
-    def startHandler(worker, updates: telegram.Update):
+    def startHandler(self, worker, updates: telegram.Update):
         message = worker.bot.last_message_inline_keyboard
         callback_query = updates.callback_query.data
         lst = callback_query.split('#')
         handlername = lst[0]
         object_id = lst[1]
         if worker.second_menu is None:
-            menu = TelegramSecondMenu(worker)
-            worker.second_menu = menu
+            worker.second_menu = self
         worker.second_menu.object_id = object_id
         worker.second_menu.handler_name = handlername
         reply_markup = worker.second_menu.call_handler_by_name(handlername, object_id)
@@ -394,7 +416,7 @@ class TelegramSecondMenu():
                 user = self.worker.session.query(db.User).filter_by(user_id=user_id).one()
                 name = f"{user.last_name} {user.first_name}"
             except:
-                name = "не задано"
+                name = "Ваш список клиентов пуст!"
             keyboard_nice.append([telegram.InlineKeyboardButton(f"{name}", callback_data="none"),
                                   ])
 
@@ -430,6 +452,15 @@ class TelegramSecondMenu():
 
     @staticmethod
     def draw_object_list_light(object_id, column_names, columns, call_back_data):
+        ''' метод формирует произвольное inline меню телеграмма для вывода таблицы с данными
+            Автоматические добавляет еще одну колонку в конце для возможности выбора конкретной строки
+            Параметры:
+            object_id - напротив объекта с этим id будет выставлен признак выбран ✅
+            column_names - название колонок таблицы в виде списка []
+            columns - список строк с данными, каждая строка - тоже список [[],[],[]]. Первый элемент в каждой строке должен быть id объекта.
+            Он в меню не выводится
+            call_back_data - добавляем в возвращаемое значение при нажатии на меню
+        '''
         log.debug(f"begin draw_object_list_light second menu")
         column_names_full = []
         for column_name in column_names:
@@ -517,6 +548,84 @@ class TelegramSecondMenu():
         return None
 
 
+class TelegramSecondMenuAdmin(TelegramSecondMenuBase):
+    '''
+        Дополнительное меню Админа. Решили разделить между админом, тренером и пользователем, чтобы
+        не толкаться локтями и вести параллельную разработку.
+    '''
+    def __init__(self, worker: Worker):
+        super().__init__(worker)
+        return
+
+    def CoachList(self, object_id: int):
+        log.debug(f"begin SwimpoolList second menu handler")
+        column_names = ["ФИО", "О тренере"]
+        coach_table = self.worker.session.query(db.Coach).filter_by(deleted=False).all()
+        columns = []
+        for coach in coach_table:
+            id = coach.id
+            user_id = coach.user_id
+            about = coach.about
+            user = self.worker.session.query(db.User).filter_by().one()
+            name = f"{user.last_name} {user.first_name}" if user is not None else "Не задано"
+            column = [id, name, about]
+            columns.append(column)
+        reply_markup = self.draw_object_list_light(object_id, column_names, columns, "CoachList")
+        # reply_markup = self.draw_object_list(object_id, "Coach", column_names, ["id","about"], "CoachList")
+        return reply_markup
+
+
+class TelegramSecondMenuCoach(TelegramSecondMenuBase):
+    '''
+        Дополнительное меню Админа. Решили разделить между админом, тренером и пользователем, чтобы
+        не толкаться локтями и вести параллельную разработку.
+    '''
+    def __init__(self, worker: Worker):
+        super().__init__(worker)
+        return
+
+    def CoachClientList(self, object_id: int):
+        log.debug(f"begin CoachClientList second menu handler")
+        msg_txt = "menu_coach_client_list_text"
+        log.debug(f"begin Coach ClientList handler")
+        object_id = int(object_id)
+        c_id = 0
+        user_id = int(self.worker.telegram_user.id)
+        log.debug(f"Object_id:{user_id}")
+        coach = self.worker.session.query(db.Coach).filter_by(user_id=user_id).one()
+        log.debug(f"coach_id:{coach}")
+        c_id = int(coach.id)
+        clientlist = self.worker.session.query(db.Client).filter_by(coach_id=c_id).all()
+        log.debug(f"c_id:{c_id}")
+
+        keyboard_nice = []
+        keyboard_nice.append([telegram.InlineKeyboardButton("ФИО:", callback_data="none")])
+        for clients in clientlist:
+            cl_id = int(clients.id)
+            coach_id = int(clients.coach_id)
+            user_id = int(clients.user_id)
+
+            try:
+                user = self.worker.session.query(db.User).filter_by(user_id=user_id).one()
+                name = f"{user.last_name} {user.first_name}"
+            except:
+                name = "не задано"
+            keyboard_nice.append([telegram.InlineKeyboardButton(f"{name}", callback_data="none"),
+                                  ])
+
+        reply_markup = telegram.InlineKeyboardMarkup(keyboard_nice)
+        return reply_markup
+
+
+class TelegramSecondMenuUser(TelegramSecondMenuBase):
+    '''
+        Дополнительное меню Админа. Решили разделить между админом, тренером и пользователем, чтобы
+        не толкаться локтями и вести параллельную разработку.
+    '''
+    def __init__(self, worker: Worker):
+        super().__init__(worker)
+        return
+
 class TelegramMenu(NuConfig):
     def __init__(self, file: "TextIO", loc: localization, type):
         super().__init__(file)
@@ -524,7 +633,7 @@ class TelegramMenu(NuConfig):
         self.loc_menu = {}
         self.localnames = []
         self.handler_list = []
-        self.type = ""
+        self.type = type
         self.keyboard_handler = []
         log.debug(f"self.data={self.data}")
         self.menu = self.data[type]
@@ -533,7 +642,6 @@ class TelegramMenu(NuConfig):
             for mnt, handler in menuitem.items():
                 self.loc_menu[mnt] = [handler, loc.get(mnt)]
                 self.localnames.append(loc.get(mnt))
-
     def __getitem__(self, item):
         return self.data.__getitem__(item)
 
@@ -582,14 +690,14 @@ class TelegramMenu(NuConfig):
         # self.keyboard = self.menu.keys()
         for menuitem in self.menu.keys():
             # menuitem = self.menu[menuitem]
-            # log.debug(f"add menu point {menuitem} to keyboard")
+            log.debug(f"add menu point {menuitem} to keyboard")
             self.keyboard.append([telegram.KeyboardButton(self.loc.get(menuitem))])
             self.loc_menu.append(self.loc.get(menuitem))
             self.handler_list.append(self.menu[menuitem])
             tmp = [self.menu[menuitem], self.loc.get(menuitem)]
             self.keyboard_handler.append(tmp)
 
-    def draw_menu(self, header_txt, worker: Worker, menu_type, handlerclass, camunda_schema, menustart):
+    def draw_menu(self, header_txt, worker: Worker, handlerclass, camunda_schema, menustart):
         get_class = lambda x: globals()[x]
         c = get_class(handlerclass)
         log.debug(f"worker in draw_menu {worker}")
@@ -598,10 +706,10 @@ class TelegramMenu(NuConfig):
         # classHandler = type(classHandler, (object, ), dict())
         classHandler.set_menu_by_bpmn(menustart, self)
         keyboard = classHandler.get_keyboard()
-        log.debug(f"Displaying {menu_type}")
         needupdatekeyboard = True
         # Loop used to returning to the menu after executing a command
         while True:
+            log.debug(f"user role {worker.role}")
             # если предыдущее сообщение такое же, не будем дублировать
             if str(worker.bot.last_message.text_html).__eq__(worker.loc.get(header_txt)):
                 needupdatekeyboard = False
@@ -618,13 +726,25 @@ class TelegramMenu(NuConfig):
             # Если сделали выбор из второго меню.
             needupdatekeyboard = True
             if isinstance(selection, telegram.Update):
-                TelegramSecondMenu.startHandler(worker, selection)
+                if utils.IsAdmin(worker.role):
+                    worker.second_menu_admin = TelegramSecondMenuAdmin(worker)
+                    worker.second_menu = worker.second_menu_admin
+                else:
+                    if utils.IsCoach(worker.role):
+                        worker.second_menu_coach = TelegramSecondMenuAdmin(worker)
+                        worker.second_menu = worker.second_menu_coach
+                    else:
+                        if utils.IsRegisterUser(worker.role):
+                            worker.second_menu_user = TelegramSecondMenuAdmin(worker)
+                            worker.second_menu = worker.second_menu_user
+                worker.second_menu.startHandler(worker, selection)
                 needupdatekeyboard = False
                 continue
             handlername = self.get_handler_by_displayname(selection)
             menuname = self.get_name_by_displayname(selection)
             log.debug(f"worker menu selected name: {selection}")
-            log.debug(f"worker menu selected {handlername}")
+            log.debug(f"worker menu selected handler: {handlername}")
+            log.debug(f"worker menu selected menuname: {menuname}")
 
             # After the user reply, update the user data
             worker.update_user()
@@ -659,7 +779,7 @@ class TelegramMenu(NuConfig):
         self.__init__(menu_file, self.loc, "Admin")
 
         header_txt = "menu_admin_main_txt"
-        self.draw_menu(header_txt, worker, "Admin", "TelegramAdminHandler", "config/comunda_admin_menu.bpmn",
+        self.draw_menu(header_txt, worker, "TelegramAdminHandler", "config/comunda_admin_menu.bpmn",
                        "MenuStart")
         '''
             # If the user has selected the Products option...
