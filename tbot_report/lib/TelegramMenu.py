@@ -768,7 +768,7 @@ class TelegramMenu(NuConfig):
         self.__init__(menu_file, self.loc, "Coach")
         log.debug(f"header_txt: {header_txt}")
         log.debug(f" menustart: {menustart}")
-        self.draw_menu(header_txt, worker, "Coach", "TelegramCoachHandler", "config/comunda_coach_menu.bpmn",
+        self.draw_menu(header_txt, worker, "TelegramCoachHandler", "config/comunda_coach_menu.bpmn",
                        menustart)
         return
 

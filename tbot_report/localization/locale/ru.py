@@ -174,6 +174,10 @@ menu_coach_finance = "Мои финансы"
 menu_coach_training_status = "Проведенные тренировки"
 menu_coach_save_swimpool = "Добавить бассайн"
 menu_coach_del_swimpool = "Отменить изменения"
+menu_coach_detail_client = "Подробно"
+menu_coach_detail_inventory = "Подробно"
+menu_coach_inventory_cancel = "🔙 Отмена"
+menu_coach_client_list_cancel = "🔙 Отмена"
 #----- пункты меню клиента
 #----- пункты меню админа
 
