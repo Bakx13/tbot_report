@@ -224,7 +224,7 @@ class Client(DeferredReflection, TableDeclarativeBase):
     user = relationship("User")
 
     id = Column(BigInteger, primary_key=False, autoincrement=True)
-    timetable_id = Column(BigInteger, ForeignKey("timetable.id"), primary_key=True)
+    timetable_id = Column(BigInteger, ForeignKey("timetable.client_id"), primary_key=True)
     timetable = relationship("TimeTable")  # Permissions
     coach_id = Column(BigInteger, ForeignKey("coachs.user_id"), primary_key=False)
     coach = relationship("Coach")
@@ -314,6 +314,9 @@ class TimeTable(DeferredReflection, TableDeclarativeBase):
     #  Связь с бассейном
     swimpool_id = Column(Integer, nullable=False)
 
+    #связь с клиентом
+    client_id = Column(Integer, nullable=False)
+
 
 
     # Date of delivery
@@ -330,7 +333,7 @@ class TimeTable(DeferredReflection, TableDeclarativeBase):
     __tablename__ = "timetable"
 
     def __repr__(self):
-        return f"<>"
+        return f"<TimeTable('%s','%s', '%s',)>" % (self.id, self.client_id, self.coach_id)
 
     def text(self, w: "worker.Worker", session, user=False):
         '''

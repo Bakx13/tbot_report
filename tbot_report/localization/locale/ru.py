@@ -180,6 +180,7 @@ menu_coach_detail_client = "Подробно"
 menu_coach_detail_inventory = "Подробно"
 menu_coach_inventory_cancel = "🔙 Отмена"
 menu_coach_client_list_cancel = "🔙 Отмена"
+menu_coach_clientlist_schedule = "График занятий с клиентом"
 #----- пункты меню клиента
 #----- пункты меню админа
 
