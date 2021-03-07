@@ -111,6 +111,23 @@ class TelegramCoachHandler(TelegramHandler):
         self.worker.bot.send_message(self.worker.chat.id, "<b>Список клиентов:</b>", reply_markup=reply_markup)
         return keyboard, msg_txt
 
+    def ClientSchedule(self, menuname):
+        msg_txt = "menu_all_client_list_text"
+        log.debug(f"begin admin ClientSchedule handler")
+        log.debug(f"menuname={menuname}")
+        # переопределяем клавиатуру для выбранного пункта меню
+        self.worker.menu.set_menu_by_bpmn(menuname)
+        keyboard = self.get_keyboard()
+        # отображаем текущий список бассейнов:
+        if self.worker.second_menu_coach is None:
+            menu = TelegramSecondMenuCoach(self.worker)
+            self.worker.second_menu = menu
+            self.worker.second_menu_coach = menu
+        reply_markup = self.worker.second_menu_coach.CoachClientList(0)
+        # @todo не забыть убрать в локализацию
+        self.worker.bot.send_message(self.worker.chat.id, "<b>Расписание клиента:</b>", reply_markup=reply_markup)
+        return keyboard, msg_txt
+
 
 class TelegramAdminHandler(TelegramHandler):
     def __init__(self, worker: Worker):
@@ -397,8 +414,11 @@ class TelegramSecondMenuBase():
             try:
                 user = self.worker.session.query(db.User).filter_by(user_id=user_id).one()
                 name = f"{user.last_name} {user.first_name}"
+
             except:
                 name = "Ваш список клиентов пуст!"
+                choice = "✔️"
+                if cl_id == object_id : f"✅"
             keyboard_nice.append([telegram.InlineKeyboardButton(f"{name}", callback_data="none"),
                                   ])
 
@@ -618,34 +638,26 @@ class TelegramSecondMenuCoach(TelegramSecondMenuBase):
 
     def CoachClientList(self, object_id: int):
         log.debug(f"begin CoachClientList second menu handler")
-        msg_txt = "menu_coach_client_list_text"
-        log.debug(f"begin Coach ClientList handler")
+        column_names = ["ФИО Клиента", "Расписание"]
         object_id = int(object_id)
         c_id = 0
         user_id = int(self.worker.telegram_user.id)
         log.debug(f"Object_id:{user_id}")
-        coach = self.worker.session.query(db.Coach).filter_by(user_id=user_id).one()
+        coach = self.worker.session.query(db.Coach).filter_by(user_id=user_id).first()
         log.debug(f"coach_id:{coach}")
         c_id = int(coach.id)
-        clientlist = self.worker.session.query(db.Client).filter_by(coach_id=c_id).all()
+        clientlist_table = self.worker.session.query(db.Client).filter_by(coach_id=c_id).all()
         log.debug(f"c_id:{c_id}")
+        columns = []
 
-        keyboard_nice = []
-        keyboard_nice.append([telegram.InlineKeyboardButton("ФИО:", callback_data="none")])
-        for clients in clientlist:
-            cl_id = int(clients.id)
-            coach_id = int(clients.coach_id)
-            user_id = int(clients.user_id)
+        for clients in clientlist_table:
+            client_id = clients.user_id
+            user = self.worker.session.query(db.User).filter_by(user_id=client_id).first()
+            name = f"{user.last_name} {user.first_name}" if user is not None else "Не задано"
+            column = [client_id, name]
+            columns.append(column)
 
-            try:
-                user = self.worker.session.query(db.User).filter_by(user_id=user_id).one()
-                name = f"{user.last_name} {user.first_name}"
-            except:
-                name = "не задано"
-            keyboard_nice.append([telegram.InlineKeyboardButton(f"{name}", callback_data="none"),
-                                  ])
-
-        reply_markup = telegram.InlineKeyboardMarkup(keyboard_nice)
+        reply_markup = self.draw_object_list_light(object_id, column_names, columns, "CoachClientList")
         return reply_markup
 
 
