@@ -271,6 +271,23 @@ class TelegramAdminHandler(TelegramHandler):
         self.worker.bot.send_message(self.worker.chat.id, "<b>Список клиентов:</b>", reply_markup=reply_markup)
         return keyboard, msg_txt
 
+    def Inventory(self, menuname):
+        msg_txt = "menu_admin_coach_list_txt"
+        log.debug(f"begin admin Swimpoollist handler")
+        log.debug(f"menuname={menuname}")
+        # переопределяем клавиатуру для выбранного пункта меню
+        self.worker.menu.set_menu_by_bpmn(menuname)
+        keyboard = self.get_keyboard()
+        # отображаем текущий список тренеров:
+        if self.worker.second_menu_admin is None:
+            menu = TelegramSecondMenuAdmin(self.worker)
+            self.worker.second_menu = menu
+            self.worker.second_menu_admin = menu
+        reply_markup = self.worker.second_menu_admin.UserList(0)
+
+        # @todo не забыть убрать в локализацию
+        self.worker.bot.send_message(self.worker.chat.id, "<b>Список клиентов:</b>", reply_markup=reply_markup)
+        return keyboard, msg_txt
 
 
 '''
@@ -592,7 +609,9 @@ class TelegramSecondMenuUser(TelegramSecondMenuBase):
         super().__init__(worker)
         return
 
+
 class TelegramMenu():
+
     def __init__(self, bpmnfile, worker, menustart):
         self.bpmnfile = bpmnfile
         self.bpmnfile = worker.cfg.tbot_home + self.bpmnfile
@@ -726,11 +745,11 @@ class TelegramMenu():
                     self.worker.second_menu = self.worker.second_menu_admin
                 else:
                     if utils.IsCoach(self.worker.role):
-                        self.worker.second_menu_coach = TelegramSecondMenuAdmin(self.worker)
+                        self.worker.second_menu_coach = TelegramSecondMenuCoach(self.worker)
                         self.worker.second_menu = self.worker.second_menu_coach
                     else:
                         if utils.IsRegisterUser(self.worker.role):
-                            self.worker.second_menu_user = TelegramSecondMenuAdmin(self.worker)
+                            self.worker.second_menu_user = TelegramSecondMenuUser(self.worker)
                             self.worker.second_menu = self.worker.second_menu_user
                 self.worker.second_menu.startHandler(self.worker, selection)
                 needupdatekeyboard = False
