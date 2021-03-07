@@ -121,7 +121,7 @@ class TelegramAdminHandler(TelegramHandler):
         log.debug(f"begin admin SwitchAdminToCoach handler")
         # Start the bot in user mode
         self.worker.role = utils.ROLES[1]
-        self.worker.menu.coach_menu(menuname, "menu_coach_main_txt", self.worker)
+        self.worker.menu.coach_menu("MenuStart", "menu_coach_main_txt", self.worker)
         log.debug(f"end admin SwitchAdminToCoach handler")
         return
 
@@ -779,7 +779,7 @@ class TelegramMenu():
         self.__init__("config/comunda_coach_menu.bpmn", self.worker, menustart)
         log.debug(f"header_txt: {header_txt}")
         log.debug(f" menustart: {menustart}")
-        self.draw_menu(header_txt, worker, "TelegramCoachHandler",
+        self.draw_menu(header_txt, "TelegramCoachHandler",
                        menustart)
         return
 
