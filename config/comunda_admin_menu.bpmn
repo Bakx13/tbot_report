@@ -49,7 +49,7 @@
       <bpmn:incoming>Flow_1v4cj3d</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:sequenceFlow id="Flow_1v4cj3d" sourceRef="menu_admin_client_request" targetRef="Event_0mkzivi" />
-    <bpmn:exclusiveGateway id="menu_all_inventor" name="12#Inventory">
+    <bpmn:exclusiveGateway id="menu_all_inventory" name="12#Inventory">
       <bpmn:incoming>menu_all_timetable_st</bpmn:incoming>
       <bpmn:outgoing>Flow_0wheafk</bpmn:outgoing>
     </bpmn:exclusiveGateway>
@@ -79,7 +79,7 @@
     <bpmn:endEvent id="Event_1fmj4an" name="1#desc">
       <bpmn:incoming>Flow_0wheafk</bpmn:incoming>
     </bpmn:endEvent>
-    <bpmn:sequenceFlow id="Flow_0wheafk" sourceRef="menu_all_inventor" targetRef="Event_1fmj4an" />
+    <bpmn:sequenceFlow id="Flow_0wheafk" sourceRef="menu_all_inventory" targetRef="Event_1fmj4an" />
     <bpmn:startEvent id="Event_0yaqot0">
       <bpmn:outgoing>Flow_0ucdpa1</bpmn:outgoing>
     </bpmn:startEvent>
@@ -92,7 +92,7 @@
     <bpmn:sequenceFlow id="menu_coach_client_request_st" sourceRef="MenuStart" targetRef="menu_admin_client_request">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">lorder.menuname=="menu_coach_client_request"</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
-    <bpmn:sequenceFlow id="menu_all_timetable_st" sourceRef="MenuStart" targetRef="menu_all_inventor">
+    <bpmn:sequenceFlow id="menu_all_timetable_st" sourceRef="MenuStart" targetRef="menu_all_inventory">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">lorder.menuname=="menu_all_timetable"</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="menu_coach_client_list_st" sourceRef="MenuStart" targetRef="menu_admin_coach_list">
@@ -126,6 +126,7 @@
     <bpmn:exclusiveGateway id="menu_admin_client_list" name="2#ClientList">
       <bpmn:incoming>menu_admin_client_list_st</bpmn:incoming>
       <bpmn:outgoing>Flow_1nt2cvg</bpmn:outgoing>
+      <bpmn:outgoing>Flow_1sykvx2</bpmn:outgoing>
     </bpmn:exclusiveGateway>
     <bpmn:sequenceFlow id="menu_admin_client_list_st" sourceRef="MenuStart" targetRef="menu_admin_client_list">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">lorder.menuname=="menu_coach_client_list"</bpmn:conditionExpression>
@@ -146,6 +147,12 @@
     <bpmn:sequenceFlow id="Flow_1i1xasq" sourceRef="menu_admin_coach_list" targetRef="menu_admin_coach_list_cancel">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">a==a</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
+    <bpmn:endEvent id="menu_admin_client_list_cancel" name="8#Cancel">
+      <bpmn:incoming>Flow_1sykvx2</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_1sykvx2" sourceRef="menu_admin_client_list" targetRef="menu_admin_client_list_cancel">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">a==a</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Coach">
@@ -159,8 +166,9 @@
         <di:waypoint x="792" y="180" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_1nt2cvg_di" bpmnElement="Flow_1nt2cvg">
-        <di:waypoint x="675" y="350" />
-        <di:waypoint x="792" y="350" />
+        <di:waypoint x="650" y="325" />
+        <di:waypoint x="650" y="310" />
+        <di:waypoint x="792" y="310" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_11tzpsq_di" bpmnElement="menu_admin_client_list_st">
         <di:waypoint x="454" y="699" />
@@ -205,8 +213,8 @@
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0j0rfxw_di" bpmnElement="menu_all_swimpool_list_st">
         <di:waypoint x="454" y="699" />
-        <di:waypoint x="454" y="500" />
-        <di:waypoint x="625" y="500" />
+        <di:waypoint x="454" y="600" />
+        <di:waypoint x="625" y="600" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="509" y="537" width="87" height="53" />
         </bpmndi:BPMNLabel>
@@ -236,39 +244,38 @@
         <di:waypoint x="650" y="100" />
         <di:waypoint x="792" y="100" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_0oreel3_di" bpmnElement="Flow_Cancel">
-        <di:waypoint x="650" y="525" />
-        <di:waypoint x="650" y="556" />
-        <di:waypoint x="790" y="556" />
+      <bpmndi:BPMNEdge id="Flow_1sykvx2_di" bpmnElement="Flow_1sykvx2">
+        <di:waypoint x="650" y="375" />
+        <di:waypoint x="650" y="400" />
+        <di:waypoint x="792" y="400" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_05nguh2_di" bpmnElement="Flow_add_swimpool">
+        <di:waypoint x="650" y="575" />
+        <di:waypoint x="650" y="546" />
+        <di:waypoint x="790" y="546" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="694" y="542" width="52" height="27" />
+          <dc:Bounds x="695" y="532" width="49" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_03nm9ww_di" bpmnElement="Flow_del_swimpool">
-        <di:waypoint x="675" y="500" />
-        <di:waypoint x="792" y="500" />
+        <di:waypoint x="675" y="600" />
+        <di:waypoint x="792" y="600" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="677" y="482" width="86" height="14" />
+          <dc:Bounds x="677" y="582" width="86" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_05nguh2_di" bpmnElement="Flow_add_swimpool">
-        <di:waypoint x="650" y="475" />
-        <di:waypoint x="650" y="446" />
-        <di:waypoint x="790" y="446" />
+      <bpmndi:BPMNEdge id="Flow_0oreel3_di" bpmnElement="Flow_Cancel">
+        <di:waypoint x="650" y="625" />
+        <di:waypoint x="650" y="656" />
+        <di:waypoint x="790" y="656" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="695" y="432" width="49" height="27" />
+          <dc:Bounds x="694" y="642" width="52" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="EndEvent_0ofyivj_di" bpmnElement="menu_admin_add_coach">
         <dc:Bounds x="792" y="82" width="36" height="36" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="780" y="125" width="64" height="14" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Gateway_0v1bhfx_di" bpmnElement="menu_all_swimpool_list" isMarkerVisible="true">
-        <dc:Bounds x="625" y="475" width="50" height="50" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="613" y="425" width="78" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Gateway_0w9ztd8_di" bpmnElement="menu_admin_coach_list" isMarkerVisible="true">
@@ -289,28 +296,10 @@
           <dc:Bounds x="792" y="749" width="36" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Gateway_0dg8wfq_di" bpmnElement="menu_all_inventor" isMarkerVisible="true">
+      <bpmndi:BPMNShape id="Gateway_0dg8wfq_di" bpmnElement="menu_all_inventory" isMarkerVisible="true">
         <dc:Bounds x="625" y="795" width="50" height="50" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="623" y="852" width="64" height="14" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_082f88f_di" bpmnElement="menu_all_add_swimpool">
-        <dc:Bounds x="792" y="428" width="36" height="36" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="771" y="471" width="80" height="14" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_1f3zdum_di" bpmnElement="menu_all_del_swimpool">
-        <dc:Bounds x="792" y="482" width="36" height="36" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="772" y="525" width="77" height="14" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_18p0snj_di" bpmnElement="menu_all_cancel">
-        <dc:Bounds x="792" y="538" width="36" height="36" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="787" y="581" width="47" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Gateway_08qjarb_di" bpmnElement="menu_admin_coach_mode" isMarkerVisible="true">
@@ -352,13 +341,7 @@
       <bpmndi:BPMNShape id="Gateway_0xsbomo_di" bpmnElement="menu_admin_client_list" isMarkerVisible="true">
         <dc:Bounds x="625" y="325" width="50" height="50" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="622" y="375" width="58" height="14" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_0xcwjrq_di" bpmnElement="menu_admin_detail_client">
-        <dc:Bounds x="792" y="332" width="36" height="36" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="776" y="375" width="74" height="14" />
+          <dc:Bounds x="685" y="343" width="58" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_1sjsncq_di" bpmnElement="menu_admin_del_coach">
@@ -371,6 +354,42 @@
         <dc:Bounds x="792" y="232" width="36" height="36" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="787" y="275" width="47" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0xcwjrq_di" bpmnElement="menu_admin_detail_client">
+        <dc:Bounds x="792" y="292" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="776" y="335" width="74" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1eyrmka_di" bpmnElement="menu_admin_client_list_cancel">
+        <dc:Bounds x="792" y="382" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="786" y="423" width="47" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_0v1bhfx_di" bpmnElement="menu_all_swimpool_list" isMarkerVisible="true">
+        <dc:Bounds x="625" y="575" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="611" y="634.5" width="78" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_082f88f_di" bpmnElement="menu_all_add_swimpool">
+        <dc:Bounds x="792" y="528" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="771" y="571" width="80" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1f3zdum_di" bpmnElement="menu_all_del_swimpool">
+        <dc:Bounds x="792" y="582" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="772" y="625" width="77" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_18p0snj_di" bpmnElement="menu_all_cancel">
+        <dc:Bounds x="792" y="638" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="787" y="681" width="47" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
     </bpmndi:BPMNPlane>

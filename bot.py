@@ -132,6 +132,17 @@ def main():
                                       address=swimpool['address'], name=swimpool['name'], price=swimpool['price'])
             session.add(spool)
 
+        users = test_data['User']
+        for users_id in users:
+            user = users[users_id]
+            log.debug(f"Загружаем тестовых юзеров: {user['first_name']}")
+            cch = database.User(w=None, user_id=user['user_id'],
+                                first_name=user['first_name'],
+                                last_name=user['last_name'],
+                                username=user['username'],
+                                language_code=user['language'])
+            session.add(cch)
+
         coachs = test_data['Coach']
         for coach_id in coachs:
             coach = coachs[coach_id]

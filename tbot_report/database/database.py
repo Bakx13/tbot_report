@@ -42,16 +42,23 @@ class User(DeferredReflection, TableDeclarativeBase):
 
     def __init__(self, w: "worker.Worker", **kwargs):
         # Initialize the super
-        super().__init__(**kwargs)
-        # Get the data from telegram
-        self.user_id = w.telegram_user.id
-        self.first_name = w.telegram_user.first_name
-        self.last_name = w.telegram_user.last_name
-        self.username = w.telegram_user.username
-        if w.telegram_user.language_code:
-            self.language = w.telegram_user.language_code
+        super().__init__()
+        if w is not None:
+            # Get the data from telegram
+            self.user_id = w.telegram_user.id
+            self.first_name = w.telegram_user.first_name
+            self.last_name = w.telegram_user.last_name
+            self.username = w.telegram_user.username
+            if w.telegram_user.language_code:
+                self.language = w.telegram_user.language_code
+            else:
+                self.language = w.cfg.language["default_language"]
         else:
-            self.language = w.cfg.language["default_language"]
+            self.user_id = kwargs["user_id"]
+            self.first_name = kwargs["first_name"]
+            self.last_name = kwargs["last_name"]
+            self.username = kwargs["username"]
+            self.language = kwargs["language_code"]
         # The starting wallet value is 0
         self.credit = 0
 
@@ -221,6 +228,7 @@ class Client(DeferredReflection, TableDeclarativeBase):
     timetable = relationship("TimeTable")  # Permissions
     coach_id = Column(BigInteger, ForeignKey("coachs.user_id"), primary_key=False)
     coach = relationship("Coach")
+    deleted = Column(Boolean, nullable=False, default=False)
 
     # Extra table parameters
     __tablename__ = "client"

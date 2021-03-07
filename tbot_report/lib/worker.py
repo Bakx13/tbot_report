@@ -519,12 +519,19 @@ class Worker(threading.Thread):
 
         return
 
+    def __admin_menu(self):
+        """Function called from the run method when the user is an administrator.
+        Administrative bot actions should be placed here."""
+        log.debug("Displaying __admin_menu")
+        self.menu = TelegramMenu("config/comunda_admin_menu.bpmn", self, "MenuStart")
+        self.menu.admin_menu("MenuStart", "menu_admin_main_txt")
+        return
+
     def __user_menu(self):
         """Эта функция запускается, если с ботом начинается общение с ролью - тренер"""
 
-        menu_file = TelegramMenu.get_menu_file(self.cfg, "coach_menu")
-        self.menu = TelegramMenu(menu_file, self.loc, "Coach")
-        self.menu.coach_menu("MenuStart", "menu_coach_main_txt", self)
+        self.menu = TelegramMenu("config/comunda_coach_menu.bpmn", self, "MenuStart")
+        self.menu.coach_menu("MenuStart", "menu_coach_main_txt")
 
         return
 
@@ -926,15 +933,6 @@ class Worker(threading.Thread):
         """Send information about the bot."""
         log.debug("Displaying __bot_info")
         self.bot.send_message(self.chat.id, self.loc.get("bot_info"))
-
-    def __admin_menu(self):
-        """Function called from the run method when the user is an administrator.
-        Administrative bot actions should be placed here."""
-        log.debug("Displaying __admin_menu")
-        menu_file = TelegramMenu.get_menu_file(self.cfg, "coach_menu")
-        self.menu = TelegramMenu(menu_file, self.loc, "Admin")
-        self.menu.admin_menu("MenuStart", "menu_admin_main_txt", self)
-        return
 
     def __products_menu(self):
         """Display the admin menu to select a product to edit."""

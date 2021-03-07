@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.5.0">
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.6.0">
   <bpmn:process id="Coach" name="Coach" isExecutable="false">
     <bpmn:endEvent id="EndEvent_0ofyivj" name="three">
       <bpmn:incoming>Flow_0n7xfm6</bpmn:incoming>
@@ -44,7 +44,7 @@
       <bpmn:incoming>Flow_1v4cj3d</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:sequenceFlow id="Flow_1v4cj3d" sourceRef="menu_admin_client_request" targetRef="Event_0mkzivi" />
-    <bpmn:exclusiveGateway id="menu_all_inventor" name=" Инвентарь для плавания">
+    <bpmn:exclusiveGateway id="menu_all_inventory" name=" Инвентарь для плавания">
       <bpmn:incoming>menu_all_timetable_st</bpmn:incoming>
       <bpmn:outgoing>Flow_0wheafk</bpmn:outgoing>
     </bpmn:exclusiveGateway>
@@ -74,7 +74,7 @@
     <bpmn:endEvent id="Event_1fmj4an">
       <bpmn:incoming>Flow_0wheafk</bpmn:incoming>
     </bpmn:endEvent>
-    <bpmn:sequenceFlow id="Flow_0wheafk" sourceRef="menu_all_inventor" targetRef="Event_1fmj4an" />
+    <bpmn:sequenceFlow id="Flow_0wheafk" sourceRef="menu_all_inventory" targetRef="Event_1fmj4an" />
     <bpmn:startEvent id="Event_0yaqot0">
       <bpmn:outgoing>Flow_0ucdpa1</bpmn:outgoing>
     </bpmn:startEvent>
@@ -87,7 +87,7 @@
     <bpmn:sequenceFlow id="menu_coach_client_request_st" sourceRef="MenuStart" targetRef="menu_admin_client_request">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">lorder.menuname=="menu_coach_client_request"</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
-    <bpmn:sequenceFlow id="menu_all_timetable_st" sourceRef="MenuStart" targetRef="menu_all_inventor">
+    <bpmn:sequenceFlow id="menu_all_timetable_st" sourceRef="MenuStart" targetRef="menu_all_inventory">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">lorder.menuname=="menu_all_timetable"</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="menu_coach_client_list_st" sourceRef="MenuStart" targetRef="menu_admin_client_list">
@@ -217,7 +217,7 @@
       <bpmndi:BPMNShape id="Event_0mkzivi_di" bpmnElement="Event_0mkzivi">
         <dc:Bounds x="822" y="232" width="36" height="36" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Gateway_0dg8wfq_di" bpmnElement="menu_all_inventor" isMarkerVisible="true">
+      <bpmndi:BPMNShape id="Gateway_0dg8wfq_di" bpmnElement="menu_all_inventory" isMarkerVisible="true">
         <dc:Bounds x="625" y="385" width="50" height="50" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="615" y="442" width="77" height="27" />

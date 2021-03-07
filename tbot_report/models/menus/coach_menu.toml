@@ -29,7 +29,7 @@ menu_all_timetable = "TimeTable"
 menu_all_swimpool_list = "SwimpoolList"
 menu_all_training_method = "TrainingMethod"
 menu_coach_personal_card = "PersonalCard"
-menu_all_inventor = "Inventory"
+menu_all_inventory = "Inventory"
 menu_coach_finance = "FinanceStatus"
 menu_coach_training_status = "TrainingStatus"
 
@@ -51,7 +51,7 @@ menu_admin_coach_list = "CoachList"
 menu_admin_client_request = "ClientRequest"
 menu_all_swimpool_list = "SwimpoolList"
 
-menu_all_inventor = "Inventory"
+menu_all_inventory = "Inventory"
 
 menu_admin_user_mode = "SwitchAdminToUser"
 menu_admin_coach_mode = "SwitchAdminToCoach"
