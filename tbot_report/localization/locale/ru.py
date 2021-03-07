@@ -148,7 +148,11 @@ menu_all_del_swimpool = "🚫 удалить бассейн"
 menu_all_buy_inventory = "👙 Рекомендуемый инвентарь"
 
 #----- пункты меню  администратора. Текстовки
+menu_admin_coach_add_txt = "В этоме меню можно Добавить тренера\n" \
+                           "Для этого он должен хотя бы один раз пообщаться с ботом\n" \
+                           "Отправьте ему ссылку - https://t.me/KonstantinS_bot?start\n"
 menu_admin_client_list_txt = "В этоме меню можно просмотреть клиентов наших тренеров\n"
+
 
 menu_admin_coach_list_txt = "В этоме меню можно добавить/удалить тренера\n"
 
@@ -189,11 +193,15 @@ menu_admin_del_swimpool = "🏊 Изменить бассейн"
 menu_admin_client_list = "👔 Список клиентов"
 menu_admin_coach_list = "🏅 Список тренеров"
 menu_admin_client_request = "Новые клиенты"
-menu_admin_add_coach = "Добавить тренера"
+menu_admin_add_coach = "Добавить"
+menu_admin_add_coach_list = "Добавить тренера"
+menu_admin_add_coach_list2 = "Добавить тренера"
 menu_admin_del_coach = "Удалить тренера"
 menu_admin_coach_list_cancel = "🔙 Отмена"
 menu_admin_client_list_cancel = "🔙 Отмена"
+menu_admin_add_coach_cancel = "🔙 Отмена"
 menu_admin_inventory_cancel = "🔙 Отмена"
+menu_admin_add_coach_list_cancel = "🔙 Отмена"
 menu_admin_detail_client = "Подробно"
 menu_admin_inventory_flippers = "Ласты"
 #----общие вопросы

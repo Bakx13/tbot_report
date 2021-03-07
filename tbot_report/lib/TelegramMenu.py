@@ -271,6 +271,25 @@ class TelegramAdminHandler(TelegramHandler):
         self.worker.bot.send_message(self.worker.chat.id, "<b>Список клиентов:</b>", reply_markup=reply_markup)
         return keyboard, msg_txt
 
+    def AddCoachList(self, menuname):
+        msg_txt = "menu_admin_coach_add_txt"
+        log.debug(f"begin admin AddCoachList handler")
+        log.debug(f"menuname={menuname}")
+        # переопределяем клавиатуру для выбранного пункта меню
+        self.worker.menu.set_menu_by_bpmn(menuname)
+        keyboard = self.get_keyboard()
+        log.debug(f"keyboard after set_menu_by_bpmn={keyboard}")
+        # отображаем текущий список тренеров:
+        if self.worker.second_menu_admin is None:
+            menu = TelegramSecondMenuAdmin(self.worker)
+            self.worker.second_menu = menu
+            self.worker.second_menu_admin = menu
+        reply_markup = self.worker.second_menu_admin.AddCoachList(0)
+
+        # @todo не забыть убрать в локализацию
+        self.worker.bot.send_message(self.worker.chat.id, "<b>Список клиентов:</b>", reply_markup=reply_markup)
+        return keyboard, msg_txt
+
     def Inventory(self, menuname):
         msg_txt = "menu_admin_coach_list_txt"
         log.debug(f"begin admin Swimpoollist handler")
@@ -538,7 +557,7 @@ class TelegramSecondMenuAdmin(TelegramSecondMenuBase):
         return reply_markup
 
     def UserList(self, object_id: int):
-        log.debug(f"begin SwimpoolList second menu handler")
+        log.debug(f"begin UserList second menu handler")
         column_names = ["ФИО", "Тренер"]
         object_table = self.worker.session.query(db.Client).filter_by(deleted=False).all()
         columns = []
@@ -555,6 +574,36 @@ class TelegramSecondMenuAdmin(TelegramSecondMenuBase):
             column = [id, name, coach_name]
             columns.append(column)
         reply_markup = self.draw_object_list_light(object_id, column_names, columns, "UserList")
+        # reply_markup = self.draw_object_list(object_id, "Coach", column_names, ["id","about"], "CoachList")
+        return reply_markup
+
+    def AddCoachList(self, object_id: int):
+        log.debug(f"begin UserListAddCoach second menu handler")
+        column_names = ["Ник в telegram", "ФИО из телеграм"]
+        object_table = self.worker.session.query(db.User).filter_by().all()
+        columns = []
+        for object in object_table:
+            user_id = object.user_id
+            name = f"{object.last_name} {object.first_name}" if object is not None else "Не задано"
+            nick = object.username
+            column = [user_id, nick, name]
+            columns.append(column)
+        reply_markup = self.draw_object_list_light(object_id, column_names, columns, "AddCoachList")
+        # reply_markup = self.draw_object_list(object_id, "Coach", column_names, ["id","about"], "CoachList")
+        return reply_markup
+
+    def AddCoach(self, object_id: int):
+        log.debug(f"begin UserListAddCoach second menu handler")
+        column_names = ["Ник в telegram", "ФИО из телеграм"]
+        object_table = self.worker.session.query(db.User).filter_by().all()
+        columns = []
+        for object in object_table:
+            user_id = object.user_id
+            name = f"{object.last_name} {object.first_name}" if object is not None else "Не задано"
+            nick = object.username
+            column = [user_id, nick, name]
+            columns.append(column)
+        reply_markup = self.draw_object_list_light(object_id, column_names, columns, "AddCoachList")
         # reply_markup = self.draw_object_list(object_id, "Coach", column_names, ["id","about"], "CoachList")
         return reply_markup
 
@@ -622,7 +671,7 @@ class TelegramMenu():
                                                  self.runner.workflowEditor)
         workflowSpec = BpmnSerializer().deserialize_workflow_spec(package)
         self.runner.workflow = BpmnWorkflow(workflowSpec, **self.runner.kwargs)
-
+        self.keyboard = []
         self.loc = worker.loc
         self.loc_menu = {}
         self.localnames = []
@@ -677,11 +726,25 @@ class TelegramMenu():
         log.debug("Start set_menu_by_bpmn")
         log.debug(step_name)
         task = self.runner.workflow.get_tasks_from_spec_name(step_name)
+        log.debug(f"step_name = {step_name}")
+        # log.debug(f"task[0] = {task[0].__dict__}")
+        # log.debug(f"task[0].task_spec = {task[0].task_spec.__dict__}")
         task_list = task[0].children
+        # log.debug(f"task_list = {task_list}")
         # Если дошли до конца - возвращаемся на стартовую страницу
         if not task_list:
-            task = self.runner.workflow.get_tasks_from_spec_name("MenuStart")
-            task_list = task[0].children
+            if task[0].task_spec:
+                if task[0].task_spec.outgoing_sequence_flows:
+                    lsts = task[0].task_spec.outgoing_sequence_flows
+                    for lst in lsts:
+                        task = self.runner.workflow.get_task_spec_from_name(lst)
+                        task.task_spec = task
+                        # log.debug(f"task name ({lst}) ={task.__dict__}")
+                        task_list.append(task)
+                else:
+                    task = self.runner.workflow.get_tasks_from_spec_name("MenuStart")
+                    task_list = task[0].children
+        # log.debug(f"task_list = {task_list}")
         self.keyboard = []
         self.localnames = []
         self.loc_menu = {}
