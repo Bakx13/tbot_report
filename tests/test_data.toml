@@ -173,6 +173,7 @@ id = 1
 creation_date = 2021-01-01 20:39:29.574437
 coach_id = 1
 swimpool_id = 1
+client_id = 1
 
 
 # The unique item id
@@ -189,4 +190,5 @@ prop = "Каждый"
 start_time = 2021-01-01 09:00:00.000000
 end_time = 2021-01-01 20:39:29.574437
 timetable_id = 1
+
 

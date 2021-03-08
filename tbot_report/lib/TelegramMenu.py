@@ -307,6 +307,28 @@ class TelegramAdminHandler(TelegramHandler):
         self.worker.bot.send_message(self.worker.chat.id, "<b>Список клиентов:</b>", reply_markup=reply_markup)
         return keyboard, msg_txt
 
+    def AddCoach(self, menuname):
+        msg_txt = "menu_admin_coach_add_txt"
+        log.debug(f"begin admin AddCoach handler")
+        log.debug(f"menuname={menuname}")
+        # после добавления тренера поднимаемся на один пункт менбю выше, чтобы посмотреть обновленный список тренеров
+        menuname = self.worker.menu.get_parent_menu(menuname)
+        # переопределяем клавиатуру для выбранного пункта меню
+        self.worker.menu.set_menu_by_bpmn(menuname)
+        keyboard = self.get_keyboard()
+        log.debug(f"keyboard after set_menu_by_bpmn={keyboard}")
+        # отображаем текущий список тренеров:
+        if self.worker.second_menu_admin is None:
+            menu = TelegramSecondMenuAdmin(self.worker)
+            self.worker.second_menu = menu
+            self.worker.second_menu_admin = menu
+        log.debug(f"callback={self.worker.second_menu_admin.callback_query}")
+        reply_markup = self.worker.second_menu_admin.AddCoachList(0)
+
+        # @todo не забыть убрать в локализацию
+        self.worker.bot.send_message(self.worker.chat.id, "<b>Список клиентов:</b>", reply_markup=reply_markup)
+        return keyboard, msg_txt
+
     def Inventory(self, menuname):
         msg_txt = "menu_admin_coach_list_txt"
         log.debug(f"begin admin Swimpoollist handler")
@@ -336,11 +358,13 @@ class TelegramSecondMenuBase():
         self.worker = worker
         self.object_id = 0
         self.handler_name = None
+        self.callback_query = ""
         return
 
     def startHandler(self, worker, updates: telegram.Update):
         message = worker.bot.last_message_inline_keyboard
         callback_query = updates.callback_query.data
+        self.callback_query = callback_query
         lst = callback_query.split('#')
         handlername = lst[0]
         object_id = lst[1]
@@ -612,20 +636,6 @@ class TelegramSecondMenuAdmin(TelegramSecondMenuBase):
         # reply_markup = self.draw_object_list(object_id, "Coach", column_names, ["id","about"], "CoachList")
         return reply_markup
 
-    def AddCoach(self, object_id: int):
-        log.debug(f"begin UserListAddCoach second menu handler")
-        column_names = ["Ник в telegram", "ФИО из телеграм"]
-        object_table = self.worker.session.query(db.User).filter_by().all()
-        columns = []
-        for object in object_table:
-            user_id = object.user_id
-            name = f"{object.last_name} {object.first_name}" if object is not None else "Не задано"
-            nick = object.username
-            column = [user_id, nick, name]
-            columns.append(column)
-        reply_markup = self.draw_object_list_light(object_id, column_names, columns, "AddCoachList")
-        # reply_markup = self.draw_object_list(object_id, "Coach", column_names, ["id","about"], "CoachList")
-        return reply_markup
 
 class TelegramSecondMenuCoach(TelegramSecondMenuBase):
     '''
@@ -709,7 +719,7 @@ class TelegramMenu():
 
     def get_parent_menu(self, step_name):
         log.debug("Start get_parent_menu")
-        task = self.runner.workflow.get_tasks_from_spec_name(step_name)
+s        task = self.runner.workflow.get_tasks_from_spec_name(step_name)
         try:
             return task[0].parent.task_spec.name
         except:
@@ -802,6 +812,7 @@ class TelegramMenu():
             if str(self.worker.bot.last_message.text_html).__eq__(self.worker.loc.get(header_txt)):
                 needupdatekeyboard = False
                 log.debug("Предыдушее сообщение равно текущему")
+                log.debug(f"self.worker.bot.last_message.text_html={self.worker.bot.last_message.text_html}")
             # Send the previously created keyboard to the user (ensuring it can be clicked only 1 time)
             log.debug(f"needupdatekeyboard={needupdatekeyboard}")
             if needupdatekeyboard:
