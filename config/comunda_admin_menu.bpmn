@@ -149,22 +149,22 @@
     </bpmn:sequenceFlow>
     <bpmn:exclusiveGateway id="menu_admin_add_coach_list" name="1#AddCoachList">
       <bpmn:incoming>Flow_0ot5y9k</bpmn:incoming>
-      <bpmn:outgoing>Flow_1wjygda</bpmn:outgoing>
       <bpmn:outgoing>Flow_13ywn72</bpmn:outgoing>
+      <bpmn:outgoing>Flow_025pmgo</bpmn:outgoing>
     </bpmn:exclusiveGateway>
     <bpmn:sequenceFlow id="Flow_0ot5y9k" sourceRef="menu_admin_coach_list" targetRef="menu_admin_add_coach_list">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">a==a</bpmn:conditionExpression>
-    </bpmn:sequenceFlow>
-    <bpmn:endEvent id="menu_admin_add_coach" name="1#AddCoach">
-      <bpmn:incoming>Flow_1wjygda</bpmn:incoming>
-    </bpmn:endEvent>
-    <bpmn:sequenceFlow id="Flow_1wjygda" sourceRef="menu_admin_add_coach_list" targetRef="menu_admin_add_coach">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">a==a</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:endEvent id="menu_admin_add_coach_cancel" name="4#Cancel">
       <bpmn:incoming>Flow_13ywn72</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:sequenceFlow id="Flow_13ywn72" sourceRef="menu_admin_add_coach_list" targetRef="menu_admin_add_coach_cancel">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">a==a</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:exclusiveGateway id="menu_admin_add_coach" name="8#AddCoach">
+      <bpmn:incoming>Flow_025pmgo</bpmn:incoming>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="Flow_025pmgo" sourceRef="menu_admin_add_coach_list" targetRef="menu_admin_add_coach">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">a==a</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
   </bpmn:process>
@@ -276,15 +276,10 @@
         <di:waypoint x="650" y="290" />
         <di:waypoint x="785" y="290" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_1wjygda_di" bpmnElement="Flow_1wjygda">
-        <di:waypoint x="810" y="265" />
-        <di:waypoint x="810" y="230" />
-        <di:waypoint x="952" y="230" />
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_13ywn72_di" bpmnElement="Flow_13ywn72">
-        <di:waypoint x="810" y="315" />
-        <di:waypoint x="810" y="340" />
-        <di:waypoint x="952" y="340" />
+        <di:waypoint x="810" y="265" />
+        <di:waypoint x="810" y="220" />
+        <di:waypoint x="952" y="220" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_1nt2cvg_di" bpmnElement="Flow_1nt2cvg">
         <di:waypoint x="650" y="385" />
@@ -295,6 +290,11 @@
         <di:waypoint x="650" y="435" />
         <di:waypoint x="650" y="460" />
         <di:waypoint x="792" y="460" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_025pmgo_di" bpmnElement="Flow_025pmgo">
+        <di:waypoint x="810" y="315" />
+        <di:waypoint x="810" y="340" />
+        <di:waypoint x="945" y="340" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="Gateway_0v1bhfx_di" bpmnElement="menu_all_swimpool_list" isMarkerVisible="true">
         <dc:Bounds x="625" y="565" width="50" height="50" />
@@ -419,16 +419,16 @@
           <dc:Bounds x="844.5" y="283" width="81" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_1f5cf2r_di" bpmnElement="menu_admin_add_coach">
-        <dc:Bounds x="952" y="212" width="36" height="36" />
+      <bpmndi:BPMNShape id="Event_1wrx0bj_di" bpmnElement="menu_admin_add_coach_cancel">
+        <dc:Bounds x="952" y="202" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="939" y="255" width="64" height="14" />
+          <dc:Bounds x="947" y="245" width="47" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_1wrx0bj_di" bpmnElement="menu_admin_add_coach_cancel">
-        <dc:Bounds x="952" y="322" width="36" height="36" />
+      <bpmndi:BPMNShape id="Gateway_10rdd2l_di" bpmnElement="menu_admin_add_coach" isMarkerVisible="true">
+        <dc:Bounds x="945" y="315" width="50" height="50" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="947" y="365" width="47" height="14" />
+          <dc:Bounds x="938" y="291" width="64" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
     </bpmndi:BPMNPlane>

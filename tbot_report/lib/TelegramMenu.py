@@ -311,7 +311,8 @@ class TelegramAdminHandler(TelegramHandler):
         msg_txt = "menu_admin_coach_add_txt"
         log.debug(f"begin admin AddCoach handler")
         log.debug(f"menuname={menuname}")
-        # после добавления тренера поднимаемся на один пункт менбю выше, чтобы посмотреть обновленный список тренеров
+        # после добавления тренера поднимаемся на два пункта меню выше, чтобы посмотреть обновленный список тренеров
+        menuname = self.worker.menu.get_parent_menu(menuname)
         menuname = self.worker.menu.get_parent_menu(menuname)
         # переопределяем клавиатуру для выбранного пункта меню
         self.worker.menu.set_menu_by_bpmn(menuname)
@@ -322,9 +323,20 @@ class TelegramAdminHandler(TelegramHandler):
             menu = TelegramSecondMenuAdmin(self.worker)
             self.worker.second_menu = menu
             self.worker.second_menu_admin = menu
-        log.debug(f"callback={self.worker.second_menu_admin.callback_query}")
+        log.debug(f"callback= {self.worker.second_menu_admin.callback_query}")
+        if self.worker.second_menu_admin.callback_query:
+            lst = self.worker.second_menu_admin.callback_query.split('#')
+            handlername = lst[0]
+            object_id = lst[1]
+            if (handlername == "AddCoachList"):
+                # на всякий случай, чтобы сделать добавление только один раз
+                self.worker.second_menu_admin.callback_query = ""
+                coach = db.Coach(user_id=object_id, timetable_id=1,
+                                 about="Не забудьте добавить свое краткое описание")
+                self.worker.session.add(coach)
+                self.worker.session.commit()
+                log.debug(f"Добавили тренера с user_id = {object_id}")
         reply_markup = self.worker.second_menu_admin.AddCoachList(0)
-
         # @todo не забыть убрать в локализацию
         self.worker.bot.send_message(self.worker.chat.id, "<b>Список клиентов:</b>", reply_markup=reply_markup)
         return keyboard, msg_txt
@@ -718,12 +730,18 @@ class TelegramMenu():
         return None
 
     def get_parent_menu(self, step_name):
-        log.debug("Start get_parent_menu")
-s        task = self.runner.workflow.get_tasks_from_spec_name(step_name)
+        log.debug(f"Start get_parent_menu for step = {step_name}")
         try:
+            task = self.runner.workflow.get_tasks_from_spec_name(step_name)
             return task[0].parent.task_spec.name
         except:
-            return None
+            try:
+                task = self.runner.workflow.get_task_spec_from_name(step_name)
+                log.debug(f"task = {task.inputs[0].name}")
+                return task.inputs[0].name
+            except:
+                log.debug(f"task = None")
+                return None
         return None
 
     @staticmethod
@@ -745,13 +763,20 @@ s        task = self.runner.workflow.get_tasks_from_spec_name(step_name)
         return keyboard
 
     def set_menu_by_bpmn(self, step_name):
-        log.debug("Start set_menu_by_bpmn")
-        log.debug(step_name)
-        task = self.runner.workflow.get_tasks_from_spec_name(step_name)
-        log.debug(f"step_name = {step_name}")
+        log.debug(f"Start set_menu_by_bpmn for step_name = {step_name}")
+        task_list = []
+        try:
+            task = self.runner.workflow.get_tasks_from_spec_name(step_name)
+            task_list = task[0].children
+        except:
+            task = self.runner.workflow.get_task_spec_from_name(step_name)
+            task_list_tmp = task.outputs
+            for task in task_list_tmp:
+                task = self.runner.workflow.get_task_spec_from_name(task.name)
+                task.task_spec = task
+                task_list.append(task)
         # log.debug(f"task[0] = {task[0].__dict__}")
         # log.debug(f"task[0].task_spec = {task[0].task_spec.__dict__}")
-        task_list = task[0].children
         # log.debug(f"task_list = {task_list}")
         # Если дошли до конца - возвращаемся на стартовую страницу
         if not task_list:
@@ -761,7 +786,7 @@ s        task = self.runner.workflow.get_tasks_from_spec_name(step_name)
                     for lst in lsts:
                         task = self.runner.workflow.get_task_spec_from_name(lst)
                         task.task_spec = task
-                        # log.debug(f"task name ({lst}) ={task.__dict__}")
+                        log.debug(f"task name ({lst}) ={task.__dict__}")
                         task_list.append(task)
                 else:
                     task = self.runner.workflow.get_tasks_from_spec_name("MenuStart")
@@ -773,6 +798,7 @@ s        task = self.runner.workflow.get_tasks_from_spec_name(step_name)
         for_menus = []
         for menuitem in task_list:
             try:
+                # log.debug(f"menuitem={menuitem.__dict__}")
                 menuitem_desc = menuitem.task_spec.description.split('#')
                 menuitem_id = int(menuitem_desc[0])
                 # удаляем всякое возможное непотребство типа перевода строк из имени обработчика
@@ -816,7 +842,7 @@ s        task = self.runner.workflow.get_tasks_from_spec_name(step_name)
             # Send the previously created keyboard to the user (ensuring it can be clicked only 1 time)
             log.debug(f"needupdatekeyboard={needupdatekeyboard}")
             if needupdatekeyboard:
-                log.debug(f"keyboard={self.keyboard}")
+                # log.debug(f"keyboard={self.keyboard}")
                 self.worker.bot.send_message(self.worker.chat.id, self.worker.loc.get(header_txt),
                                         reply_markup=telegram.ReplyKeyboardMarkup(self.keyboard, one_time_keyboard=False,
                                                                                   resize_keyboard=True))

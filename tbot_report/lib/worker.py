@@ -334,6 +334,7 @@ class Worker(threading.Thread):
             update = self.__receive_next_update()
             try:
                 log.debug(f"get command {update.message.text}")
+                log.debug(f"get command list {items}")
             except:
                 log.debug(f"update.message.text is None")
             # If a CancelSignal is received...
