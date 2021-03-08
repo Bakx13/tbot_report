@@ -211,6 +211,9 @@ questions_name = "Введите название"
 questions_address = "Введите адрес"
 #---- вопросы для добавление бассейна
 questions_swimpool_cost = "Введите стоимость разового посещения"
+questions_timetableitem_day = "Введите день недели"
+questions_timetableitem_start = "Введите время начала"
+questions_timetableitem_end =  "Введите время окончания"
 #---- вопросы для добавления расписания
 
 #---- вопросы для добавления района

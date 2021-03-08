@@ -70,12 +70,31 @@ class TelegramCoachHandler(TelegramHandler):
         return keyboard, msg_txt
 
     def AddSwimpool(self, menuname):
-        msg_txt = "menu_all_swimpool_list_text"
-        log.debug(f"begin Swimpoollist handler")
-        # переопределяем клавиатуру для выбранного пункта меню
-        self.worker.menu.set_menu_by_bpmn(menuname)
-        keyboard = self.get_keyboard()
-        return keyboard, msg_txt
+            msg_txt = "menu_all_swimpool_list_text"
+            log.debug(f"begin Swimpoollist handler")
+            # переопределяем клавиатуру для выбранного пункта меню
+            self.worker.menu.set_menu_by_bpmn(menuname)
+            keyboard = self.get_keyboard()
+            sw_fileds = TelegramSecondMenuCoach.collect_object_fields(self.worker,
+                                                                      [self.worker.loc.get("questions_name"),
+                                                                       self.worker.loc.get("questions_address"),
+                                                                       self.worker.loc.get("questions_swimpool_cost"),
+                                                                       self.worker.loc.get("questions_timetableitem_day"),
+                                                                       self.worker.loc.get("questions_timetableitem_start"),
+                                                                       self.worker.loc.get("questions_timetableitem_end")
+                                                                       ],
+                                                                      [])
+            timetableitem = db.TimeTableItem(day_of_week = sw_fileds[3], start_time = sw_fileds[4], end_time = sw_fileds[5])
+            log.debug(f"timetableitem:{timetableitem}")
+
+            self.worker.session.add(timetableitem)
+            self.worker.session.commit()
+
+            swpool = db.SwimPool(distict_id=1, timetable_id=1, address=sw_fileds[1], name=sw_fileds[0],
+                                 price=sw_fileds[2])
+            self.worker.session.add(swpool)
+            self.worker.session.commit()
+            return keyboard, msg_txt
 
     def AddAddressSwimPool(self, message):
         self.worker.bot.send_message(self.worker.chat.id, message)
