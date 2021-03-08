@@ -52,11 +52,21 @@ class TelegramCoachHandler(TelegramHandler):
         return
 
     def SwimpoolList(self, menuname):
-        log.debug(f"begin Swimpoollist handler")
         msg_txt = "menu_all_swimpool_list_text"
+        log.debug(f"begin coach Swimpoollist handler")
+        log.debug(f"menuname={menuname}")
+        # переопределяем клавиатуру для выбранного пункта меню
         self.worker.menu.set_menu_by_bpmn(menuname)
         keyboard = self.get_keyboard()
-        log.debug(f"end Swimpoollist handler")
+        # отображаем текущий список бассейнов:
+        if self.worker.second_menu_admin is None:
+            menu = TelegramSecondMenuCoach(self.worker)
+            self.worker.second_menu = menu
+            self.worker.second_menu_coach = menu
+        reply_markup = self.worker.second_menu_coach.SwimpoolList(0)
+
+        # @todo не забыть убрать в локализацию
+        self.worker.bot.send_message(self.worker.chat.id, "<b>Список бассейнов:</b>", reply_markup=reply_markup)
         return keyboard, msg_txt
 
     def AddSwimpool(self, menuname):
@@ -87,8 +97,9 @@ class TelegramCoachHandler(TelegramHandler):
     def Cancel(self, menuname):
         log.debug(f"begin Cancel handler")
         msg_txt = "menu_coach_main_txt"
+        menuname = 'MenuStart'
         # переопределяем клавиатуру для выбранного пункта меню
-        log.debug(f"begin Cancel handler")
+        log.debug(f"begin Cancel handler, menuname:{menuname}")
         # переопределяем клавиатуру для выбранного пункта меню
         self.worker.menu.set_menu_by_bpmn(menuname)
         keyboard = self.get_keyboard()
@@ -660,7 +671,7 @@ class TelegramSecondMenuCoach(TelegramSecondMenuBase):
 
     def CoachClientList(self, object_id: int):
         log.debug(f"begin CoachClientList second menu handler")
-        column_names = ["ФИО Клиента", "Расписание"]
+        column_names = ["ФИО Клиента"]
         object_id = int(object_id)
         c_id = 0
         user_id = int(self.worker.telegram_user.id)
@@ -681,6 +692,37 @@ class TelegramSecondMenuCoach(TelegramSecondMenuBase):
 
         reply_markup = self.draw_object_list_light(object_id, column_names, columns, "CoachClientList")
         return reply_markup
+
+    def SwimpoolList(self, object_id: int):
+        log.debug(f"begin SwimpoolList second menu handler")
+        usr_id = int(self.worker.telegram_user.id)
+        coach_id = self.worker.session.query(db.Coach).filter_by(user_id = usr_id).first()
+        table_timetable = self.worker.session.query(db.TimeTable).filter_by(coach_id = coach_id.id)
+
+        for row in table_timetable:
+            swimpools = self.worker.session.query(db.SwimPool).filter_by(id = row.swimpool_id).all()
+            object_id = int(object_id)
+            keyboard_nice = []
+            keyboard_nice.append([telegram.InlineKeyboardButton("Название бассейна", callback_data="none"),
+                              telegram.InlineKeyboardButton("Стоимость", callback_data="none"),
+                              telegram.InlineKeyboardButton("Выбрать", callback_data="none")])
+            for swimpool in swimpools:
+                sw_id = int(swimpool.id)
+                swimpool_name = str(swimpool.name)
+                if swimpool.price is None:
+                    swimpool_price = "не задана"
+                else:
+                    swimpool_price = str(swimpool.price)
+
+                # @todo не забыть убрать в localization"
+                choice = "✔️"
+                if sw_id == object_id: choice = f"✅"
+                keyboard_nice.append([telegram.InlineKeyboardButton(swimpool_name, callback_data="none"),
+                                  telegram.InlineKeyboardButton(swimpool_price, callback_data="none"),
+                                  telegram.InlineKeyboardButton(choice, callback_data=f"SwimpoolList#{sw_id}")])
+            reply_markup = telegram.InlineKeyboardMarkup(keyboard_nice)
+
+            return reply_markup
 
 
 class TelegramSecondMenuUser(TelegramSecondMenuBase):
@@ -910,6 +952,6 @@ class TelegramMenu():
         # переопределяем сами себя из-за возможного перехода из другого режима, например Admin-> Coach
         menu_file = TelegramMenu.get_menu_file(worker.cfg, "coach_menu")
         self.__init__("config/comunda_user_menu.bpmn", self.worker, menustart)
-        self.draw_menu(header_txt, worker, "User", "TelegramCoachHandler",
+        self.draw_menu(header_txt,  "TelegramUserHandler",
                        menustart)
         return
